@@ -1,0 +1,36 @@
+body{
+	background-image: url("welcome-to-my-world.jpg");
+	background-color: green;
+	background-size: auto;
+	background-position: center top;
+	background-size: 85em;
+}
+head{
+	display: flex;
+
+	justify-content: center;
+	align-items: center;
+}
+body{
+	height: 430px;
+	display: flex;
+	flex-flow: column wrap;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+h1{
+	font-family: 'Caveat Brush', cursive;
+	font-size: 6em;
+	text-align: center;
+} 
+
+h2{
+	font-family: 'Caveat', cursive;
+	font-size: 2em;
+	text-align: center;
+	padding-bottom: 20px;
+}
+.btn-primary{
+	background-color: green;
+}
