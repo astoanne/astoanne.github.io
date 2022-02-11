@@ -12,7 +12,15 @@ i  <!DOCTYPE html>
 		<h1>Welcome to my world!</h1>
 		<h2>~ A garden for all</h2>
 	</div>
-
+		<script>
+			fetch('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx1f4c823680968cd5&secret=d593fa44754c7d74097b0abecf2c70a9').then(function(response) {
+				  return response.json();
+				}).then(function(data) {
+				  console.log(data);
+				}).catch(function() {
+				  console.log("Booo");
+				});
+		</script>
 
 		<!--End mc_embed_signup-->
 
