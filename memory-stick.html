@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欣欣需要的内存条 ♡</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: linear-gradient(180deg, #fff5f5 0%, #fef0e6 100%);
+    color: #4a3a3a;
+    line-height: 1.85;
+    margin: 0;
+    padding: 32px 20px 80px;
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: #d96666;
+    letter-spacing: 1px;
+  }
+  .heart {
+    color: #e88;
+    font-size: 22px;
+  }
+  .sub {
+    color: #a07878;
+    font-size: 15px;
+    margin: 0 auto;
+    max-width: 480px;
+  }
+  .intro {
+    background: white;
+    border-radius: 20px;
+    padding: 20px 24px;
+    margin-bottom: 22px;
+    text-align: center;
+    border: 1px solid #fae0e0;
+    box-shadow: 0 2px 8px rgba(230, 180, 180, 0.08);
+  }
+  .intro p {
+    margin: 0;
+    color: #6a5050;
+    font-size: 16px;
+  }
+  .step {
+    background: white;
+    border: 1px solid #fae0e0;
+    border-radius: 20px;
+    padding: 24px 26px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(230, 180, 180, 0.08);
+  }
+  .step-num {
+    display: inline-block;
+    background: linear-gradient(135deg, #f8b4b4, #e88e8e);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-right: 12px;
+    vertical-align: 2px;
+    box-shadow: 0 2px 6px rgba(232, 142, 142, 0.3);
+  }
+  .step-title {
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: inline-block;
+    color: #5a3a3a;
+  }
+  .step p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: #4a3a3a;
+  }
+  .step ul {
+    padding-left: 24px;
+    margin: 10px 0;
+    list-style: none;
+  }
+  .step li {
+    margin: 8px 0;
+    font-size: 16px;
+    position: relative;
+    padding-left: 4px;
+  }
+  .step li::before {
+    content: "♡";
+    position: absolute;
+    left: -20px;
+    color: #f4b4b4;
+    font-size: 14px;
+  }
+  .key {
+    display: inline-block;
+    background: #fff0e8;
+    color: #d96644;
+    padding: 2px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 16px;
+    border: 1px dashed #f4c4a8;
+  }
+  .yes { color: #6ab088; font-weight: 600; }
+  .no { color: #d97878; font-weight: 600; }
+  .photo-card {
+    background: linear-gradient(135deg, #fff0f0 0%, #ffe8e0 100%);
+    border: 1px dashed #f4b4b4;
+    border-radius: 20px;
+    padding: 28px 26px;
+    margin-top: 24px;
+    text-align: center;
+  }
+  .photo-card h3 {
+    margin: 0 0 10px;
+    font-size: 19px;
+    color: #c46666;
+    font-weight: 600;
+  }
+  .photo-card p {
+    margin: 4px 0;
+    color: #8a5a5a;
+    font-size: 16px;
+  }
+  .size-diagram {
+    background: #fdf5f0;
+    border-radius: 14px;
+    padding: 20px;
+    margin: 14px 0 6px;
+    text-align: center;
+  }
+  .size-diagram .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 10px 0;
+  }
+  .stick-long {
+    background: linear-gradient(135deg, #a8d8b9, #8ec5a0);
+    color: white;
+    padding: 10px 0;
+    width: 260px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(142, 197, 160, 0.3);
+  }
+  .stick-short {
+    background: linear-gradient(135deg, #e8b4b4, #d99494);
+    color: white;
+    padding: 10px 0;
+    width: 130px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(217, 148, 148, 0.3);
+  }
+  .label-mock {
+    background: #4a3a3a;
+    color: #f8e8e0;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-family: ui-monospace, monospace;
+    font-size: 14px;
+    margin: 12px 0;
+    line-height: 1.7;
+    text-align: left;
+  }
+  .label-mock .hl {
+    background: #f8b4b4;
+    color: #4a2a2a;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .hint {
+    color: #a07878;
+    font-size: 14px;
+    margin-top: 14px;
+  }
+  .footer-note {
+    text-align: center;
+    margin-top: 30px;
+    color: #c4a4a4;
+    font-size: 14px;
+  }
+  .footer-note .heart-small {
+    color: #e8a4a4;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <h1>欣欣需要的内存条 <span class="heart">♡</span></h1>
+    <p class="sub">妈妈, 帮我看一下家里那根多余的内存条<br>对照下面三步就知道能不能给我用啦</p>
+  </div>
+
+  <div class="intro">
+    <p>只要看 <strong>三个地方</strong> 就好啦 ~</p>
+  </div>
+
+  <div class="step">
+    <span class="step-num">1</span><span class="step-title">看条子上有没有 "DDR4"</span>
+    <p>内存条侧面贴着一张小标签, 上面有一行字母和数字。</p>
+    <p>找一找这几个字母 → <span class="key">DDR4</span></p>
+    <ul>
+      <li>看到 <span class="key">DDR4</span> &nbsp;<span class="yes">可以用 ♡</span></li>
+      <li>看到 DDR3 &nbsp;<span class="no">用不了</span></li>
+      <li>看到 DDR5 &nbsp;<span class="no">用不了</span></li>
+    </ul>
+    <p class="hint">标签大概长这样, 看到红框框里那几个字就对啦:</p>
+    <div class="label-mock">
+      KINGSTON 16GB 1Rx8<br>
+      PC4-25600 <span class="hl">DDR4</span>-3200<br>
+      KF432C16BB/16
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">2</span><span class="step-title">大小要对</span>
+    <p>应该是一根长长的条子, 差不多一支筷子一半的长度 (大概 13 厘米)。</p>
+    <p>如果是那种短短小小的, 就是笔记本电脑用的, 装不进我的台式机哦。</p>
+    <div class="size-diagram">
+      <div class="row">
+        <div class="stick-long">长条 ♡ 这种能用</div>
+      </div>
+      <div class="row">
+        <div class="stick-short">短的 用不了</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">3</span><span class="step-title">那台旧电脑的年份</span>
+    <p>如果是从某台旧电脑上拆下来的, 可以大概看看那台电脑是哪年的:</p>
+    <ul>
+      <li><strong>2016 年以后</strong>的台式机 &nbsp;<span class="yes">多半能用</span></li>
+      <li><strong>2015 年或更早</strong>的 &nbsp;<span class="no">基本用不了</span></li>
+    </ul>
+    <p class="hint">年份只是参考, 最准的还是看标签上有没有 <span class="key">DDR4</span> 几个字 ~</p>
+  </div>
+
+  <div class="photo-card">
+    <h3>不确定的话 ♡</h3>
+    <p>把内存条 <strong>有标签那一面</strong> 拍清楚发给我</p>
+    <p>我一看就知道行不行啦 ~</p>
+  </div>
+
+  <div class="footer-note">
+    谢谢妈妈 <span class="heart-small">♡</span>
+  </div>
+
+</div>
+</body>
+</html>
