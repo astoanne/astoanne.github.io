@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贯日翻译 · 权限与提成系统决策表</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg: #faf8f3;
+    --paper: #ffffff;
+    --ink: #1a1a2e;
+    --muted: #6b6b7d;
+    --hairline: #e8e4d8;
+    --accent: #6b63fa;
+    --accent-soft: #ecebff;
+    --warm: #d63031;
+    --warm-soft: #fce4e4;
+    --note: #f39c12;
+    --note-soft: #fef3e0;
+}
+
+html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 24px 160px;
+}
+
+/* ============ Header ============ */
+header {
+    margin-bottom: 64px;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 36px;
+}
+.eyebrow {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+header h1 {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-size: 44px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+}
+header h1 .accent { font-style: italic; color: var(--accent); }
+.lede {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 640px;
+}
+.lede strong {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+/* ============ Section ============ */
+section { margin-bottom: 64px; }
+section > h2 {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    border-bottom: 1px dashed var(--hairline);
+    padding-bottom: 14px;
+}
+section > h2 .num {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 20px;
+}
+
+/* ============ Question ============ */
+.q {
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 24px 26px;
+    margin-bottom: 18px;
+}
+.q h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+.q .qnum {
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+    background: var(--accent-soft);
+    padding: 2px 8px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+.q .qhint {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    font-style: italic;
+}
+
+.opts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.opt {
+    background: var(--bg);
+    border: 1.5px solid transparent;
+    border-radius: 4px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--ink);
+    user-select: none;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.opt:hover {
+    background: #f0eee5;
+}
+.opt::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid #c8c4b8;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+.opt.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+}
+.opt.selected::before {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: inset 0 0 0 3px white;
+}
+.opt .current-tag {
+    margin-left: auto;
+    font-size: 11px;
+    background: var(--note-soft);
+    color: var(--note);
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Text input questions */
+.q-text-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.q-text-input input {
+    background: var(--bg);
+    border: 1.5px solid var(--hairline);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--ink);
+    width: 100px;
+    text-align: center;
+    transition: border-color 0.15s;
+}
+.q-text-input input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+.q-text-input .label {
+    color: var(--muted);
+    font-size: 14px;
+}
+.q-text-input .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 0;
+}
+.q-text-input .row > label {
+    flex: 1;
+    color: var(--ink);
+    font-size: 15px;
+}
+
+/* Free text */
+.q-free textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--hairline);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100px;
+    resize: vertical;
+    transition: border-color 0.15s;
+}
+.q-free textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* Skip notice */
+.skip-note {
+    background: var(--warm-soft);
+    border-left: 4px solid var(--warm);
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #8c2020;
+    line-height: 1.6;
+}
+
+/* ============ Footer / Export ============ */
+.export-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--hairline);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+}
+.export-bar .btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(107, 99, 250, 0.3);
+    transition: transform 0.15s;
+}
+.export-bar .btn:hover {
+    transform: translateY(-1px);
+}
+.export-bar .progress {
+    align-self: center;
+    margin-right: 20px;
+    color: var(--muted);
+    font-size: 14px;
+}
+.export-bar .progress strong {
+    color: var(--accent);
+}
+
+/* Modal */
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+    background: white;
+    border-radius: 8px;
+    padding: 28px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+.modal h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.modal .modal-hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+.modal textarea {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    line-height: 1.6;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 300px;
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+.modal-actions button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid var(--hairline);
+    background: white;
+    color: var(--ink);
+}
+.modal-actions button.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+    header h1 { font-size: 32px; }
+    .wrap { padding: 32px 16px 140px; }
+    .q { padding: 18px 18px; }
+    .export-bar { padding: 12px 16px; }
+    .export-bar .progress { font-size: 12px; margin-right: 12px; }
+    .export-bar .btn { padding: 12px 20px; font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+    <div class="eyebrow">— Internal · 需要决定的设计选择 —</div>
+    <h1>权限与<span class="accent">提成系统</span>决策表</h1>
+    <p class="lede">小程序员工后台权限和提成系统设计前,需要拍板下面这些关键问题。<strong>每题点选你的偏好</strong>,带 <span style="background:var(--note-soft);color:var(--note);padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600;">CURRENT</span> 标记的是目前的实现方式。底部有"导出选择"按钮,把内容回传即可。</p>
+</header>
+
+<!-- ============ SECTION 1: 可见性 ============ -->
+<section data-key="visibility">
+<h2><span class="num">01</span>可见性 · 谁能看哪些订单</h2>
+
+<div class="q" data-q="visibility-recursion">
+    <h3><span class="qnum">Q1</span>员工/推广人有下属时,能看到的订单范围?</h3>
+    <p class="qhint">举例:Bob(员工)下面有 Anne(推广人)和 Carol(员工);Carol 下面又有 Dave(推广人)。Bob 能看到谁带来的订单?</p>
+    <div class="opts">
+        <div class="opt" data-v="self_only">只看自己直接带来的(没有"下属可见"的概念)</div>
+        <div class="opt" data-v="one_level">自己 + 直接下属(Bob 看自己 + Anne + Carol,但不看 Dave)</div>
+        <div class="opt" data-v="recursive">自己 + 所有下级,递归无限层(Bob 看自己 + Anne + Carol + Dave) <span class="current-tag">current</span></div>
+        <div class="opt" data-v="configurable">由 admin 在每个员工身上单独配置</div>
+    </div>
+</div>
+
+<div class="q" data-q="edit-permission">
+    <h3><span class="qnum">Q2</span>员工是否能<strong>编辑</strong>(上传译件、改状态)下属带来的订单?</h3>
+    <p class="qhint">"看得到" 不一定 "改得了"。比如 Bob 看到 Carol 带来的订单,他是只能围观,还是也能上传译件?</p>
+    <div class="opts">
+        <div class="opt" data-v="see_equal_edit">看得到 = 改得了 <span class="current-tag">current</span></div>
+        <div class="opt" data-v="own_only">只能改自己直接带来的;下属订单只能看不能改</div>
+        <div class="opt" data-v="admin_grant">需要 admin 单独授权"代为处理"</div>
+    </div>
+</div>
+</section>
+
+<!-- ============ SECTION 2: 提成 ============ -->
+<section data-key="commission">
+<h2><span class="num">02</span>提成系统 · 钱怎么分</h2>
+
+<div class="q" data-q="enable-commission">
+    <h3><span class="qnum">Q3</span>是否要做提成系统?</h3>
+    <p class="qhint">不做就只是订单归属,提成线下结算;做就要在系统里计算并展示金额。</p>
+    <div class="opts">
+        <div class="opt" data-v="no">不需要,提成线下处理就好</div>
+        <div class="opt" data-v="yes">需要,系统里计算并展示</div>
+    </div>
+</div>
+
+<div class="skip-note">↓ 下面所有问题,只在 Q3 选"需要"时才相关 ↓</div>
+
+<div class="q" data-q="commission-scope">
+    <h3><span class="qnum">Q4</span>一单成交,谁拿提成?</h3>
+    <p class="qhint">订单的 seller 字段记录"谁的二维码进的客户"。这个 seller 是直接拿到提成的人。问题是:他的上级(parent / parent's parent)是否也分一杯?</p>
+    <div class="opts">
+        <div class="opt" data-v="direct_only">只有直接 seller 拿,上级不分</div>
+        <div class="opt" data-v="one_up">直接 seller + 直接上级(1 层向上)</div>
+        <div class="opt" data-v="all_ancestors">直接 seller + 所有上级(整条线递归向上)</div>
+        <div class="opt" data-v="manager_only">推广人成单 → 提成给"管这个推广人的员工",推广人本身不直接拿</div>
+    </div>
+</div>
+
+<div class="q" data-q="rate-uniformity">
+    <h3><span class="qnum">Q5</span>不同角色的提成率一样吗?</h3>
+    <div class="opts">
+        <div class="opt" data-v="uniform">统一比例,所有人一样</div>
+        <div class="opt" data-v="role_diff">推广人和员工不一样</div>
+        <div class="opt" data-v="tiered">按层级递减(L1 高,L2 中,L3 低)</div>
+        <div class="opt" data-v="per_person">每个人单独配置(在 salesman 表加个字段)</div>
+    </div>
+</div>
+
+<div class="q q-text-input" data-q="rates">
+    <h3 style="width:100%;"><span class="qnum">Q6</span>具体提成比例(填数字,百分比)</h3>
+    <p class="qhint" style="width:100%;">如果上面选了"统一",只填第一项;否则按角色 / 层级填。空着不填的项当作 0。</p>
+    <div class="row">
+        <label>推广人(直接成单)</label>
+        <input type="number" min="0" max="100" step="0.5" placeholder="例 20" data-input="rate-promoter">
+        <span class="label">%</span>
+    </div>
+    <div class="row">
+        <label>员工(直接成单)</label>
+        <input type="number" min="0" max="100" step="0.5" placeholder="例 25" data-input="rate-employee">
+        <span class="label">%</span>
+    </div>
+    <div class="row">
+        <label>员工(下属代收,1 层向上)</label>
+        <input type="number" min="0" max="100" step="0.5" placeholder="例 5" data-input="rate-up1">
+        <span class="label">%</span>
+    </div>
+    <div class="row">
+        <label>员工(下属代收,2 层向上)</label>
+        <input type="number" min="0" max="100" step="0.5" placeholder="例 1" data-input="rate-up2">
+        <span class="label">%</span>
+    </div>
+</div>
+
+<div class="q" data-q="commission-timing">
+    <h3><span class="qnum">Q7</span>提成何时入账?</h3>
+    <p class="qhint">订单状态:待付款 → 已付款 → 已完成。提成在哪个时刻"算"上?</p>
+    <div class="opts">
+        <div class="opt" data-v="on_pay">客户付款的瞬间</div>
+        <div class="opt" data-v="on_complete">订单标记完成时(译件上传完)</div>
+        <div class="opt" data-v="after_window">完成后 7 天(过了退款窗口)才正式入账</div>
+    </div>
+</div>
+
+<div class="q" data-q="refund-handling">
+    <h3><span class="qnum">Q8</span>客户退款时,已发放的提成怎么处理?</h3>
+    <div class="opts">
+        <div class="opt" data-v="auto_deduct">自动扣除已发放的提成</div>
+        <div class="opt" data-v="admin_review">admin 手动审核后扣</div>
+        <div class="opt" data-v="locked">锁定不退(退款损失公司承担)</div>
+        <div class="opt" data-v="no_refund">公司不接受退款,所以不存在这问题</div>
+    </div>
+</div>
+
+<div class="q" data-q="commission-display">
+    <h3><span class="qnum">Q9</span>提成在哪里展示?(可多选,在导出文本里描述即可)</h3>
+    <div class="opts">
+        <div class="opt" data-v="own_total">每个员工/推广人自己后台看到当月总提成</div>
+        <div class="opt" data-v="per_order">每条订单详情上显示这单分到的提成金额</div>
+        <div class="opt" data-v="monthly_report">月度报表(类型/订单数/总收入/总提成)</div>
+        <div class="opt" data-v="admin_dashboard">admin 总览所有员工业绩</div>
+        <div class="opt" data-v="all">以上全部</div>
+    </div>
+</div>
+
+<div class="q" data-q="settlement-cycle">
+    <h3><span class="qnum">Q10</span>提成结算周期?</h3>
+    <p class="qhint">"结算" = 真正打钱给员工。系统里只是显示金额。</p>
+    <div class="opts">
+        <div class="opt" data-v="realtime">实时显示,无结算周期(谁要钱自己查)</div>
+        <div class="opt" data-v="monthly">月结(月底汇总,admin 触发"已结算"标记)</div>
+        <div class="opt" data-v="quarterly">季度结</div>
+        <div class="opt" data-v="manual">不固定,admin 想发就发</div>
+    </div>
+</div>
+
+<div class="q" data-q="repeat-customer">
+    <h3><span class="qnum">Q11</span>同一客户多次下单(每次走不同二维码),提成归谁?</h3>
+    <p class="qhint">客户 X 第一次从 Anne 的二维码进,第二次从 Bob 的二维码进 —— 两单分别归谁?</p>
+    <div class="opts">
+        <div class="opt" data-v="per_order">每单独立,看当时进的二维码</div>
+        <div class="opt" data-v="lock_first">锁定首次归属,后续都归 Anne</div>
+        <div class="opt" data-v="admin_decide">admin 在系统里决定</div>
+    </div>
+</div>
+
+<div class="q q-free" data-q="other-rules">
+    <h3><span class="qnum">Q12</span>还有其他规则或顾虑?(开放)</h3>
+    <p class="qhint">比如:某些单不参与提成(亲友单)、提成上限、特殊情况、想看的报表维度…</p>
+    <textarea placeholder="自由填写..." data-textarea="other-rules"></textarea>
+</div>
+</section>
+
+</div>
+
+<div class="export-bar">
+    <span class="progress" id="progress">已选 <strong id="progress-num">0</strong> / 11 题</span>
+    <button class="btn" id="export-btn">完成 → 导出我的选择</button>
+</div>
+
+<div class="modal-bg" id="modal">
+    <div class="modal">
+        <h3>你的决策</h3>
+        <p class="modal-hint">复制下面的内容,发给开发员,即可作为系统设计依据。</p>
+        <textarea readonly id="export-text"></textarea>
+        <div class="modal-actions">
+            <button id="close-btn">关闭</button>
+            <button class="primary" id="copy-btn">复制</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// State
+const STORAGE_KEY = 'guanri-decisions-v1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) {}
+
+function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updateProgress();
+}
+
+function updateProgress() {
+    const totalQs = document.querySelectorAll('.q').length;
+    const answered = Object.keys(state).filter(k => {
+        const v = state[k];
+        if (v === undefined || v === null || v === '') return false;
+        if (Array.isArray(v) && v.length === 0) return false;
+        if (typeof v === 'object' && Object.keys(v).length === 0) return false;
+        return true;
+    }).length;
+    document.getElementById('progress-num').textContent = answered;
+    document.querySelector('.progress').innerHTML = '已选 <strong id="progress-num">' + answered + '</strong> / ' + totalQs + ' 题';
+}
+
+// Bind option clicks
+document.querySelectorAll('.q .opts').forEach(opts => {
+    const qkey = opts.closest('.q').dataset.q;
+    const stored = state[qkey];
+    opts.querySelectorAll('.opt').forEach(opt => {
+        if (opt.dataset.v === stored) opt.classList.add('selected');
+        opt.addEventListener('click', () => {
+            opts.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            state[qkey] = opt.dataset.v;
+            save();
+        });
+    });
+});
+
+// Bind text inputs
+document.querySelectorAll('.q-text-input').forEach(q => {
+    const qkey = q.dataset.q;
+    if (!state[qkey]) state[qkey] = {};
+    q.querySelectorAll('input[data-input]').forEach(input => {
+        const k = input.dataset.input;
+        if (state[qkey][k] !== undefined) input.value = state[qkey][k];
+        input.addEventListener('input', () => {
+            state[qkey][k] = input.value.trim();
+            save();
+        });
+    });
+});
+
+// Bind textareas
+document.querySelectorAll('textarea[data-textarea]').forEach(ta => {
+    const qkey = ta.closest('.q').dataset.q;
+    if (state[qkey]) ta.value = state[qkey];
+    ta.addEventListener('input', () => {
+        state[qkey] = ta.value;
+        save();
+    });
+});
+
+// Export
+const QUESTIONS_ORDER = [
+    { key: 'visibility-recursion', label: 'Q1 · 下属可见范围' },
+    { key: 'edit-permission', label: 'Q2 · 是否能编辑下属订单' },
+    { key: 'enable-commission', label: 'Q3 · 是否启用提成系统' },
+    { key: 'commission-scope', label: 'Q4 · 谁拿提成' },
+    { key: 'rate-uniformity', label: 'Q5 · 提成率是否统一' },
+    { key: 'rates', label: 'Q6 · 具体提成比例' },
+    { key: 'commission-timing', label: 'Q7 · 提成何时入账' },
+    { key: 'refund-handling', label: 'Q8 · 退款处理' },
+    { key: 'commission-display', label: 'Q9 · 展示位置' },
+    { key: 'settlement-cycle', label: 'Q10 · 结算周期' },
+    { key: 'repeat-customer', label: 'Q11 · 重复客户归属' },
+    { key: 'other-rules', label: 'Q12 · 其他规则(开放)' },
+];
+
+const VALUE_LABELS = {
+    // Q1
+    'self_only': '只看自己直接带来的',
+    'one_level': '自己 + 直接下属',
+    'recursive': '自己 + 所有下级 (递归)',
+    'configurable': '每个员工单独配置',
+    // Q2
+    'see_equal_edit': '看得到 = 改得了',
+    'own_only': '只能改自己直接带来的',
+    'admin_grant': '需要 admin 单独授权',
+    // Q3
+    'no': '不需要',
+    'yes': '需要,系统计算并展示',
+    // Q4
+    'direct_only': '只有直接 seller 拿',
+    'one_up': '直接 seller + 直接上级 (1 层)',
+    'all_ancestors': '直接 seller + 所有上级 (递归)',
+    'manager_only': '推广人成单 → 提成给上级员工(推广人本身不拿)',
+    // Q5
+    'uniform': '统一比例',
+    'role_diff': '推广人和员工不一样',
+    'tiered': '按层级递减',
+    'per_person': '每人单独配置',
+    // Q7
+    'on_pay': '客户付款的瞬间',
+    'on_complete': '订单标记完成时',
+    'after_window': '完成后 7 天(过了退款窗口)',
+    // Q8
+    'auto_deduct': '自动扣除',
+    'admin_review': 'admin 手动审核',
+    'locked': '锁定不退',
+    'no_refund': '不接受退款',
+    // Q9
+    'own_total': '员工自己后台看当月总额',
+    'per_order': '每条订单显示提成金额',
+    'monthly_report': '月度报表',
+    'admin_dashboard': 'admin 总览',
+    'all': '以上全部',
+    // Q10
+    'realtime': '实时显示,无结算周期',
+    'monthly': '月结',
+    'quarterly': '季度结',
+    'manual': 'admin 不固定触发',
+    // Q11
+    'per_order': '每单独立,看当时进的二维码',
+    'lock_first': '锁定首次归属',
+    'admin_decide': 'admin 决定'
+};
+
+document.getElementById('export-btn').addEventListener('click', () => {
+    const lines = ['# 贯日翻译 · 权限与提成决策', '', '导出时间: ' + new Date().toLocaleString('zh-CN'), ''];
+    QUESTIONS_ORDER.forEach(q => {
+        const v = state[q.key];
+        let display;
+        if (v === undefined || v === null || v === '') {
+            display = '(未填)';
+        } else if (typeof v === 'object' && !Array.isArray(v)) {
+            // text-input
+            const parts = Object.entries(v).filter(([k, val]) => val !== '').map(([k, val]) => k + ' = ' + val);
+            display = parts.length ? parts.join(' / ') : '(未填)';
+        } else {
+            display = VALUE_LABELS[v] || v;
+        }
+        lines.push('## ' + q.label);
+        lines.push(display);
+        lines.push('');
+    });
+    document.getElementById('export-text').value = lines.join('\n');
+    document.getElementById('modal').classList.add('open');
+});
+
+document.getElementById('close-btn').addEventListener('click', () => {
+    document.getElementById('modal').classList.remove('open');
+});
+
+document.getElementById('copy-btn').addEventListener('click', () => {
+    const ta = document.getElementById('export-text');
+    ta.select();
+    document.execCommand('copy');
+    const btn = document.getElementById('copy-btn');
+    const orig = btn.textContent;
+    btn.textContent = '已复制 ✓';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+});
+
+document.getElementById('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') {
+        document.getElementById('modal').classList.remove('open');
+    }
+});
+
+updateProgress();
+</script>
+
+</body>
+</html>
