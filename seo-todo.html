@@ -14,15 +14,8 @@
     max-width: 900px;
     margin: 0 auto;
   }
-  h1 {
-    font-size: 24px;
-    margin-bottom: 4px;
-  }
-  .subtitle {
-    color: #64748b;
-    margin-bottom: 24px;
-    font-size: 14px;
-  }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: #64748b; margin-bottom: 24px; font-size: 14px; }
   .summary {
     background: #fff;
     padding: 16px 20px;
@@ -31,118 +24,105 @@
     border-left: 4px solid #6366f1;
   }
   .summary strong { color: #6366f1; }
-  .section {
-    margin-bottom: 28px;
-  }
+  .section { margin-bottom: 28px; }
   .section-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 18px; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
   }
   .section-title .label {
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 11px; padding: 3px 10px; border-radius: 12px;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
   }
   .label-this-week { background: #dcfce7; color: #166534; }
   .label-this-month { background: #fef3c7; color: #92400e; }
   .label-long-term { background: #e0e7ff; color: #4338ca; }
   .card {
-    background: #fff;
-    border-radius: 10px;
-    padding: 16px 20px;
-    margin-bottom: 10px;
+    background: #fff; border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 10px;
     border: 1px solid #e2e8f0;
-    transition: all 0.2s;
-    cursor: pointer;
+    transition: all 0.2s; cursor: pointer;
   }
   .card:hover { border-color: #6366f1; box-shadow: 0 2px 8px rgba(99,102,241,0.08); }
   .card.done {
-    opacity: 0.55;
-    background: #f8fafc;
+    background: #f0fdf4;
+    border-color: #86efac;
   }
-  .card.done .task-title { text-decoration: line-through; }
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+  .card.done .task-title { color: #166534; }
+  .card.done .task-title::before { content: "✅ "; }
+  .card.skipped {
+    opacity: 0.6;
+    background: #fafafa;
+    border-color: #d4d4d8;
   }
+  .card.skipped .task-title { color: #71717a; text-decoration: line-through; }
+  .card.skipped .task-title::before { content: "⏭️ "; }
+  .card.blocked {
+    background: #fff7ed;
+    border-color: #fdba74;
+  }
+  .card.blocked .task-title::before { content: "⏸️ "; color: #ea580c; }
+  .card-header { display: flex; align-items: flex-start; gap: 12px; }
   .checkbox {
-    width: 22px;
-    height: 22px;
+    width: 22px; height: 22px;
     border: 2px solid #cbd5e1;
-    border-radius: 6px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 6px; flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
     transition: all 0.15s;
   }
-  .card.done .checkbox {
-    background: #22c55e;
-    border-color: #22c55e;
-  }
-  .card.done .checkbox::after {
-    content: "✓";
-    color: #fff;
-    font-weight: 700;
-  }
+  .card.done .checkbox { background: #22c55e; border-color: #22c55e; }
+  .card.done .checkbox::after { content: "✓"; color: #fff; font-weight: 700; }
+  .card.skipped .checkbox { background: #a1a1aa; border-color: #a1a1aa; }
+  .card.skipped .checkbox::after { content: "−"; color: #fff; font-weight: 700; }
+  .card.blocked .checkbox { background: #fb923c; border-color: #fb923c; }
+  .card.blocked .checkbox::after { content: "⏸"; color: #fff; font-size: 10px; font-weight: 700; }
   .task-content { flex: 1; }
-  .task-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .task-meta {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-  }
+  .task-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .task-meta { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
   .badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: 600;
+    font-size: 11px; padding: 2px 8px;
+    border-radius: 10px; font-weight: 600;
   }
   .badge-who-you { background: #fef2f2; color: #991b1b; }
   .badge-who-me { background: #ecfeff; color: #155e75; }
   .badge-impact-high { background: #fef3c7; color: #92400e; }
   .badge-impact-medium { background: #f1f5f9; color: #475569; }
   .badge-time { background: #f5f3ff; color: #6d28d9; }
-  .task-body {
-    color: #475569;
-    font-size: 14px;
-    margin-top: 6px;
+  .badge-status-done { background: #dcfce7; color: #14532d; }
+  .badge-status-skipped { background: #e4e4e7; color: #52525b; }
+  .badge-status-blocked { background: #fed7aa; color: #9a3412; }
+  .task-body { color: #475569; font-size: 14px; margin-top: 6px; }
+  .done-note {
+    background: #ecfdf5; border-left: 3px solid #10b981;
+    padding: 8px 12px; margin-top: 8px;
+    font-size: 13px; color: #065f46; border-radius: 4px;
+  }
+  .skipped-note {
+    background: #f4f4f5; border-left: 3px solid #71717a;
+    padding: 8px 12px; margin-top: 8px;
+    font-size: 13px; color: #3f3f46; border-radius: 4px;
+  }
+  .blocked-note {
+    background: #fff7ed; border-left: 3px solid #ea580c;
+    padding: 8px 12px; margin-top: 8px;
+    font-size: 13px; color: #9a3412; border-radius: 4px;
   }
   .footer {
-    text-align: center;
-    color: #94a3b8;
-    font-size: 13px;
-    margin-top: 32px;
-    padding: 16px;
-    border-top: 1px solid #e2e8f0;
+    text-align: center; color: #94a3b8; font-size: 13px;
+    margin-top: 32px; padding: 16px; border-top: 1px solid #e2e8f0;
   }
   .progress-bar {
-    background: #e2e8f0;
-    height: 6px;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 10px;
+    background: #e2e8f0; height: 6px;
+    border-radius: 3px; overflow: hidden; margin-top: 10px;
   }
   .progress-fill {
     background: linear-gradient(90deg, #6366f1, #8b5cf6);
-    height: 100%;
-    width: 0%;
-    transition: width 0.4s;
+    height: 100%; width: 0%; transition: width 0.4s;
   }
+  .legend {
+    display: flex; gap: 16px; margin-top: 12px;
+    font-size: 12px; color: #64748b; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
 </style>
 </head>
 <body>
@@ -153,12 +133,15 @@
 <div class="summary">
   <div>
     <strong>完成进度:</strong>
-    <span id="progress-text">0 / 10</span>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <span id="progress-text">4 / 10</span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:40%"></div></div>
   </div>
-  <p style="margin-top:10px;color:#64748b;font-size:13px">
-    点击卡片切换完成状态 · 任务按时间和优先级分组
-  </p>
+  <div class="legend">
+    <span class="legend-item">✅ 已完成</span>
+    <span class="legend-item">⏸️ 等待中(需要资料/权限)</span>
+    <span class="legend-item">⏭️ 不做(原因见说明)</span>
+    <span class="legend-item">⬜ 待办</span>
+  </div>
 </div>
 
 <!-- ========== 本周做 ========== -->
@@ -173,85 +156,94 @@
       <div class="task-content">
         <div class="task-title">1. 提交 sitemap 到搜索引擎</div>
         <div class="task-meta">
-          <span class="badge badge-who-you">你做(登录提交)</span>
+          <span class="badge badge-who-you">需登录提交</span>
           <span class="badge badge-impact-high">超高影响</span>
           <span class="badge badge-time">2 小时</span>
         </div>
         <div class="task-body">
           百度站长(ziyuan.baidu.com)、360 站长、搜狗站长、神马、Google Search Console。
-          提交 4 个域名 + sitemap.xml。1-4 周内索引量提升 5-10 倍。
+          提交所有域名 + sitemap.xml。1-4 周内索引量提升 5-10 倍。
         </div>
       </div>
     </div>
   </div>
 
-  <div class="card" onclick="toggle(this)">
+  <div class="card done">
     <div class="card-header">
       <div class="checkbox"></div>
       <div class="task-content">
         <div class="task-title">2. 加百度主动推送代码</div>
         <div class="task-meta">
-          <span class="badge badge-who-me">我做(改代码)</span>
-          <span class="badge badge-impact-high">超高影响</span>
-          <span class="badge badge-time">5 分钟</span>
+          <span class="badge badge-status-done">已完成</span>
+          <span class="badge badge-time">已部署</span>
         </div>
         <div class="task-body">
-          在 site-tracker.js 里加一段:每个页面打开时把 URL 自动推给百度。
-          0 维护成本,所有 18 万张页面自动推送,加快索引速度 10 倍以上。
+          在 site-tracker.js 里加百度官方 push.js,每个页面打开时自动推送 URL。
+        </div>
+        <div class="done-note">
+          ✅ site-tracker.js 已部署到 translationchina.com 和 tongshengfanyi.com。
+          只要任务 1 在百度站长完成域名验证,推送立即生效。
         </div>
       </div>
     </div>
   </div>
 
-  <div class="card" onclick="toggle(this)">
+  <div class="card done">
     <div class="card-header">
       <div class="checkbox"></div>
       <div class="task-content">
         <div class="task-title">3. 加 Schema.org 结构化数据</div>
         <div class="task-meta">
-          <span class="badge badge-who-me">我做</span>
-          <span class="badge badge-impact-high">超高影响</span>
-          <span class="badge badge-time">30 分钟</span>
+          <span class="badge badge-status-done">已完成</span>
+          <span class="badge badge-time">已部署</span>
         </div>
         <div class="task-body">
-          搜索结果出现"富片段"(评分、电话、地址)。
-          点击率提升 30-50%。在 office-detail.js / agency-detail.js 里
-          自动注入,18.5 万页立即生效。
+          每个公证机构 / 婚介机构页自动注入 LocalBusiness JSON-LD,
+          搜索结果出现富片段(名称、地址、电话)。
+        </div>
+        <div class="done-note">
+          ✅ office-detail.js / agency-detail.js 已部署。所有 18.5 万页生效,
+          下次百度/Google 爬虫来抓时自动拿到结构化数据。
         </div>
       </div>
     </div>
   </div>
 
-  <div class="card" onclick="toggle(this)">
+  <div class="card done">
     <div class="card-header">
       <div class="checkbox"></div>
       <div class="task-content">
         <div class="task-title">4. 加 canonical 标签</div>
         <div class="task-meta">
-          <span class="badge badge-who-me">我做</span>
-          <span class="badge badge-impact-medium">中等</span>
-          <span class="badge badge-time">15 分钟</span>
+          <span class="badge badge-status-done">已完成</span>
+          <span class="badge badge-time">已部署</span>
         </div>
         <div class="task-body">
-          防止搜索引擎判定重复内容扣分。0 风险,有益无害。
+          每个详情页自动注入 &lt;link rel="canonical"&gt;,
+          防止搜索引擎判定重复内容扣分。
+        </div>
+        <div class="done-note">
+          ✅ 同 #3 一起部署在 detail.js 里,18.5 万页自动生效。
         </div>
       </div>
     </div>
   </div>
 
-  <div class="card" onclick="toggle(this)">
+  <div class="card done">
     <div class="card-header">
       <div class="checkbox"></div>
       <div class="task-content">
-        <div class="task-title">5. 检查 robots.txt</div>
+        <div class="task-title">5. 检查 + 优化 robots.txt</div>
         <div class="task-meta">
-          <span class="badge badge-who-me">我做</span>
-          <span class="badge badge-impact-medium">中等</span>
-          <span class="badge badge-time">10 分钟</span>
+          <span class="badge badge-status-done">已完成</span>
+          <span class="badge badge-time">已部署</span>
         </div>
         <div class="task-body">
-          确认 /notary/ 和 /dating/ 没有被 robots.txt 屏蔽。
-          如果挡了爬虫,所有 SEO 工作白做。
+          确认爬虫能访问 /notary/ 和 /dating/,屏蔽不该被索引的路径。
+        </div>
+        <div class="done-note">
+          ✅ 两个站 robots.txt 已升级:Sitemap URL 改成 HTTPS,
+          /api/、/data/、/backup/ 设为 Disallow(防止后台接口被索引)。
         </div>
       </div>
     </div>
@@ -264,19 +256,22 @@
     📅 本月做 <span class="label label-this-month">中优先级 · 回报较大</span>
   </h2>
 
-  <div class="card" onclick="toggle(this)">
+  <div class="card blocked">
     <div class="card-header">
       <div class="checkbox"></div>
       <div class="task-content">
         <div class="task-title">6. en-ch.com 全面体检 + 升级</div>
         <div class="task-meta">
-          <span class="badge badge-who-me">我做</span>
+          <span class="badge badge-status-blocked">等待中</span>
           <span class="badge badge-impact-high">超高影响</span>
           <span class="badge badge-time">半天</span>
         </div>
         <div class="task-body">
-          en-ch.com 是主战场。目前只升级了 translationchina 和 tongshengfanyi,
-          应该对 en-ch.com 做同样优化(HTTPS、sitemap、Schema、CTA等)。
+          en-ch.com 是主战场,应该跟 translationchina / tongshengfanyi 一样做:
+          HTTPS、sitemap、Schema、CTA、robots.txt 等。
+        </div>
+        <div class="blocked-note">
+          ⏸️ 需要 en-ch.com 的 FTP 账号密码才能开始。可以的话提供给 Anne。
         </div>
       </div>
     </div>
@@ -288,31 +283,35 @@
       <div class="task-content">
         <div class="task-title">7. 反向链接(知乎+小红书+百度知道)</div>
         <div class="task-meta">
-          <span class="badge badge-who-you">你做(运营)</span>
+          <span class="badge badge-who-you">需运营</span>
           <span class="badge badge-impact-high">超高影响(长期)</span>
           <span class="badge badge-time">每周 1-2 篇</span>
         </div>
         <div class="task-body">
           PageRank 的核心信号 = 别人有多少高质量网站链接到你。
-          知乎答 5-10 个翻译相关问题、小红书发出国攻略、百度知道答疑,都带 en-ch.com 链接。
+          知乎答 5-10 个翻译相关问题、小红书发出国攻略、百度知道答疑,
+          都带 en-ch.com 链接。
         </div>
       </div>
     </div>
   </div>
 
-  <div class="card" onclick="toggle(this)">
+  <div class="card skipped">
     <div class="card-header">
       <div class="checkbox"></div>
       <div class="task-content">
         <div class="task-title">8. 加 hreflang 多语言标签</div>
         <div class="task-meta">
-          <span class="badge badge-who-me">我做</span>
-          <span class="badge badge-impact-medium">中等</span>
-          <span class="badge badge-time">30 分钟</span>
+          <span class="badge badge-status-skipped">不做(架构不匹配)</span>
         </div>
         <div class="task-body">
-          CTA 已经支持 23 种语言。加 hreflang 后,各语种地区(日本、阿拉伯国家等)
-          搜索排名会显著提升。
+          理论上能告诉搜索引擎"这个页面有 23 种语言版本"。
+        </div>
+        <div class="skipped-note">
+          ⏭️ 当前架构下不适合做。hreflang 需要每种语言一个独立 URL,
+          但我们的语言切换是 JS+localStorage,所有语言用同一个 URL。
+          在同一 URL 上加 hreflang 没用反而会扰乱搜索引擎。
+          如果未来重构成 /zh/、/en/、/ja/ 这种 URL 结构再加。
         </div>
       </div>
     </div>
@@ -324,12 +323,13 @@
       <div class="task-content">
         <div class="task-title">9. 注册关键词监控工具</div>
         <div class="task-meta">
-          <span class="badge badge-who-you">你做(注册)</span>
+          <span class="badge badge-who-you">需注册</span>
           <span class="badge badge-impact-medium">中等</span>
           <span class="badge badge-time">30 分钟</span>
         </div>
         <div class="task-body">
-          百度统计(免费)、5118.com(有免费版)。每周看一次,知道哪些关键词在涨、哪些跌,调整策略。
+          百度统计(免费)、5118.com(有免费版)。
+          每周看一次,知道哪些关键词在涨、哪些跌,调整策略。
         </div>
       </div>
     </div>
@@ -342,19 +342,19 @@
     🌱 长期项目 <span class="label label-long-term">大工程 · 战略性</span>
   </h2>
 
-  <div class="card" onclick="toggle(this)">
+  <div class="card skipped">
     <div class="card-header">
       <div class="checkbox"></div>
       <div class="task-content">
         <div class="task-title">10. 主站编码升级 GB2312 → UTF-8</div>
         <div class="task-meta">
-          <span class="badge badge-who-me">我做(分阶段)</span>
-          <span class="badge badge-impact-medium">中等</span>
-          <span class="badge badge-time">几天到几周</span>
+          <span class="badge badge-status-skipped">不做(等新站)</span>
         </div>
         <div class="task-body">
-          translationchina.com 和 tongshengfanyi.com 现在是 2000 年代的 GB2312 编码。
-          Google 算法偏好 UTF-8,移动端体验也更好。需要重做主站。
+          translationchina.com 和 tongshengfanyi.com 现在是 GB2312 编码。
+        </div>
+        <div class="skipped-note">
+          ⏭️ 不在老站上改了。计划做全新主站,届时直接用现代标准(UTF-8、响应式、新框架)。
         </div>
       </div>
     </div>
@@ -362,21 +362,30 @@
 </div>
 
 <div class="footer">
-  💡 建议:本周先做 1-5 这 5 项(任务 1 你自己做,2-5 我来做)。
-  做完后 1-3 个月预期搜索流量增长 2-5 倍。
+  💡 剩下要做的:任务 1(提交搜索引擎,你登录)、7(内容运营)、9(监控工具注册)。
+  任务 6 在等 en-ch.com 的 FTP 信息。
 </div>
 
 <script>
   function toggle(card) {
+    // Only allow toggling cards that aren't done/skipped/blocked
+    if (card.classList.contains('skipped') || card.classList.contains('blocked')) return;
     card.classList.toggle('done');
     updateProgress();
   }
   function updateProgress() {
     const total = document.querySelectorAll('.card').length;
     const done = document.querySelectorAll('.card.done').length;
-    document.getElementById('progress-text').textContent = done + ' / ' + total;
-    document.getElementById('progress-fill').style.width = (done/total*100) + '%';
+    const skipped = document.querySelectorAll('.card.skipped').length;
+    const blocked = document.querySelectorAll('.card.blocked').length;
+    const completed = done + skipped; // skipped counts as resolved
+    document.getElementById('progress-text').textContent =
+      done + ' / ' + total + ' 已完成 · ' +
+      skipped + ' 不做 · ' +
+      blocked + ' 等待中';
+    document.getElementById('progress-fill').style.width = (completed/total*100) + '%';
   }
+  updateProgress();
 </script>
 
 </body>
