@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贯日翻译 · 权限与订单号系统</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --bg: #faf8f3;
+        --paper: #ffffff;
+        --ink: #1a1a2e;
+        --muted: #6b6b7d;
+        --hairline: #e8e4d8;
+        --admin: #d63031;
+        --admin-soft: #fce4e4;
+        --employee: #6b63fa;
+        --employee-soft: #ecebff;
+        --promoter: #f39c12;
+        --promoter-soft: #fef3e0;
+        --yes: #07a35f;
+        --no: #c5254a;
+        --info: #5b6d8a;
+    }
+
+    html, body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 64px 24px 120px;
+    }
+
+    /* ============ Header ============ */
+    header {
+        margin-bottom: 80px;
+        border-bottom: 1px solid var(--hairline);
+        padding-bottom: 40px;
+    }
+    header .eyebrow {
+        font-family: "Cormorant Garamond", "Georgia", serif;
+        font-style: italic;
+        color: var(--muted);
+        font-size: 18px;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+    }
+    header h1 {
+        font-family: "Cormorant Garamond", "Georgia", serif;
+        font-size: 48px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+        margin-bottom: 18px;
+    }
+    header h1 .accent {
+        font-style: italic;
+        color: var(--employee);
+    }
+    header .lede {
+        color: var(--muted);
+        font-size: 17px;
+        max-width: 680px;
+    }
+
+    /* ============ Section ============ */
+    section { margin-bottom: 96px; }
+    section h2 {
+        font-family: "Cormorant Garamond", "Georgia", serif;
+        font-size: 32px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+    }
+    section h2 .num {
+        font-style: italic;
+        color: var(--muted);
+        font-size: 22px;
+    }
+    section .sub {
+        color: var(--muted);
+        font-size: 15px;
+        margin-bottom: 36px;
+    }
+
+    /* ============ Role cards ============ */
+    .role-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    @media (max-width: 720px) {
+        .role-grid { grid-template-columns: 1fr; }
+    }
+
+    .role-card {
+        background: var(--paper);
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        padding: 28px 26px 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .role-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+    }
+    .role-card.admin::before { background: var(--admin); }
+    .role-card.employee::before { background: var(--employee); }
+    .role-card.promoter::before { background: var(--promoter); }
+
+    .role-card h3 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .role-card .role-tag {
+        display: inline-block;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        padding: 2px 10px;
+        border-radius: 20px;
+        margin-bottom: 16px;
+    }
+    .role-card.admin .role-tag {
+        background: var(--admin-soft);
+        color: var(--admin);
+    }
+    .role-card.employee .role-tag {
+        background: var(--employee-soft);
+        color: var(--employee);
+    }
+    .role-card.promoter .role-tag {
+        background: var(--promoter-soft);
+        color: var(--promoter);
+    }
+    .role-card .desc {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 22px;
+        padding-bottom: 18px;
+        border-bottom: 1px dashed var(--hairline);
+    }
+
+    .perm-list {
+        list-style: none;
+    }
+    .perm-list li {
+        display: flex;
+        gap: 10px;
+        padding: 7px 0;
+        font-size: 14.5px;
+        align-items: flex-start;
+    }
+    .perm-list .icon {
+        flex-shrink: 0;
+        font-weight: 700;
+        line-height: 1.5;
+        font-size: 13px;
+        width: 18px;
+    }
+    .perm-list .yes .icon { color: var(--yes); }
+    .perm-list .no .icon { color: var(--no); }
+    .perm-list .info .icon { color: var(--info); }
+    .perm-list .no .text { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(197, 37, 74, 0.4); }
+    .perm-list .new {
+        background: linear-gradient(120deg, transparent 0 5%, #fff7c4 5% 95%, transparent 95%);
+        padding: 0 6px;
+        margin-left: -6px;
+        border-radius: 2px;
+    }
+    .new-tag {
+        display: inline-block;
+        font-size: 10px;
+        background: var(--admin);
+        color: white;
+        padding: 1px 6px;
+        border-radius: 3px;
+        margin-left: 6px;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+
+    /* ============ Order number anatomy ============ */
+    .anatomy {
+        background: var(--ink);
+        color: white;
+        border-radius: 6px;
+        padding: 56px 40px;
+        text-align: center;
+    }
+    .anatomy .number {
+        font-family: "JetBrains Mono", "Courier New", monospace;
+        font-size: 84px;
+        letter-spacing: 4px;
+        font-weight: 500;
+        margin-bottom: 32px;
+        display: inline-flex;
+        align-items: baseline;
+    }
+    .anatomy .seg {
+        position: relative;
+        padding: 0 4px;
+    }
+    .anatomy .seg.brand { color: #ffd16e; }
+    .anatomy .seg.code { color: #a8b8ff; }
+    .anatomy .seg.random { color: #7fe7c8; }
+    .anatomy .seg::after {
+        content: attr(data-label);
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 8px;
+        font-size: 11px;
+        font-family: -apple-system, "PingFang SC", sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.4);
+        white-space: nowrap;
+        font-style: normal;
+    }
+    .anatomy .legend {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 56px;
+        flex-wrap: wrap;
+        text-align: left;
+    }
+    .anatomy .legend > div {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.7);
+        max-width: 220px;
+    }
+    .anatomy .legend strong {
+        display: block;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+    .anatomy .legend .swatch {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+        vertical-align: middle;
+    }
+    .anatomy .legend .swatch.brand { background: #ffd16e; }
+    .anatomy .legend .swatch.code { background: #a8b8ff; }
+    .anatomy .legend .swatch.random { background: #7fe7c8; }
+    .anatomy .footer-note {
+        margin-top: 48px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+    }
+
+    /* ============ Code table ============ */
+    .search {
+        width: 100%;
+        background: var(--paper);
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        padding: 14px 18px;
+        font-size: 15px;
+        margin-bottom: 28px;
+        font-family: inherit;
+        color: var(--ink);
+        outline: none;
+        transition: border-color 0.15s;
+    }
+    .search:focus {
+        border-color: var(--employee);
+    }
+
+    .cat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+    @media (max-width: 720px) {
+        .cat-grid { grid-template-columns: 1fr; }
+    }
+
+    .cat {
+        background: var(--paper);
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        padding: 22px 24px 16px;
+    }
+    .cat h4 {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--muted);
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--hairline);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+    .cat h4 .count {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 400;
+        letter-spacing: 0.5px;
+    }
+    .cat-c h4 { color: var(--employee); border-bottom-color: var(--employee); }
+    .cat-e h4 { color: var(--admin); border-bottom-color: var(--admin); }
+    .cat-f h4 { color: var(--promoter); border-bottom-color: var(--promoter); }
+    .cat-x h4 { color: var(--info); border-bottom-color: var(--info); }
+
+    .cat table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .cat tr {
+        transition: background 0.1s;
+    }
+    .cat tr:hover {
+        background: rgba(0, 0, 0, 0.02);
+    }
+    .cat td {
+        padding: 7px 0;
+        font-size: 14.5px;
+    }
+    .cat td.code {
+        font-family: "JetBrains Mono", "Courier New", monospace;
+        font-weight: 600;
+        width: 60px;
+        color: var(--ink);
+        letter-spacing: 0.5px;
+    }
+    .cat td.label {
+        color: var(--muted);
+    }
+
+    /* ============ Footer ============ */
+    footer {
+        margin-top: 100px;
+        padding-top: 32px;
+        border-top: 1px solid var(--hairline);
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+    }
+    footer p { margin: 4px 0; }
+
+    /* hide rows that don't match search */
+    .no-match { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <div class="eyebrow">— Internal documentation —</div>
+    <h1>贯日翻译小程序<br><span class="accent">权限</span> & <span class="accent">订单号</span> 系统</h1>
+    <p class="lede">员工后台的三种角色、它们各自能做什么,以及 2026 年 5 月引入的新订单号编码规则。</p>
+</header>
+
+<section>
+    <h2><span class="num">01</span> 角色与权限</h2>
+    <p class="sub">所有权限校验都在云函数里执行,客户端隐藏只是 UI 层,不能绕过。</p>
+
+    <div class="role-grid">
+        <div class="role-card admin">
+            <h3>admin</h3>
+            <span class="role-tag">管理员</span>
+            <p class="desc">系统管理者。继续用 CMS 后台,小程序里也能进员工后台。</p>
+            <ul class="perm-list">
+                <li class="yes"><span class="icon">✓</span><span class="text">看所有订单</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">下载所有原件</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">上传 / 替换译件</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text new">标记为已付款<span class="new-tag">NEW</span></span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">标记为已完成</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">添加员工 / 推广人</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">在 CMS 改任何字段</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">造测试数据 (🔧 按钮)</span></li>
+            </ul>
+        </div>
+
+        <div class="role-card employee">
+            <h3>employee</h3>
+            <span class="role-tag">员工</span>
+            <p class="desc">实际处理翻译的人。能看自己 + 所有下属(子树)的订单。</p>
+            <ul class="perm-list">
+                <li class="yes"><span class="icon">✓</span><span class="text">看自己 + 下属(递归)的订单</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">下载原件</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">上传 / 替换译件 → 自动完成</span></li>
+                <li class="no"><span class="icon">✗</span><span class="text">标记已付款 (admin only)</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">标记为已完成</span></li>
+                <li class="yes"><span class="icon">✓</span><span class="text">在自己下面加员工/推广人</span></li>
+                <li class="no"><span class="icon">✗</span><span class="text">不能加 admin</span></li>
+                <li class="info"><span class="icon">▸</span><span class="text">可切换"仅看自己"过滤</span></li>
+            </ul>
+        </div>
+
+        <div class="role-card promoter">
+            <h3>promoter</h3>
+            <span class="role-tag">推广人</span>
+            <p class="desc">分销渠道,只看不动。后端剥掉文件相关字段,前端无法绕过。</p>
+            <ul class="perm-list">
+                <li class="yes"><span class="icon">✓</span><span class="text">看自己 seller 的订单</span></li>
+                <li class="info"><span class="icon">▸</span><span class="text">能看金额、类型、客户备注</span></li>
+                <li class="no"><span class="icon">✗</span><span class="text">不能下载原件</span></li>
+                <li class="no"><span class="icon">✗</span><span class="text">不能上传/改译件</span></li>
+                <li class="no"><span class="icon">✗</span><span class="text">不能改任何状态</span></li>
+                <li class="no"><span class="icon">✗</span><span class="text">不能添加任何人</span></li>
+                <li class="no"><span class="icon">✗</span><span class="text">不能造测试数据</span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2><span class="num">02</span> 订单号编码</h2>
+    <p class="sub">从 29 字符压缩到 7 字符,前缀肉眼可读。新老格式靠长度自动区分,旧订单兼容不变。</p>
+
+    <div class="anatomy">
+        <div class="number">
+            <span class="seg brand" data-label="品牌">G</span><span class="seg code" data-label="类型">CI</span><span class="seg random" data-label="随机">A3K9</span>
+        </div>
+
+        <div class="legend">
+            <div>
+                <strong><span class="swatch brand"></span>品牌 · 1 字符</strong>
+                G = 贯日 · Z = 郑叔。共用一个云数据库,前缀必须区分。
+            </div>
+            <div>
+                <strong><span class="swatch code"></span>类型 · 2 字符</strong>
+                C/E/F/X 大类 + 子类。见下方码表,30 个值。
+            </div>
+            <div>
+                <strong><span class="swatch random"></span>随机 · 4 字符</strong>
+                大写字母 + 数字。剔除 0/O/1/I/L,客户电话报单不会听错。
+            </div>
+        </div>
+
+        <p class="footer-note">— 31<sup>4</sup> = 92 万组合,云函数生成时查重,实际碰撞率 0% —</p>
+    </div>
+</section>
+
+<section>
+    <h2><span class="num">03</span> 类型码表</h2>
+    <p class="sub">30 个类型,首字符确定大类(C 中→英证件 / E 英→中证件 / F 文件 / X 附加),次字符是子类。</p>
+
+    <input class="search" id="search" placeholder="🔍  搜索 — 输入 code 或中文名(如 CI、护照、营业)..." autocomplete="off">
+
+    <div class="cat-grid">
+        <div class="cat cat-c">
+            <h4><span>C 系列 · 证件中→英</span><span class="count">12</span></h4>
+            <table>
+                <tr><td class="code">CI</td><td class="label">身份证</td></tr>
+                <tr><td class="code">CH</td><td class="label">户口簿</td></tr>
+                <tr><td class="code">CG</td><td class="label">学位证</td></tr>
+                <tr><td class="code">CL</td><td class="label">毕业证</td></tr>
+                <tr><td class="code">CT</td><td class="label">成绩单</td></tr>
+                <tr><td class="code">CS</td><td class="label">高中成绩单</td></tr>
+                <tr><td class="code">C4</td><td class="label">四六级成绩单</td></tr>
+                <tr><td class="code">CB</td><td class="label">出生证</td></tr>
+                <tr><td class="code">CM</td><td class="label">结婚证</td></tr>
+                <tr><td class="code">CV</td><td class="label">机动车登记证</td></tr>
+                <tr><td class="code">CR</td><td class="label">房产证</td></tr>
+                <tr><td class="code">CC</td><td class="label">营业执照</td></tr>
+            </table>
+        </div>
+
+        <div class="cat cat-e">
+            <h4><span>E 系列 · 证件英→中</span><span class="count">8</span></h4>
+            <table>
+                <tr><td class="code">EP</td><td class="label">护照</td></tr>
+                <tr><td class="code">ED</td><td class="label">驾驶证</td></tr>
+                <tr><td class="code">EG</td><td class="label">学位证</td></tr>
+                <tr><td class="code">EL</td><td class="label">毕业证</td></tr>
+                <tr><td class="code">ET</td><td class="label">成绩单</td></tr>
+                <tr><td class="code">EN</td><td class="label">入籍证明</td></tr>
+                <tr><td class="code">EB</td><td class="label">出生证 (含美国各州/海牙/三级)</td></tr>
+                <tr><td class="code">EM</td><td class="label">结婚证 (含美国各州/海牙/三级)</td></tr>
+            </table>
+        </div>
+
+        <div class="cat cat-f">
+            <h4><span>F 系列 · 文件翻译</span><span class="count">6</span></h4>
+            <table>
+                <tr><td class="code">F1</td><td class="label">普通-英译中</td></tr>
+                <tr><td class="code">F2</td><td class="label">商务-英译中</td></tr>
+                <tr><td class="code">F3</td><td class="label">专业-英译中</td></tr>
+                <tr><td class="code">F4</td><td class="label">普通-中译英</td></tr>
+                <tr><td class="code">F5</td><td class="label">商务-中译英</td></tr>
+                <tr><td class="code">F6</td><td class="label">专业-中译英</td></tr>
+            </table>
+        </div>
+
+        <div class="cat cat-x">
+            <h4><span>X 系列 · 附加服务</span><span class="count">4</span></h4>
+            <table>
+                <tr><td class="code">XN</td><td class="label">电子盖章加购</td></tr>
+                <tr><td class="code">XD</td><td class="label">快递盖章加购</td></tr>
+                <tr><td class="code">XL</td><td class="label">电子盖章执照加购</td></tr>
+                <tr><td class="code">XS</td><td class="label">快递加购 (=licensD)</td></tr>
+            </table>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>贯日翻译小程序 · 2026 年 5 月版</p>
+    <p>客户端权限是 UI 隐藏,真正的权限校验在云函数 (getStaffOrders / staffUpdateOrder / addStaff / seedFakeOrders)。</p>
+</footer>
+
+</div>
+
+<script>
+    const search = document.getElementById('search');
+    const rows = document.querySelectorAll('.cat tr');
+
+    search.addEventListener('input', function (e) {
+        const q = e.target.value.trim().toLowerCase();
+        if (!q) {
+            rows.forEach(r => r.classList.remove('no-match'));
+            return;
+        }
+        rows.forEach(r => {
+            const text = r.textContent.toLowerCase();
+            if (text.includes(q)) {
+                r.classList.remove('no-match');
+            } else {
+                r.classList.add('no-match');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
