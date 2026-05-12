@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>en-ch.com 百度站长验证 — 接着干指南</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f1f5f9; color: #0f172a;
+    padding: 24px; line-height: 1.65;
+    max-width: 920px; margin: 0 auto;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .subtitle { color: #64748b; font-size: 14px; margin-bottom: 22px; }
+  .top-banner {
+    background: #fef3c7; border-left: 4px solid #d97706;
+    padding: 14px 18px; margin-bottom: 22px;
+    color: #78350f; font-size: 14px; border-radius: 6px;
+  }
+  .copy-area {
+    position: relative;
+    background: #0f172a; color: #e2e8f0;
+    border-radius: 10px; padding: 22px 24px 22px 24px;
+    font-family: "Menlo", "Consolas", monospace;
+    font-size: 13px; line-height: 1.7;
+    white-space: pre-wrap; word-wrap: break-word;
+    margin-bottom: 28px;
+  }
+  .copy-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: #6366f1; color: #fff;
+    border: none; border-radius: 6px;
+    padding: 8px 14px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .copy-btn:hover { background: #4f46e5; }
+  .copy-btn.copied { background: #22c55e; }
+  h2 {
+    font-size: 17px; font-weight: 700;
+    margin: 28px 0 12px; color: #1e293b;
+    border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;
+  }
+  .stage-card {
+    background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 10px; padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .stage-card.done {
+    background: #f0fdf4; border-color: #86efac;
+  }
+  .stage-card .stage-num {
+    display: inline-block;
+    background: #6366f1; color: #fff;
+    width: 24px; height: 24px; border-radius: 50%;
+    text-align: center; line-height: 24px;
+    font-size: 12px; font-weight: 700;
+    margin-right: 8px;
+  }
+  .stage-card.done .stage-num { background: #22c55e; }
+  .stage-title { font-weight: 700; font-size: 15px; display: inline; }
+  .stage-body { color: #475569; font-size: 14px; margin-top: 6px; padding-left: 32px; }
+  table {
+    width: 100%; border-collapse: collapse;
+    background: #fff; border-radius: 8px; overflow: hidden;
+    margin: 8px 0; font-size: 13px;
+  }
+  th, td { padding: 9px 13px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+  th { background: #f8fafc; font-weight: 600; color: #475569; }
+  tr:last-child td { border-bottom: none; }
+  code {
+    background: #e2e8f0; padding: 2px 6px;
+    border-radius: 4px; font-size: 12px;
+    font-family: "Menlo", "Consolas", monospace;
+  }
+  .note {
+    background: #eff6ff; border-left: 3px solid #3b82f6;
+    padding: 10px 14px; margin-top: 10px;
+    font-size: 13px; color: #1e3a8a; border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>en-ch.com 百度站长验证 — 接着干指南</h1>
+<p class="subtitle">给浏览器 Claude 插件用 · 之前 Chrome 崩了,从未知状态恢复</p>
+
+<div class="top-banner">
+  <strong>背景:</strong>
+  另外两个站(translationchina.com、tongshengfanyi.com)已经在百度站长验证通过。
+  现在轮到 en-ch.com,但 Chrome 崩了不知道之前进度到哪。
+  下面这段提示词直接复制给插件即可,它会先摸清状态再继续。
+</div>
+
+<h2>📋 复制下面整段给浏览器 Claude 插件</h2>
+
+<div class="copy-area">
+<button class="copy-btn" id="copyBtn" onclick="copyPrompt()">📋 复制</button><span id="prompt-content">我之前在做百度站长验证,Chrome 崩溃了不知道进度到哪。前两个站(translationchina.com 和 tongshengfanyi.com)已经验证通过,现在轮到第三个也是最后一个:en-ch.com。
+
+请按以下步骤继续:
+
+═══ 步骤 1:摸清当前状态 ═══
+
+打开 ziyuan.baidu.com → 站点管理 / 我的资源 → 找 en-ch.com:
+
+A. 如果 en-ch.com 已经在列表里且状态显示"已验证" → 跳到步骤 4
+B. 如果 en-ch.com 在列表里但状态是"未验证" / "验证中" → 跳到步骤 3
+C. 如果 en-ch.com 根本不在列表里 → 从步骤 2 开始
+
+告诉 Anne 当前看到的状态(响一声叮),然后按对应步骤继续。
+
+═══ 步骤 2:添加站点(只在 C 情况) ═══
+
+1. 点"添加网站" / "+"
+2. 协议选 HTTPS
+3. 域名填:en-ch.com(不要带 www 不要带斜杠)
+4. 站点首页 URL 填:https://www.en-ch.com/
+5. 站点类型按它的预设填(如不确定选"翻译服务"或"企业服务")
+6. 提交,进入验证页面
+
+═══ 步骤 3:验证(关键!) ═══
+
+en-ch.com 跟前两个站不一样 —— 它没有 EdgeOne,没有 HTTPS 强制跳转。
+两种验证方式都可以,优先选【HTML 标签验证】(更稳)。
+
+【HTML 标签验证】流程:
+
+1. 选"HTML 标签验证"
+2. 复制百度给的整段 meta 标签(类似:<meta name="baidu-site-verification" content="codeva-XXXXXX" />)
+3. 响一声叮,告诉 Anne 完整的 meta 标签内容
+   → Anne 会把它加到 en-ch.com 首页的 <head> 里
+   → Anne 会回复"已加好"
+4. 点"完成验证"
+5. 如果失败显示"找不到 meta 标签":
+   → 告诉 Anne 出现这个错误
+   → Anne 会调整 meta 位置(放到 charset 后面)
+   → 再点验证
+6. 验证通过后跳到步骤 4
+
+【文件验证】备用流程(仅 HTML 验证连续失败 3 次时用):
+
+1. 选"文件验证"
+2. 下载验证文件(类似 baidu_verify_codeva-XXX.html,会保存到 Downloads)
+3. 响一声叮,告诉 Anne 文件名 + 内容(用 cat 读或贴出内容)
+   → Anne 会用 FTP 把文件上传到 en-ch.com 根目录
+   → Anne 会回复"已上传"
+4. 点"完成验证"
+5. 验证通过后跳到步骤 4
+
+═══ 步骤 4:填备案号 ═══
+
+验证通过后,进入 en-ch.com 站点 → 站点属性 / 站点信息 → 找"主体备案号":
+
+- 如果备案号已经有值 → 直接跳到步骤 5
+- 如果备案号为空:
+  - 响一声叮,告诉 Anne 需要填备案号
+  - Anne 会去 https://beian.miit.gov.cn 查 en-ch.com 的备案号给你
+  - 把它填进去,保存
+
+═══ 步骤 5:不要立即提交 sitemap ═══
+
+今天百度的 sitemap 配额估计已经用完(前两个站提交时用了)。
+明天 0 点后(北京时间)配额会刷新。
+
+所以现在就到这一步,告诉 Anne "en-ch.com 验证通过 + 备案号填好,等明天提交 sitemap"。
+
+═══ 重要原则 ═══
+
+- 每次需要 Anne 介入(扫码、复制内容、上传文件、填备案)前,先播放叮一声:
+
+  (function() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      gain.gain.value = 0.25;
+      osc.start();
+      osc.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.stop(ctx.currentTime + 0.4);
+    } catch(e) {}
+  })();
+  document.title = '🔔 ' + document.title.replace(/^🔔 /, '');
+
+- 登录扫码 Anne 来做,你别自己尝试
+- 遇到滑块/短信 → 暂停叫 Anne
+- 遇到付费选项 → 跳过
+
+开始:登录后告诉我 en-ch.com 在百度站长里的当前状态。</span>
+</div>
+
+<h2>📊 完成度全景</h2>
+
+<div class="stage-card done">
+  <span class="stage-num">✓</span>
+  <span class="stage-title">translationchina.com 百度站长验证</span>
+  <div class="stage-body">已通过 HTML 标签验证。</div>
+</div>
+
+<div class="stage-card done">
+  <span class="stage-num">✓</span>
+  <span class="stage-title">tongshengfanyi.com 百度站长验证</span>
+  <div class="stage-body">用文件验证通过(临时关 HTTPS 强制跳转 → 验证 → 重新开)。</div>
+</div>
+
+<div class="stage-card">
+  <span class="stage-num">3</span>
+  <span class="stage-title">en-ch.com 百度站长验证</span>
+  <div class="stage-body">进行中。en-ch.com 没接 EdgeOne,没有 HTTPS 跳转问题,验证应该比前两个简单。</div>
+</div>
+
+<div class="stage-card">
+  <span class="stage-num">4</span>
+  <span class="stage-title">填备案号(三个站)</span>
+  <div class="stage-body">填了之后明天 sitemap 配额会大幅提升。</div>
+</div>
+
+<div class="stage-card">
+  <span class="stage-num">5</span>
+  <span class="stage-title">明天 10 点:三站全部提交 sitemap</span>
+  <div class="stage-body">已设好闹钟提醒。同时也要去 360 站长、搜狗站长提交。</div>
+</div>
+
+<h2>🎯 关键事实速查</h2>
+
+<table>
+  <tr><th>项</th><th>值</th></tr>
+  <tr><td>en-ch.com sitemap URL</td><td><code>https://www.en-ch.com/sitemap.xml</code></td></tr>
+  <tr><td>en-ch.com HTTPS</td><td>有(单独 DV 证书,不是 EdgeOne)</td></tr>
+  <tr><td>en-ch.com 是否需要关跳转</td><td>不需要(没有强制跳转)</td></tr>
+  <tr><td>主营业务</td><td>翻译服务,主战场</td></tr>
+</table>
+
+<div class="note">
+  💡 <strong>本页用法</strong>:
+  打开页面 → 点右上角"复制"按钮 → 切到 Chrome Claude 插件 → 粘贴 → 它会自己摸清状态继续。
+  插件需要 Anne 配合时会播放叮一声 + 标题栏出现 🔔。
+</div>
+
+<script>
+function copyPrompt() {
+  const text = document.getElementById('prompt-content').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ 已复制';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 复制';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(err => alert('复制失败: ' + err));
+}
+</script>
+
+</body>
+</html>
