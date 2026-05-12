@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>欣欣需要的内存条 ♡</title>
+<title>欣欣需要的零件 ♡</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -15,14 +15,8 @@
     padding: 32px 20px 80px;
     min-height: 100vh;
   }
-  .wrap {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .header {
-    text-align: center;
-    margin-bottom: 32px;
-  }
+  .wrap { max-width: 600px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 28px; }
   h1 {
     font-size: 28px;
     font-weight: 600;
@@ -30,29 +24,68 @@
     color: #d96666;
     letter-spacing: 1px;
   }
-  .heart {
-    color: #e88;
-    font-size: 22px;
-  }
+  .heart { color: #e88; font-size: 22px; }
   .sub {
     color: #a07878;
     font-size: 15px;
     margin: 0 auto;
     max-width: 480px;
   }
-  .intro {
+  .overview {
     background: white;
     border-radius: 20px;
-    padding: 20px 24px;
-    margin-bottom: 22px;
-    text-align: center;
+    padding: 22px 24px;
+    margin-bottom: 28px;
     border: 1px solid #fae0e0;
     box-shadow: 0 2px 8px rgba(230, 180, 180, 0.08);
   }
-  .intro p {
-    margin: 0;
-    color: #6a5050;
+  .overview-title {
+    text-align: center;
+    color: #a07878;
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .overview-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 16px;
+  }
+  .overview-item {
+    flex: 1;
+    text-align: center;
+    padding: 14px 8px;
+    background: linear-gradient(135deg, #fff5f0, #ffeae0);
+    border-radius: 14px;
+  }
+  .overview-item .label {
+    font-size: 14px;
+    color: #8a5a5a;
+    margin-bottom: 6px;
+  }
+  .overview-item .count {
+    font-size: 28px;
+    font-weight: 600;
+    color: #d96666;
+    line-height: 1;
+  }
+  .overview-item .unit {
+    font-size: 14px;
+    color: #a07878;
+    margin-top: 4px;
+  }
+  .section-divider {
+    text-align: center;
+    margin: 32px 0 18px;
+    color: #c48a8a;
     font-size: 16px;
+    letter-spacing: 3px;
+    font-weight: 500;
+  }
+  .section-divider::before,
+  .section-divider::after {
+    content: " ♡ ";
+    color: #f4b4b4;
   }
   .step {
     background: white;
@@ -80,7 +113,6 @@
   .step-title {
     font-size: 19px;
     font-weight: 600;
-    margin-bottom: 14px;
     display: inline-block;
     color: #5a3a3a;
   }
@@ -98,7 +130,6 @@
     margin: 8px 0;
     font-size: 16px;
     position: relative;
-    padding-left: 4px;
   }
   .step li::before {
     content: "♡";
@@ -120,12 +151,22 @@
   }
   .yes { color: #6ab088; font-weight: 600; }
   .no { color: #d97878; font-weight: 600; }
+  .slot-callout {
+    background: linear-gradient(135deg, #fff8e8, #fff0d8);
+    border: 1px dashed #e8c888;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 14px 0 4px;
+    color: #8a6a3a;
+    font-size: 15px;
+  }
+  .slot-callout strong { color: #b8862a; }
   .photo-card {
     background: linear-gradient(135deg, #fff0f0 0%, #ffe8e0 100%);
     border: 1px dashed #f4b4b4;
     border-radius: 20px;
     padding: 28px 26px;
-    margin-top: 24px;
+    margin-top: 28px;
     text-align: center;
   }
   .photo-card h3 {
@@ -196,28 +237,71 @@
     font-size: 14px;
     margin-top: 14px;
   }
+  .drive-shapes {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 14px 0;
+  }
+  .drive-shape {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fdf5f0;
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .drive-icon {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #a8d0e8, #8ab8d4);
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 8px 6px;
+    box-shadow: 0 2px 6px rgba(138, 184, 212, 0.3);
+  }
+  .drive-icon.m2 { width: 80px; height: 28px; line-height: 12px; }
+  .drive-icon.ssd25 { width: 60px; height: 50px; padding-top: 18px; }
+  .drive-icon.hdd35 { width: 70px; height: 60px; padding-top: 22px; background: linear-gradient(135deg, #c4a8d8, #a888c4); }
+  .drive-info { flex: 1; }
+  .drive-info .name { font-weight: 600; color: #5a3a3a; font-size: 15px; }
+  .drive-info .desc { color: #8a6a6a; font-size: 14px; margin-top: 2px; }
   .footer-note {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 36px;
     color: #c4a4a4;
     font-size: 14px;
   }
-  .footer-note .heart-small {
-    color: #e8a4a4;
-  }
+  .footer-note .heart-small { color: #e8a4a4; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="header">
-    <h1>欣欣需要的内存条 <span class="heart">♡</span></h1>
-    <p class="sub">妈妈, 帮我看一下家里那根多余的内存条<br>对照下面三步就知道能不能给我用啦</p>
+    <h1>欣欣需要的零件 <span class="heart">♡</span></h1>
+    <p class="sub">妈妈, 我电脑现在内存和硬盘都不太够<br>家里有多余的零件吗? 对照下面看看能不能给我用 ~</p>
   </div>
 
-  <div class="intro">
-    <p>只要看 <strong>三个地方</strong> 就好啦 ~</p>
+  <div class="overview">
+    <div class="overview-title">我最多能装几个</div>
+    <div class="overview-row">
+      <div class="overview-item">
+        <div class="label">内存条</div>
+        <div class="count">3</div>
+        <div class="unit">根 (装不下更多了)</div>
+      </div>
+      <div class="overview-item">
+        <div class="label">硬盘 / SSD</div>
+        <div class="count">5</div>
+        <div class="unit">个 (一根 M.2 + 4 个普通)</div>
+      </div>
+    </div>
   </div>
+
+  <div class="section-divider">内 存 条</div>
 
   <div class="step">
     <span class="step-num">1</span><span class="step-title">看条子上有没有 "DDR4"</span>
@@ -260,9 +344,68 @@
     <p class="hint">年份只是参考, 最准的还是看标签上有没有 <span class="key">DDR4</span> 几个字 ~</p>
   </div>
 
+  <div class="slot-callout">
+    💡 <strong>提醒:</strong> 我电脑里只有 <strong>3 个空位</strong>, 最多装 3 根。如果家里有更多, 挑容量最大的 3 根就好啦, 多了我也装不下 ~
+  </div>
+
+  <div class="section-divider">硬 盘 / S S D</div>
+
+  <div class="step">
+    <span class="step-num">1</span><span class="step-title">硬盘长什么样</span>
+    <p>硬盘有三种常见的样子, 任意一种都可以给我:</p>
+    <div class="drive-shapes">
+      <div class="drive-shape">
+        <div class="drive-icon m2">M.2</div>
+        <div class="drive-info">
+          <div class="name">小条子 (像口香糖)</div>
+          <div class="desc">最新最快, 比内存条短一点, 大概一根手指那么长</div>
+        </div>
+      </div>
+      <div class="drive-shape">
+        <div class="drive-icon ssd25">2.5"<br>SSD</div>
+        <div class="drive-info">
+          <div class="name">小方盒子 (像一副扑克牌大小)</div>
+          <div class="desc">扁扁的, 很轻, 金属外壳, 拿在手里凉凉的</div>
+        </div>
+      </div>
+      <div class="drive-shape">
+        <div class="drive-icon hdd35">3.5"<br>HDD</div>
+        <div class="drive-info">
+          <div class="name">大方盒子 (像一本厚书)</div>
+          <div class="desc">比较重, 摇一摇能感觉到里面有东西在转</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">2</span><span class="step-title">什么能用, 什么不用</span>
+    <ul>
+      <li><span class="yes">从旧电脑里拆下来的</span> &nbsp;都可以试试</li>
+      <li><span class="yes">空白没用过的</span> &nbsp;最好啦</li>
+      <li><span class="no">U 盘 (那种插 USB 的)</span> &nbsp;不用了, 我自己有</li>
+      <li><span class="no">移动硬盘 (USB 线连的那种)</span> &nbsp;也不用</li>
+    </ul>
+    <p class="hint">硬盘里的东西不用清空, 我自己会处理 ~</p>
+  </div>
+
+  <div class="step">
+    <span class="step-num">3</span><span class="step-title">容量越大越好</span>
+    <p>硬盘的容量一般写在标签上, 像这样:</p>
+    <ul>
+      <li><strong>1 TB</strong> 或 <strong>2 TB</strong> &nbsp;<span class="yes">超棒</span></li>
+      <li><strong>500 GB</strong> 或 <strong>512 GB</strong> &nbsp;<span class="yes">很好</span></li>
+      <li><strong>250 GB</strong> 以下 &nbsp;也能用, 帮我多腾点地方就行</li>
+    </ul>
+  </div>
+
+  <div class="slot-callout">
+    💡 <strong>提醒:</strong> 硬盘我能装 <strong>5 个</strong> (一个小条子 M.2 + 4 个方盒子)。家里如果有多的, 挑容量最大的几个就好 ~
+  </div>
+
   <div class="photo-card">
     <h3>不确定的话 ♡</h3>
-    <p>把内存条 <strong>有标签那一面</strong> 拍清楚发给我</p>
+    <p>把零件 <strong>有标签那一面</strong> 拍清楚发给我</p>
     <p>我一看就知道行不行啦 ~</p>
   </div>
 
