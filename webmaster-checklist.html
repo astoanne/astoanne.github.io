@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>站长平台总览 — 今晚能做哪些</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f1f5f9; color: #0f172a;
+    padding: 24px 20px; line-height: 1.65;
+    max-width: 960px; margin: 0 auto;
+  }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: #64748b; font-size: 14px; margin-bottom: 22px; }
+  .legend-row {
+    background: #fff; padding: 14px 18px; margin-bottom: 22px;
+    border-radius: 10px; border-left: 4px solid #6366f1;
+    font-size: 13px; display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .legend-item { color: #475569; }
+  .legend-item strong { color: #0f172a; }
+  h2 {
+    font-size: 18px; font-weight: 700;
+    margin: 32px 0 14px 0; color: #1e293b;
+    border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;
+  }
+  .platform-card {
+    background: #fff; border-radius: 12px;
+    padding: 18px 22px; margin-bottom: 14px;
+    border: 1px solid #e2e8f0;
+    position: relative; overflow: hidden;
+  }
+  .platform-card.done {
+    background: #f0fdf4; border-color: #86efac;
+  }
+  .platform-card.tonight {
+    background: #fefce8; border-color: #fde047;
+  }
+  .platform-card.blocked {
+    background: #fff7ed; border-color: #fed7aa;
+  }
+  .platform-card.skip {
+    opacity: 0.6;
+    background: #fafafa; border-color: #e4e4e7;
+  }
+  .platform-card.skip .platform-name { text-decoration: line-through; }
+  .platform-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 12px; margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .platform-name {
+    font-size: 17px; font-weight: 700; color: #18181b;
+  }
+  .platform-url {
+    font-family: "Menlo", "Consolas", monospace;
+    font-size: 12px; color: #64748b;
+    margin-top: 2px;
+  }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11px; padding: 3px 10px;
+    border-radius: 12px; font-weight: 600;
+  }
+  .b-effect-5 { background: #fef3c7; color: #92400e; }
+  .b-effect-4 { background: #fed7aa; color: #9a3412; }
+  .b-effect-3 { background: #f1f5f9; color: #475569; }
+  .b-effect-2 { background: #e2e8f0; color: #475569; }
+  .b-effect-1 { background: #f4f4f5; color: #71717a; }
+  .b-done { background: #dcfce7; color: #14532d; }
+  .b-tonight { background: #fef9c3; color: #713f12; }
+  .b-blocked { background: #fed7aa; color: #9a3412; }
+  .b-skip { background: #e4e4e7; color: #52525b; }
+  .platform-body { color: #475569; font-size: 14px; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 6px 12px;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .info-grid .label { color: #71717a; font-weight: 500; }
+  .info-grid .value { color: #18181b; }
+  .info-grid .value code {
+    background: #f1f5f9; padding: 1px 6px;
+    border-radius: 4px; font-size: 12px;
+    font-family: "Menlo", "Consolas", monospace;
+  }
+  .note {
+    background: #eff6ff; border-left: 3px solid #3b82f6;
+    padding: 8px 12px; margin-top: 10px;
+    font-size: 13px; color: #1e3a8a; border-radius: 4px;
+  }
+  .note.warn {
+    background: #fff7ed; border-color: #ea580c;
+    color: #7c2d12;
+  }
+  .stars {
+    display: inline-block; font-size: 13px;
+    color: #f59e0b; letter-spacing: 1px;
+  }
+  .star-empty { color: #d4d4d8; }
+  .summary-block {
+    background: linear-gradient(135deg, #fef3c7, #fce7f3);
+    border: 1px solid #fde68a;
+    border-radius: 12px; padding: 20px 24px;
+    margin-top: 24px;
+  }
+  .summary-block h3 {
+    font-size: 16px; font-weight: 700; margin-bottom: 10px;
+  }
+  .summary-block ol { padding-left: 22px; }
+  .summary-block li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<h1>🛠️ 站长平台总览</h1>
+<p class="subtitle">效果排名 · 权限要求 · 今晚能做哪些 — 翻译公司 SEO 提交清单</p>
+
+<div class="legend-row">
+  <span class="legend-item"><strong>✅ 已完成</strong></span>
+  <span class="legend-item"><strong>🟡 今晚能做</strong></span>
+  <span class="legend-item"><strong>⏸️ 需要权限</strong>(等明天找资料)</span>
+  <span class="legend-item"><strong>⏭️ 跳过</strong>(效果差或不可用)</span>
+</div>
+
+<h2>按优先级排</h2>
+
+<!-- 百度 -->
+<div class="platform-card done">
+  <div class="platform-header">
+    <div>
+      <div class="platform-name">百度站长</div>
+      <div class="platform-url">ziyuan.baidu.com</div>
+    </div>
+    <div class="badges">
+      <span class="badge b-effect-5">效果 ★★★★★</span>
+      <span class="badge b-done">3 站已完成</span>
+    </div>
+  </div>
+  <div class="platform-body">
+    中国市场最重要,翻译业务的国内 SEO 必做。3 个站全部验证通过 ✅
+    <div class="note">
+      明天 10 点闹钟响后提交 sitemap(0 点后配额刷新)+ 填备案号解锁更高配额。
+    </div>
+  </div>
+</div>
+
+<!-- Google -->
+<div class="platform-card tonight">
+  <div class="platform-header">
+    <div>
+      <div class="platform-name">Google Search Console</div>
+      <div class="platform-url">search.google.com/search-console</div>
+    </div>
+    <div class="badges">
+      <span class="badge b-effect-5">效果 ★★★★★</span>
+      <span class="badge b-tonight">今晚能做(部分)</span>
+    </div>
+  </div>
+  <div class="platform-body">
+    海外英文客户来源最大,en-ch.com 主战场必交。
+    <div class="info-grid">
+      <span class="label">验证方式</span>
+      <span class="value">HTML 文件 / Meta 标签 / DNS TXT / Google Analytics / Tag Manager</span>
+      <span class="label">关键区别</span>
+      <span class="value">
+        加 "<strong>URL 前缀</strong>" 类型 → 文件 / Meta 都行(今晚就能做)<br>
+        加 "<strong>网域</strong>" 类型 → 只能 DNS TXT(需要 DNS 控制台访问)
+      </span>
+    </div>
+    <div class="note">
+      <strong>今晚能做的</strong>:用"URL 前缀"模式添加 3 个站(`https://www.en-ch.com/`、`https://www.translationchina.com/`、`https://www.tongshengfanyi.com/`),HTML 文件验证。<br>
+      <strong>等明天再做</strong>:en-ch.com 的"网域"级别验证需要在 35.net 加 TXT 记录,如果当时只能找你拿 DNS 权限的话推到明天。
+    </div>
+  </div>
+</div>
+
+<!-- Bing -->
+<div class="platform-card tonight">
+  <div class="platform-header">
+    <div>
+      <div class="platform-name">Bing Webmaster</div>
+      <div class="platform-url">bing.com/webmasters</div>
+    </div>
+    <div class="badges">
+      <span class="badge b-effect-4">效果 ★★★★</span>
+      <span class="badge b-tonight">今晚能做</span>
+    </div>
+  </div>
+  <div class="platform-body">
+    Bing 数据被 ChatGPT 搜索、Copilot、DuckDuckGo 等大量使用。2025 年 Bing 强化了 AI 搜索的 sitemap 重要性,值得做。
+    <div class="info-grid">
+      <span class="label">验证方式</span>
+      <span class="value">HTML 文件 / Meta 标签 / DNS TXT / 从 GSC 导入</span>
+      <span class="label">捷径</span>
+      <span class="value">已验证 GSC 之后,Bing 支持<strong>从 GSC 一键导入</strong>站点(2 分钟搞定全部 3 站)</span>
+    </div>
+    <div class="note">
+      推荐流程:先 GSC 验证 → 再 Bing 一键导入 → 自动验证完毕。还有 <code>IndexNow</code> 协议可以让索引近实时,后续可以加。
+    </div>
+  </div>
+</div>
+
+<!-- 神马 -->
+<div class="platform-card tonight">
+  <div class="platform-header">
+    <div>
+      <div class="platform-name">神马搜索(UC 浏览器)</div>
+      <div class="platform-url">zhanzhang.sm.cn</div>
+    </div>
+    <div class="badges">
+      <span class="badge b-effect-3">效果 ★★★</span>
+      <span class="badge b-tonight">今晚能做</span>
+    </div>
+  </div>
+  <div class="platform-body">
+    UC 浏览器、阿里系移动端搜索流量。中国移动用户里有一部分,值得交。
+    <div class="info-grid">
+      <span class="label">验证方式</span>
+      <span class="value">HTML 文件 / Meta 标签 / CNAME</span>
+      <span class="label">权限</span>
+      <span class="value">FTP 即可 ✅</span>
+    </div>
+  </div>
+</div>
+
+<!-- 360 -->
+<div class="platform-card tonight">
+  <div class="platform-header">
+    <div>
+      <div class="platform-name">360 站长</div>
+      <div class="platform-url">zhanzhang.so.com</div>
+    </div>
+    <div class="badges">
+      <span class="badge b-effect-2">效果 ★★</span>
+      <span class="badge b-tonight">今晚能做</span>
+    </div>
+  </div>
+  <div class="platform-body">
+    360 搜索市场份额下滑,sitemap 经常报"抓取 URL=0"的吐槽很多。但平台还活着,加上不亏。
+    <div class="info-grid">
+      <span class="label">验证方式</span>
+      <span class="value">HTML 文件 / Meta 标签 / CNAME</span>
+      <span class="label">权限</span>
+      <span class="value">FTP 即可 ✅</span>
+    </div>
+    <div class="note">交完别期望太多。如果 sitemap 卡住,用它的"URL 主动推送"代替。</div>
+  </div>
+</div>
+
+<!-- 搜狗 -->
+<div class="platform-card skip">
+  <div class="platform-header">
+    <div>
+      <div class="platform-name">搜狗站长</div>
+      <div class="platform-url">zhanzhang.sogou.com</div>
+    </div>
+    <div class="badges">
+      <span class="badge b-effect-1">效果 ★</span>
+      <span class="badge b-skip">基本跳过</span>
+    </div>
+  </div>
+  <div class="platform-body">
+    Sitemap 邀请制 —— 没拿到邀请就传不了。验证本身意义不大,基本是"占位"。
+    <div class="note warn">
+      已经在做了就走完,但**不要花额外时间**。如果以后业务需要,可以发邮件 <code>zzpt@tencent.com</code> 申请邀请。
+    </div>
+  </div>
+</div>
+
+<h2>今晚的具体计划</h2>
+
+<div class="summary-block">
+  <h3>🌙 现在到睡觉前能搞定的(无需老板/DNS 权限)</h3>
+  <ol>
+    <li><strong>搜狗</strong>:3 个站验证完(已经在做的)。完成后跳过 sitemap。</li>
+    <li><strong>360 站长</strong>:3 个站添加 + HTML 文件验证 + sitemap 提交。约 15 分钟。</li>
+    <li><strong>神马搜索</strong>:3 个站添加 + HTML 文件验证 + sitemap 提交。约 15 分钟。</li>
+    <li><strong>Google Search Console</strong>:用 "URL 前缀" 模式(不是网域模式),3 个站 HTML 文件验证 + sitemap 提交。约 15 分钟。</li>
+    <li><strong>Bing Webmaster</strong>:GSC 验证完后一键导入,自动同步 3 站。约 5 分钟。</li>
+  </ol>
+  <h3>☀️ 明天的(需要 DNS 权限)</h3>
+  <ol>
+    <li><strong>百度站长</strong>:0 点后配额刷新,提交 sitemap(3 站)+ 填备案号。</li>
+    <li><strong>Google Search Console "网域" 模式</strong>:在 35.net 加 TXT 记录给 en-ch.com(覆盖所有子域名),需要 DNS 权限。可选,URL 前缀已经够用。</li>
+  </ol>
+</div>
+
+<h2>权限要求速查</h2>
+
+<div class="platform-card">
+  <div class="info-grid">
+    <span class="label">FTP 上传</span>
+    <span class="value">已有 ✅(translationchina.com、tongshengfanyi.com、en-ch.com)→ 文件 / Meta 标签验证都能做</span>
+    <span class="label">DNS 控制台</span>
+    <span class="value">
+      translationchina.com / tongshengfanyi.com → dns.com.cn(自己能登)<br>
+      en-ch.com → 35.net(明天再去拿登录信息)
+    </span>
+    <span class="label">EdgeOne 后台</span>
+    <span class="value">已有 ✅</span>
+    <span class="label">主机控制面板</span>
+    <span class="value">en-ch.com 的 35.net 主机面板(明天)</span>
+  </div>
+</div>
+
+<h2>⚠️ 重要提醒(今晚做时的坑)</h2>
+
+<div class="platform-card blocked">
+  <div class="platform-body">
+    <p><strong>HTTP→HTTPS 强制跳转会让验证失败</strong>。translationchina 和 tongshengfanyi 在 EdgeOne 开了强制跳转,en-ch.com 在主机层面开了。</p>
+    <p>很多平台(百度、搜狗等)用 HTTP 抓验证文件 → 拿到 302/301 → 报"网页存在跳转"失败。</p>
+    <p><strong>解决</strong>:</p>
+    <ul style="padding-left: 22px; margin-top: 8px;">
+      <li>translationchina / tongshengfanyi:EdgeOne 后台暂时关掉强制跳转 → 验证 → 重新开</li>
+      <li>en-ch.com:今晚搞不定(需要 35.net 主机面板)→ 明天再做</li>
+      <li>Google / Bing 国际平台:支持 HTTPS,直接 200 不报错</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>
