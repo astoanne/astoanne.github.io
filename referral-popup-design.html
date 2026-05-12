@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贯日翻译 · 客户端推广码弹窗设计</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg: #faf8f3;
+    --paper: #ffffff;
+    --ink: #1a1a2e;
+    --muted: #6b6b7d;
+    --hairline: #e8e4d8;
+    --accent: #6b63fa;
+    --accent-soft: #ecebff;
+    --warm: #d63031;
+    --warm-soft: #fce4e4;
+    --note: #f39c12;
+    --note-soft: #fef3e0;
+    --good: #07a35f;
+    --good-soft: #d4f5e0;
+}
+
+html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 160px;
+}
+
+header { margin-bottom: 56px; border-bottom: 1px solid var(--hairline); padding-bottom: 32px; }
+.eyebrow {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+header h1 {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+}
+header h1 .accent { font-style: italic; color: var(--accent); }
+.lede { color: var(--muted); font-size: 16px; }
+
+section { margin-bottom: 48px; }
+section h2 {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    border-bottom: 1px dashed var(--hairline);
+    padding-bottom: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+}
+section h2 .num {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+}
+
+/* 流程图 */
+.flow {
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 28px;
+}
+.flow-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--hairline);
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-num {
+    background: var(--accent-soft);
+    color: var(--accent);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.flow-text { flex: 1; }
+.flow-text strong { color: var(--ink); font-weight: 600; }
+.flow-text .sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.tag-good {
+    background: var(--good-soft);
+    color: var(--good);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* 决策卡片 */
+.choice {
+    background: var(--paper);
+    border: 2px solid var(--hairline);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s;
+}
+.choice:hover { border-color: var(--accent); }
+.choice.selected {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+.choice-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+.choice-letter {
+    background: var(--bg);
+    color: var(--accent);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 2px solid var(--accent);
+}
+.choice.selected .choice-letter {
+    background: var(--accent);
+    color: white;
+}
+.choice-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+}
+.choice-recommended {
+    margin-left: auto;
+    background: var(--good-soft);
+    color: var(--good);
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+.choice-detail {
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-left: 50px;
+}
+.choice-detail strong { color: var(--ink); }
+.choice-detail .row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+.choice-detail .pro::before {
+    content: '+';
+    color: var(--good);
+    font-weight: 700;
+    width: 16px;
+    flex-shrink: 0;
+}
+.choice-detail .con::before {
+    content: '−';
+    color: var(--warm);
+    font-weight: 700;
+    width: 16px;
+    flex-shrink: 0;
+}
+
+.notes {
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 20px 22px;
+}
+.notes label {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 12px;
+    display: block;
+}
+.notes textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--hairline);
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 90px;
+    resize: vertical;
+    transition: border-color 0.15s;
+}
+.notes textarea:focus { outline: none; border-color: var(--accent); }
+
+/* Export bar */
+.export-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--hairline);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+}
+.export-bar .btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(107, 99, 250, 0.3);
+}
+.export-bar .btn:disabled {
+    background: #b4b4fb;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+    background: white;
+    border-radius: 8px;
+    padding: 28px;
+    max-width: 540px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.modal h3 { font-size: 20px; margin-bottom: 8px; font-weight: 600; }
+.modal .modal-hint { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+.modal textarea {
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    line-height: 1.6;
+    min-height: 200px;
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+.modal-actions button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid var(--hairline);
+    background: white;
+}
+.modal-actions button.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+    header h1 { font-size: 30px; }
+    .wrap { padding: 32px 16px 130px; }
+    .choice-detail { margin-left: 0; margin-top: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+    <div class="eyebrow">— Internal · 设计决策 —</div>
+    <h1>客户端<span class="accent">推广码弹窗</span>设计</h1>
+    <p class="lede">客户首次进小程序时,如果没扫二维码,我们要不要弹窗问他有没有推广码?如果他选择"暂时跳过",下次再问吗?这是要拍板的关键细节。</p>
+</header>
+
+<section>
+<h2><span class="num">01</span>客户首次进小程序的流程</h2>
+<div class="flow">
+    <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-text">
+            <strong>客户从二维码扫进来</strong>
+            <span class="tag-good">已绑定</span>
+            <div class="sub">URL 自带 ?seller=anne → 自动永久绑定到 anne,不弹任何窗</div>
+        </div>
+    </div>
+    <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-text">
+            <strong>客户从微信搜索 / 朋友分享 / 历史记录进来</strong>
+            <div class="sub">没有 seller 参数 → 弹窗问"你有推广码吗?"</div>
+        </div>
+    </div>
+    <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-text">
+            <strong>客户输入推广码 + 系统校验</strong>
+            <span class="tag-good">已绑定</span>
+            <div class="sub">校验该推广码确实存在 → 永久绑定 → 后续所有订单的 seller 字段都是这个值</div>
+        </div>
+    </div>
+    <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-text">
+            <strong>客户选"我没有 / 跳过"</strong>
+            <div class="sub">↓ 这一步要决定怎么处理 ↓</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<section>
+<h2><span class="num">02</span>客户选"跳过"时,系统怎么做?</h2>
+
+<div class="choice" data-v="A">
+    <div class="choice-header">
+        <div class="choice-letter">A</div>
+        <div class="choice-title">下次进还问</div>
+        <div class="choice-recommended">推荐</div>
+    </div>
+    <div class="choice-detail">
+        客户跳过 = 这次不绑,下次进小程序再弹一次。如果之后某天他扫了别人的二维码,自动绑过去。
+        <div class="row pro">客户没记住推广码不会被永久"墙"在 Official,以后还有机会归属</div>
+        <div class="row pro">用户体验柔和,多次提醒也算合理</div>
+        <div class="row con">客户会觉得"怎么又问"(其实只在没绑定时才弹,绑了就不问了)</div>
+    </div>
+</div>
+
+<div class="choice" data-v="B">
+    <div class="choice-header">
+        <div class="choice-letter">B</div>
+        <div class="choice-title">永久绑到 Official(再也不问)</div>
+    </div>
+    <div class="choice-detail">
+        客户跳过 = 永久绑定到 "Official"(=没有推广人)。从此再扫任何二维码都不归属(已绑定不能改)。
+        <div class="row pro">最严格,杜绝"换码薅"</div>
+        <div class="row pro">客户只看一次弹窗,后续清净</div>
+        <div class="row con">客户随手跳过 = 永远无法被归属;这部分订单的提成永远归 Official</div>
+        <div class="row con">推广人会抱怨"这客户其实是我带来的,但被默认 Official 了"</div>
+    </div>
+</div>
+
+<div class="choice" data-v="C">
+    <div class="choice-header">
+        <div class="choice-letter">C</div>
+        <div class="choice-title">弹窗给两个跳过选项</div>
+    </div>
+    <div class="choice-detail">
+        弹窗有 3 个按钮:<strong>输入推广码</strong> / <strong>暂时跳过(下次再问)</strong> / <strong>我没有(永久 Official)</strong>。客户自己选。
+        <div class="row pro">把决定权完全交给客户,最公平</div>
+        <div class="row con">3 个按钮,认知负担略大,有些客户会乱点</div>
+        <div class="row con">弹窗界面会比 A/B 复杂</div>
+    </div>
+</div>
+</section>
+
+<section>
+<h2><span class="num">03</span>其他想法或顾虑(可选)</h2>
+<div class="notes">
+    <label>比如:推广码大小写敏感吗?是否允许加客服微信后再补绑?……</label>
+    <textarea id="notes" placeholder="自由填写..."></textarea>
+</div>
+</section>
+
+</div>
+
+<div class="export-bar">
+    <button class="btn" id="export-btn" disabled>请先选 A/B/C → 导出</button>
+</div>
+
+<div class="modal-bg" id="modal">
+    <div class="modal">
+        <h3>你的决策</h3>
+        <p class="modal-hint">复制下面内容,回传开发即可。</p>
+        <textarea readonly id="export-text"></textarea>
+        <div class="modal-actions">
+            <button id="close-btn">关闭</button>
+            <button class="primary" id="copy-btn">复制</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'guanri-referral-design-v1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) {}
+
+const CHOICE_LABELS = {
+    'A': 'A · 下次进还问(推荐)',
+    'B': 'B · 永久绑到 Official(再也不问)',
+    'C': 'C · 弹窗给两个跳过选项'
+};
+
+function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    refreshUI();
+}
+
+function refreshUI() {
+    document.querySelectorAll('.choice').forEach(c => {
+        c.classList.toggle('selected', c.dataset.v === state.choice);
+    });
+    const btn = document.getElementById('export-btn');
+    if (state.choice) {
+        btn.disabled = false;
+        btn.textContent = '已选 ' + state.choice + ' → 导出我的决定';
+    } else {
+        btn.disabled = true;
+        btn.textContent = '请先选 A/B/C → 导出';
+    }
+}
+
+document.querySelectorAll('.choice').forEach(c => {
+    c.addEventListener('click', () => {
+        state.choice = c.dataset.v;
+        save();
+    });
+});
+
+const notesEl = document.getElementById('notes');
+if (state.notes) notesEl.value = state.notes;
+notesEl.addEventListener('input', () => {
+    state.notes = notesEl.value;
+    save();
+});
+
+document.getElementById('export-btn').addEventListener('click', () => {
+    const lines = [
+        '# 贯日翻译 · 推广码弹窗设计决定',
+        '',
+        '导出时间: ' + new Date().toLocaleString('zh-CN'),
+        '',
+        '## 客户跳过时的处理',
+        CHOICE_LABELS[state.choice] || '(未选)',
+        ''
+    ];
+    if (state.notes && state.notes.trim()) {
+        lines.push('## 其他想法/顾虑');
+        lines.push(state.notes.trim());
+        lines.push('');
+    }
+    document.getElementById('export-text').value = lines.join('\n');
+    document.getElementById('modal').classList.add('open');
+});
+
+document.getElementById('close-btn').addEventListener('click', () => {
+    document.getElementById('modal').classList.remove('open');
+});
+document.getElementById('copy-btn').addEventListener('click', () => {
+    const ta = document.getElementById('export-text');
+    ta.select();
+    document.execCommand('copy');
+    const btn = document.getElementById('copy-btn');
+    const orig = btn.textContent;
+    btn.textContent = '已复制 ✓';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+});
+document.getElementById('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') {
+        document.getElementById('modal').classList.remove('open');
+    }
+});
+
+refreshUI();
+</script>
+
+</body>
+</html>
