@@ -105,6 +105,24 @@ section > h2 .num {
     align-items: baseline;
     gap: 10px;
 }
+.q-reset {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 8px;
+    border-radius: 3px;
+    visibility: hidden;
+    font-weight: 400;
+}
+.q.has-answer .q-reset {
+    visibility: visible;
+}
+.q-reset:hover {
+    background: var(--bg);
+    color: var(--warm);
+}
 .q .qnum {
     font-family: "JetBrains Mono", "Courier New", monospace;
     font-size: 13px;
@@ -598,7 +616,53 @@ Object.keys(PRE_DECIDED).forEach(k => {
 function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     updateProgress();
+    refreshHasAnswer();
 }
+
+function refreshHasAnswer() {
+    document.querySelectorAll('.q').forEach(qEl => {
+        const k = qEl.dataset.q;
+        const v = state[k];
+        let hasAnswer = false;
+        if (v !== undefined && v !== null && v !== '') {
+            if (typeof v === 'object' && !Array.isArray(v)) {
+                hasAnswer = Object.values(v).some(x => x !== '' && x !== undefined && x !== null);
+            } else {
+                hasAnswer = true;
+            }
+        }
+        qEl.classList.toggle('has-answer', hasAnswer);
+    });
+}
+
+function resetQuestion(qkey) {
+    delete state[qkey];
+    save();
+    // 清掉视觉选中
+    const qEl = document.querySelector('.q[data-q="' + qkey + '"]');
+    if (qEl) {
+        qEl.querySelectorAll('.opt.selected').forEach(o => o.classList.remove('selected'));
+        qEl.querySelectorAll('input[data-input]').forEach(i => i.value = '');
+        qEl.querySelectorAll('textarea[data-textarea]').forEach(t => t.value = '');
+    }
+    refreshHasAnswer();
+}
+
+// 给每个问题的标题加重置按钮
+document.querySelectorAll('.q').forEach(qEl => {
+    const qkey = qEl.dataset.q;
+    const h3 = qEl.querySelector('h3');
+    if (h3 && !h3.querySelector('.q-reset')) {
+        const btn = document.createElement('span');
+        btn.className = 'q-reset';
+        btn.textContent = '↺ 重置';
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetQuestion(qkey);
+        });
+        h3.appendChild(btn);
+    }
+});
 
 function updateProgress() {
     const totalQs = document.querySelectorAll('.q').length;
@@ -759,6 +823,7 @@ document.getElementById('modal').addEventListener('click', (e) => {
     }
 });
 
+refreshHasAnswer();
 updateProgress();
 </script>
 
