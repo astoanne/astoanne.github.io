@@ -176,6 +176,46 @@ section > h2 .num {
     letter-spacing: 0.5px;
     font-weight: 600;
 }
+.opt .decided-tag {
+    margin-left: auto;
+    font-size: 11px;
+    background: #d4f5e0;
+    color: #07a35f;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.opt .current-tag + .decided-tag {
+    margin-left: 8px;
+}
+
+.q.decided {
+    border-color: #07a35f;
+    border-left: 4px solid #07a35f;
+}
+.q.decided h3 .qnum {
+    background: #d4f5e0;
+    color: #07a35f;
+}
+.decided-banner {
+    background: #d4f5e0;
+    color: #07a35f;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+.decided-banner::before {
+    content: '✓';
+    font-size: 16px;
+    font-weight: 700;
+}
 
 /* Text input questions */
 .q-text-input {
@@ -380,12 +420,13 @@ section > h2 .num {
 <section data-key="visibility">
 <h2><span class="num">01</span>可见性 · 谁能看哪些订单</h2>
 
-<div class="q" data-q="visibility-recursion">
+<div class="q decided" data-q="visibility-recursion">
     <h3><span class="qnum">Q1</span>员工/推广人有下属时,能看到的订单范围?</h3>
     <p class="qhint">举例:Bob(员工)下面有 Anne(推广人)和 Carol(员工);Carol 下面又有 Dave(推广人)。Bob 能看到谁带来的订单?</p>
+    <div class="decided-banner">已决定:Bob 不能看到 Carol 下面的 Dave,只能看自己 + 直接下属(1 层)</div>
     <div class="opts">
         <div class="opt" data-v="self_only">只看自己直接带来的(没有"下属可见"的概念)</div>
-        <div class="opt" data-v="one_level">自己 + 直接下属(Bob 看自己 + Anne + Carol,但不看 Dave)</div>
+        <div class="opt" data-v="one_level">自己 + 直接下属(Bob 看自己 + Anne + Carol,但不看 Dave) <span class="decided-tag">已决定</span></div>
         <div class="opt" data-v="recursive">自己 + 所有下级,递归无限层(Bob 看自己 + Anne + Carol + Dave) <span class="current-tag">current</span></div>
         <div class="opt" data-v="configurable">由 admin 在每个员工身上单独配置</div>
     </div>
@@ -544,8 +585,15 @@ section > h2 .num {
 <script>
 // State
 const STORAGE_KEY = 'guanri-decisions-v1';
+const PRE_DECIDED = {
+    'visibility-recursion': 'one_level'  // 已确认决定
+};
 let state = {};
 try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) {}
+// 应用预设决定(本地未填的项才覆盖)
+Object.keys(PRE_DECIDED).forEach(k => {
+    if (!state[k]) state[k] = PRE_DECIDED[k];
+});
 
 function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
