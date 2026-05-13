@@ -476,13 +476,81 @@
   <!-- ======= Section 5: Code change ======= -->
   <section>
     <h2><span class="step">7</span>代码层面到底改了什么</h2>
-    <p>在 <span class="kbd">Anne_rayleigh_quotient0924.R</span> 里增加了一个可选模块，对原损失函数与主优化流程<b>零修改</b>：</p>
-    <ul class="simple">
-      <li>新增参数 <span class="kbd">use.cluster.intercept</span>（来自环境变量 <span class="kbd">FFSRQ_CLUSTER_INTERCEPT</span>）；</li>
-      <li>训练末尾：按簇计算 Δ<sub>k</sub> = mean(残差) 存进模型对象；</li>
-      <li>预测末尾：把对应簇的 Δ<sub>k</sub> 加回到 ŷ 上；</li>
-      <li>仅当 <span class="kbd">clust.num &gt; 1</span> 才生效，单簇时自动退化为原算法。</li>
-    </ul>
+    <p>在 <span class="kbd">Anne_rayleigh_quotient0924.R</span> 的 <span class="kbd">mainFFSRQ()</span> 里增加了一个可选模块，对原损失函数、β 估计与主优化流程<b>零修改</b>。两处改动如下。</p>
+
+    <h3 style="font-size:1.05rem; margin-top:14px;">① 开关声明（约 line 382–385）</h3>
+    <pre style="background:#0f1419; color:#d4d4d4; padding:14px 16px; border-radius:6px; overflow-x:auto; font-size:0.88rem; line-height:1.5;"><code>##### Residual-based per-cluster intercept is applied AFTER Y.hat is
+##### computed (post-hoc), so we don't disturb the β fit. See bottom of
+##### mainFFSRQ for the actual computation.
+use.cluster.intercept &lt;- identical(Sys.getenv("FFSRQ_CLUSTER_INTERCEPT", ""), "1")</code></pre>
+
+    <h3 style="font-size:1.05rem; margin-top:14px;">② 训练末尾的残差修正块（约 line 693–715）</h3>
+    <pre style="background:#0f1419; color:#d4d4d4; padding:14px 16px; border-radius:6px; overflow-x:auto; font-size:0.88rem; line-height:1.5;"><code>##### Residual-based per-cluster intercept (post-hoc, env-controlled).
+##### Goal: capture cluster-specific output bias that β surfaces
+##### structurally cannot represent (e.g. simulator's 0.35*cluster.offset[t,m]).
+##### Stage 1 fit (just done) gives Y.hat. Stage 2: compute residuals,
+##### project per cluster, smooth, add back. Doesn't disturb β.
+if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
+  residuals.train &lt;- output.ori - Y.hat                         # ntrain x len.t
+  weights_t      &lt;- t(active.k)                                 # K x ntrain
+  weight_sums    &lt;- rowSums(weights_t) + 1e-12
+  cluster.resid.mean &lt;- sweep((weights_t %*% residuals.train), 1, weight_sums, "/")
+  ## Smooth each cluster's residual curve via B-spline + eta penalty
+  w.0.cluster &lt;- matrix(0, nrow = length(t), ncol = clust.num)
+  smoother    &lt;- pinv(int.bly + eta * int.bly2)
+  for (m in 1:clust.num) {
+    int_mean_m &lt;- numeric(M)
+    for (i in 1:M) {
+      int_mean_m[i] &lt;- sum(cluster.resid.mean[m, ] * bl.y.des[, i] * (1/(len.t-1)))
+    }
+    w.0.cluster[, m] &lt;- as.numeric(bl.y.des %*% smoother %*% as.matrix(int_mean_m, ncol = 1))
+  }
+  ## Add to Y.hat: active.k is ntrain x K, w.0.cluster is len.t x K
+  Y.hat &lt;- Y.hat + active.k %*% t(w.0.cluster)
+}</code></pre>
+
+    <p style="font-size:0.92rem; color:var(--muted);">
+      预测端只需把 <span class="kbd">w.0.cluster</span> 存进模型对象，再在 <span class="kbd">predict.mainFFSRQ()</span> 里用测试样本的 membership 把对应簇的修正项加回 <span class="kbd">Y.hat</span> 即可，不展开。
+    </p>
+  </section>
+
+  <!-- ======= Section 8: Formal method writeup ======= -->
+  <section>
+    <h2><span class="step">8</span>论文 method section 草稿（IEEE / Ge 2021 风格）</h2>
+    <p style="color:var(--muted); font-size:0.92rem;">直接照搬 Ge 2021 的符号约定（<i>x</i>(<i>s</i>), <i>y</i>(<i>t</i>), <i>K</i> rules, <i>μ<sub>k</sub></i>, <i>β<sub>k</sub></i>, <i>B<sub>q</sub><sup>Y</sup></i>(<i>t</i>), 平滑参数 <i>η</i>），下面这一节可直接挂在 FFSRQ identification 之后。</p>
+
+    <div style="background:#fdfdfa; border:1px solid var(--hairline); border-left:3px solid var(--ink); padding:18px 22px; border-radius:0 6px 6px 0; line-height:1.75;">
+      <p><b>V-D. Residual-based Per-Cluster Offset (rPCO).</b></p>
+
+      <p>The fuzzy-rule structure of FFSRQ assumes that, within each cluster <i>k</i>, the input–output mapping can be expressed by the consequent parameters together with a shared functional component. While this design is effective in capturing the shape of the input–output relation, the location (or level) of each cluster's output cannot always be absorbed by the consequent parameters alone, especially when the underlying data generating process contains a cluster-specific additive component whose energy lies outside the chosen consequent basis. To address this issue, we introduce a simple post-hoc correction term, named the <i>residual-based Per-Cluster Offset</i> (rPCO).</p>
+
+      <p>Let {(<i>x<sub>i</sub></i>(<i>s</i>), <i>y<sub>i</sub></i>(<i>t</i>))}<sub><i>i</i>=1</sub><sup><i>N</i></sup> denote the training samples and let <i>μ<sub>k</sub></i>(<i>x<sub>i</sub></i>(<i>s</i>)) be the membership of sample <i>i</i> in cluster <i>k</i>, <i>k</i> = 1, 2, …, <i>K</i>, as defined in (8). Once the antecedent and consequent parameters of FFSRQ have been estimated, denote by <i>ŷ<sub>i</sub></i>(<i>t</i>) the in-sample prediction of <i>y<sub>i</sub></i>(<i>t</i>). Define the per-cluster residual centre by</p>
+
+      <p style="text-align:center;">
+        <i>Δ̂<sub>k</sub></i>(<i>t</i>) = ( Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>μ<sub>k</sub></i>(<i>x<sub>i</sub></i>(<i>s</i>))·(<i>y<sub>i</sub></i>(<i>t</i>) − <i>ŷ<sub>i</sub></i>(<i>t</i>)) ) / ( Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>μ<sub>k</sub></i>(<i>x<sub>i</sub></i>(<i>s</i>)) + <i>ε</i> ),&nbsp;&nbsp;&nbsp;&nbsp;(★)
+      </p>
+
+      <p>where <i>ε</i> &gt; 0 is a small constant to avoid numerical instability. The function <i>Δ̂<sub>k</sub></i>(<i>t</i>) is the membership-weighted mean of the training residuals within cluster <i>k</i>.</p>
+
+      <p>To suppress observation noise and ensure smoothness, <i>Δ̂<sub>k</sub></i>(<i>t</i>) is projected onto the same B-spline basis {<i>B<sub>q</sub><sup>Y</sup></i>(<i>t</i>)}<sub><i>q</i>=1</sub><sup><i>Q</i></sup> as the output representation, with the same roughness penalty <i>η</i> used in the main estimator:</p>
+
+      <p style="text-align:center;">
+        <i>Δ̃<sub>k</sub></i>(<i>t</i>) = Σ<sub><i>q</i>=1</sub><sup><i>Q</i></sup> <i>d<sub>kq</sub></i> <i>B<sub>q</sub><sup>Y</sup></i>(<i>t</i>),&nbsp;&nbsp;
+        (<i>d<sub>k</sub></i><sub>1</sub>, …, <i>d<sub>kQ</sub></i>)<sup>T</sup> = (Φ + <i>η</i> Ψ)<sup>−1</sup> ∫<sub>Ω<sub>t</sub></sub> <i>Δ̂<sub>k</sub></i>(<i>t</i>) <i>B<sup>Y</sup></i>(<i>t</i>) d<i>t</i>,
+      </p>
+
+      <p>where Φ = ∫<sub>Ω<sub>t</sub></sub> <i>B<sup>Y</sup></i>(<i>t</i>) <i>B<sup>Y</sup></i>(<i>t</i>)<sup>T</sup> d<i>t</i> and Ψ = ∫<sub>Ω<sub>t</sub></sub> (<i>B<sup>Y</sup></i>)′′(<i>t</i>) (<i>B<sup>Y</sup></i>)′′(<i>t</i>)<sup>T</sup> d<i>t</i>.</p>
+
+      <p>The corrected FFSRQ prediction is then given by</p>
+
+      <p style="text-align:center;">
+        <i>ỹ</i>(<i>t</i>) = <i>ŷ</i>(<i>t</i>) + Σ<sub><i>k</i>=1</sub><sup><i>K</i></sup> <i>β<sub>k</sub></i>(<i>x</i>(<i>s</i>)) <i>Δ̃<sub>k</sub></i>(<i>t</i>),
+      </p>
+
+      <p>where <i>β<sub>k</sub></i>(<i>x</i>(<i>s</i>)) is the normalised functional membership of <i>x</i>(<i>s</i>) in cluster <i>k</i>, as defined in Section IV. The same formula applies to test samples through the FFSRQ membership mapping <i>β<sub>k</sub></i>(·).</p>
+
+      <p>It should be noticed that rPCO is a strictly post-hoc correction: the antecedent and consequent estimation of FFSRQ is not affected by introducing rPCO, and the original training objective is preserved. Furthermore, rPCO introduces no additional hyperparameter that needs to be optimised, as <i>Δ̂<sub>k</sub></i>(<i>t</i>) is fully determined by the training residuals and shares the same smoothing parameter <i>η</i> with the main estimator. When the number of rules is <i>K</i> = 1, <i>Δ̃<sub>1</sub></i>(<i>t</i>) reduces to the overall residual mean and rPCO degenerates to a global intercept correction; therefore, rPCO is only activated when <i>K</i> &gt; 1.</p>
+    </div>
   </section>
 
   <footer>
