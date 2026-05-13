@@ -523,8 +523,11 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
 
   <!-- ======= Section 8: Formal method writeup ======= -->
   <section>
-    <h2><span class="step">8</span>论文 method section 草稿（IEEE / Ge 2021 风格）</h2>
-    <p style="color:var(--muted); font-size:0.92rem;">直接照搬 Ge 2021 的符号约定（<i>x</i>(<i>s</i>), <i>y</i>(<i>t</i>), <i>K</i> rules, <i>μ<sub>k</sub></i>, <i>β<sub>k</sub></i>, <i>B<sub>q</sub><sup>Y</sup></i>(<i>t</i>), 平滑参数 <i>η</i>），下面这一节可直接挂在 FFSRQ identification 之后。</p>
+    <h2><span class="step">8</span>论文 method section 草稿</h2>
+
+    <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+      <button id="copy-latex-btn" onclick="copyLatex()" style="background:#1a1a1a; color:#fff; border:none; border-radius:5px; padding:8px 14px; font-size:0.9rem; cursor:pointer; font-family:inherit;">📋 Copy LaTeX source</button>
+    </div>
 
     <div style="background:#fdfdfa; border:1px solid var(--hairline); border-left:3px solid var(--ink); padding:18px 22px; border-radius:0 6px 6px 0; line-height:1.75;">
       <p><b>V-D. Residual-based Per-Cluster Offset (rPCO).</b></p>
@@ -563,6 +566,58 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
   <footer>
     rPCO = residual-based Per-Cluster Offset · 2026-05-13
   </footer>
+
+  <!-- LaTeX source for the method-section draft (used by Copy button) -->
+  <pre id="latex-src" hidden>\subsection{Residual-based Per-Cluster Offset (rPCO)}
+
+The fuzzy-rule structure of FFSRQ assumes that, within each cluster $k$, the input--output mapping can be expressed by the consequent parameters together with a shared functional component. While this design is effective in capturing the shape of the input--output relation, the location (or level) of each cluster's output cannot always be absorbed by the consequent parameters alone, especially when the underlying data generating process contains a cluster-specific additive component whose energy lies outside the chosen consequent basis. To address this issue, we introduce a simple post-hoc correction term, named the \emph{residual-based Per-Cluster Offset} (rPCO).
+
+Let $\{(x_i(s), y_i(t))\}_{i=1}^{N}$ denote the training samples and let $\mu_k(x_i(s))$ be the membership of sample $i$ in cluster $k$, $k = 1, 2, \ldots, K$, as defined in (8). Once the antecedent and consequent parameters of FFSRQ have been estimated, denote by $\hat{y}_i(t)$ the in-sample prediction of $y_i(t)$. Define the per-cluster residual centre by
+\begin{equation}
+\hat{\Delta}_k(t) = \frac{\sum_{i=1}^{N}\mu_k(x_i(s))\bigl(y_i(t)-\hat{y}_i(t)\bigr)}{\sum_{i=1}^{N}\mu_k(x_i(s)) + \varepsilon},\qquad k=1,2,\ldots,K,
+\end{equation}
+where $\varepsilon > 0$ is a small constant to avoid numerical instability. The function $\hat{\Delta}_k(t)$ is the membership-weighted mean of the training residuals within cluster $k$.
+
+To suppress observation noise and ensure smoothness, $\hat{\Delta}_k(t)$ is projected onto the same B-spline basis $\{B^{Y}_q(t)\}_{q=1}^{Q}$ as the output representation, with the same roughness penalty $\eta$ used in the main estimator:
+\begin{equation}
+\tilde{\Delta}_k(t) = \sum_{q=1}^{Q} d_{kq}\, B^{Y}_q(t),\qquad
+(d_{k1},\ldots,d_{kQ})^{\top} = (\Phi + \eta\Psi)^{-1}\int_{\Omega_t}\hat{\Delta}_k(t)\, B^{Y}(t)\,dt,
+\end{equation}
+where $\Phi = \int_{\Omega_t} B^{Y}(t)\,B^{Y}(t)^{\top}\,dt$ and $\Psi = \int_{\Omega_t} {B^{Y}}''(t)\,{B^{Y}}''(t)^{\top}\,dt$.
+
+The corrected FFSRQ prediction is then given by
+\begin{equation}
+\tilde{y}(t) = \hat{y}(t) + \sum_{k=1}^{K}\beta_k\bigl(x(s)\bigr)\,\tilde{\Delta}_k(t),
+\end{equation}
+where $\beta_k(x(s))$ is the normalised functional membership of $x(s)$ in cluster $k$, as defined in Section IV. The same formula applies to test samples through the FFSRQ membership mapping $\beta_k(\cdot)$.
+
+It should be noticed that rPCO is a strictly post-hoc correction: the antecedent and consequent estimation of FFSRQ is not affected by introducing rPCO, and the original training objective is preserved. Furthermore, rPCO introduces no additional hyperparameter that needs to be optimised, as $\hat{\Delta}_k(t)$ is fully determined by the training residuals and shares the same smoothing parameter $\eta$ with the main estimator. When the number of rules is $K = 1$, $\tilde{\Delta}_1(t)$ reduces to the overall residual mean and rPCO degenerates to a global intercept correction; therefore, rPCO is only activated when $K &gt; 1$.</pre>
+
+  <script>
+    function copyLatex() {
+      var btn = document.getElementById('copy-latex-btn');
+      var src = document.getElementById('latex-src').textContent;
+      navigator.clipboard.writeText(src).then(function () {
+        var prev = btn.textContent;
+        btn.textContent = '✓ Copied';
+        btn.style.background = '#2a8a4a';
+        setTimeout(function () {
+          btn.textContent = prev;
+          btn.style.background = '#1a1a1a';
+        }, 1500);
+      }).catch(function () {
+        // Fallback for older browsers
+        var ta = document.createElement('textarea');
+        ta.value = src;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); btn.textContent = '✓ Copied'; }
+        catch (e) { btn.textContent = '⚠ Copy failed'; }
+        document.body.removeChild(ta);
+        setTimeout(function () { btn.textContent = '📋 Copy LaTeX source'; }, 1500);
+      });
+    }
+  </script>
 
 </div>
 </body>
