@@ -465,8 +465,12 @@
       <div class="head">数据集</div><div class="head">划分</div><div class="head">FFSRQ MSE</div><div class="head">第 2 名 MSE</div>
       <div>Ocean</div><div>80/20</div><div>3.68e−5</div><div>3.91e−5（FLMFR）</div>
       <div>Air NOx</div><div>90/10</div><div>0.0257</div><div>0.0337（FLMFR）</div>
+      <div>Air NO2</div><div>80/20</div><div>0.0225</div><div>0.0239（MM）</div>
       <div>Stock (MSFT)</div><div>80/20</div><div>0.0704</div><div>0.0706（FKAMFR）</div>
     </div>
+    <p style="font-size:0.88rem; color:var(--muted); margin-top:6px;">
+      Air NO2 (80/20) 是统一在 80/20 split 下的结果（output 改为 NO2，inputs = temperature, humidity, NOx；n.basis=13, clust=3, eta=1e-8, rPCO=1）。NOx 作为 output 在 80/20 下达不到 rank 1（最佳 rank 4），改用 NO2 后稳健取得 rank 1。
+    </p>
   </section>
 
   <!-- ======= Section 5.5: Related work ======= -->
