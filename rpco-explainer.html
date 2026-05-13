@@ -536,7 +536,7 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
     <div style="background:#fdfdfa; border:1px solid var(--hairline); border-left:3px solid var(--ink); padding:18px 22px; border-radius:0 6px 6px 0; line-height:1.75;">
       <p><b>Residual-based Per-Cluster Offset (rPCO).</b></p>
 
-      <p>To capture cluster-specific level shifts in $y(t)$ that cannot be absorbed by the consequent parameters of FFSRQ, we introduce a post-hoc correction term, the <i>residual-based per-cluster offset</i> (rPCO). After the FFSRQ parameters have been estimated, let $\hat{y}_i(t)$ denote the in-sample prediction of $y_i(t)$ and $\mu_k(x_i(s))$ the membership of sample $i$ in cluster $k$. For each $k = 1, \ldots, K$, the per-cluster residual centre is</p>
+      <p>To capture cluster-specific level shifts in $y(t)$ that cannot be absorbed by the consequent parameters, we introduce a post-hoc correction term, the <i>residual-based per-cluster offset</i> (rPCO). After the antecedent and consequent parameters have been estimated, let $\hat{y}_i(t)$ denote the in-sample prediction of $y_i(t)$ and $\mu_k(x_i(s))$ the membership of sample $i$ in cluster $k$. For each $k = 1, \ldots, K$, the per-cluster residual centre is</p>
 
       $$
       \hat{\Delta}_k(t) \;=\; \frac{\displaystyle\sum_{i=1}^{N}\mu_k(x_i(s))\bigl(y_i(t)-\hat{y}_i(t)\bigr)}{\displaystyle\sum_{i=1}^{N}\mu_k(x_i(s)) + \varepsilon},
@@ -548,7 +548,7 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
       \tilde{y}(t) \;=\; \hat{y}(t) \;+\; \sum_{k=1}^{K}\beta_k\bigl(x(s)\bigr)\,\tilde{\Delta}_k(t),
       $$
 
-      <p>where $\beta_k(x(s))$ is the normalised functional membership of $x(s)$ in cluster $k$. rPCO introduces no additional hyperparameter and is only activated when $K > 1$; for $K = 1$ it reduces to the original FFSRQ.</p>
+      <p>where $\beta_k(x(s))$ is the normalised functional membership of $x(s)$ in cluster $k$. rPCO introduces no additional hyperparameter and is only activated when $K > 1$.</p>
     </div>
   </section>
 
@@ -559,7 +559,7 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
   <!-- LaTeX source for the method-section draft (used by Copy button) -->
   <pre id="latex-src" hidden>\subsection{Residual-based Per-Cluster Offset (rPCO)}
 
-To capture cluster-specific level shifts in $y(t)$ that cannot be absorbed by the consequent parameters of FFSRQ, we introduce a post-hoc correction term, the \emph{residual-based per-cluster offset} (rPCO). After the FFSRQ parameters have been estimated, let $\hat{y}_i(t)$ denote the in-sample prediction of $y_i(t)$ and $\mu_k(x_i(s))$ the membership of sample $i$ in cluster $k$. For each $k = 1,\ldots,K$, the per-cluster residual centre is
+To capture cluster-specific level shifts in $y(t)$ that cannot be absorbed by the consequent parameters, we introduce a post-hoc correction term, the \emph{residual-based per-cluster offset} (rPCO). After the antecedent and consequent parameters have been estimated, let $\hat{y}_i(t)$ denote the in-sample prediction of $y_i(t)$ and $\mu_k(x_i(s))$ the membership of sample $i$ in cluster $k$. For each $k = 1,\ldots,K$, the per-cluster residual centre is
 \begin{equation}
 \hat{\Delta}_k(t) = \frac{\sum_{i=1}^{N}\mu_k(x_i(s))\bigl(y_i(t)-\hat{y}_i(t)\bigr)}{\sum_{i=1}^{N}\mu_k(x_i(s)) + \varepsilon},
 \end{equation}
@@ -567,7 +567,7 @@ with $\varepsilon &gt; 0$ a small constant for numerical stability. Each $\hat{\
 \begin{equation}
 \tilde{y}(t) = \hat{y}(t) + \sum_{k=1}^{K}\beta_k\bigl(x(s)\bigr)\,\tilde{\Delta}_k(t),
 \end{equation}
-where $\beta_k(x(s))$ is the normalised functional membership of $x(s)$ in cluster $k$. rPCO introduces no additional hyperparameter and is only activated when $K &gt; 1$; for $K = 1$ it reduces to the original FFSRQ.</pre>
+where $\beta_k(x(s))$ is the normalised functional membership of $x(s)$ in cluster $k$. rPCO introduces no additional hyperparameter and is only activated when $K &gt; 1$.</pre>
 
   <script>
     function copyLatex() {
