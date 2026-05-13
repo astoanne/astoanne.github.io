@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贯日翻译 · 体验版 push 前测试清单</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --bg: #faf8f3;
+    --paper: #ffffff;
+    --ink: #1a1a2e;
+    --muted: #6b6b7d;
+    --hairline: #e8e4d8;
+    --admin: #d63031;
+    --employee: #6b63fa;
+    --promoter: #f39c12;
+    --customer: #07a35f;
+    --setup: #5b6d8a;
+    --pass: #07a35f;
+    --pass-soft: #d4f5e0;
+    --fail: #d63031;
+    --fail-soft: #fce4e4;
+    --warn-soft: #fef3e0;
+    --warn: #8a6d3b;
+}
+html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+.wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 24px 160px;
+}
+
+/* Header */
+header {
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 32px;
+}
+.eyebrow {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+header h1 {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-size: 44px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+}
+.lede { color: var(--muted); font-size: 16px; }
+.lede strong { color: var(--ink); font-weight: 600; }
+
+/* Section */
+section { margin-bottom: 48px; }
+section > h2 {
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    border-bottom: 2px solid var(--hairline);
+    padding-bottom: 12px;
+}
+section > h2 .num {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 22px;
+}
+section > h2 .role-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+    font-style: normal;
+}
+section.s-setup > h2 .role-tag { background: var(--setup); }
+section.s-customer > h2 .role-tag { background: var(--customer); }
+section.s-admin > h2 .role-tag { background: var(--admin); }
+section.s-employee > h2 .role-tag { background: var(--employee); }
+section.s-promoter > h2 .role-tag { background: var(--promoter); }
+section.s-e2e > h2 .role-tag { background: var(--ink); }
+
+section .sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 28px;
+    line-height: 1.6;
+}
+section .sub.warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+    padding: 12rpx 18rpx;
+    border-radius: 6px;
+    border-left: 4px solid #f0ad4e;
+    padding: 12px 16px;
+    font-size: 13.5px;
+}
+
+/* Test card */
+.test {
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 12px;
+    transition: all 0.15s;
+}
+.test.passed { border-left: 4px solid var(--pass); background: linear-gradient(to right, var(--pass-soft) 0%, white 6%); }
+.test.failed { border-left: 4px solid var(--fail); background: linear-gradient(to right, var(--fail-soft) 0%, white 6%); }
+
+.test-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+.test-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: transparent;
+    transition: all 0.15s;
+}
+.test-checkbox:hover { border-color: var(--ink); }
+.test.passed .test-checkbox {
+    background: var(--pass);
+    border-color: var(--pass);
+    color: white;
+}
+.test.failed .test-checkbox {
+    background: var(--fail);
+    border-color: var(--fail);
+    color: white;
+}
+.test-content { flex: 1; }
+.test-title {
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    user-select: none;
+}
+.test.passed .test-title { color: var(--pass); }
+.test.failed .test-title { color: var(--fail); }
+.test-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.test-action-btn {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg);
+    color: var(--muted);
+    border: 1px solid transparent;
+}
+.test-action-btn:hover { border-color: #ccc; }
+.test-action-btn.fail-btn:hover { background: var(--fail-soft); color: var(--fail); border-color: var(--fail); }
+
+.test-body {
+    margin-top: 12px;
+    margin-left: 38px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.65;
+}
+.test-body ol, .test-body ul {
+    margin-left: 18px;
+    margin-top: 4px;
+}
+.test-body li { margin-bottom: 4px; }
+.test-body .expected {
+    background: var(--bg);
+    border-left: 3px solid var(--employee);
+    padding: 8px 12px;
+    margin-top: 10px;
+    border-radius: 0 4px 4px 0;
+    color: var(--ink);
+    font-size: 13.5px;
+}
+.test-body .expected::before {
+    content: '预期: ';
+    color: var(--employee);
+    font-weight: 600;
+}
+.test-body code {
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    background: #f0ede2;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12.5px;
+    color: var(--ink);
+}
+.test-body .needs-account {
+    color: var(--fail);
+    font-size: 12px;
+    background: var(--fail-soft);
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+/* Progress bar */
+.progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--hairline);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.progress-stats {
+    display: flex;
+    gap: 18px;
+    font-size: 14px;
+    color: var(--muted);
+}
+.progress-stats strong { color: var(--ink); }
+.progress-stats .pass-count strong { color: var(--pass); }
+.progress-stats .fail-count strong { color: var(--fail); }
+.progress-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 100px;
+    display: flex;
+}
+.progress-bar-pass { background: var(--pass); }
+.progress-bar-fail { background: var(--fail); }
+.export-btn {
+    background: var(--employee);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+/* Modal */
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+    background: white;
+    border-radius: 8px;
+    padding: 28px;
+    max-width: 580px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+.modal h3 { font-size: 20px; margin-bottom: 8px; font-weight: 600; }
+.modal .modal-hint { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+.modal textarea {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    line-height: 1.6;
+    min-height: 280px;
+    resize: vertical;
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+.modal-actions button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid var(--hairline);
+    background: white;
+}
+.modal-actions button.primary {
+    background: var(--employee);
+    color: white;
+    border-color: var(--employee);
+}
+
+@media (max-width: 600px) {
+    header h1 { font-size: 32px; }
+    .wrap { padding: 32px 16px 130px; }
+    .test { padding: 14px 16px; }
+    .test-body { margin-left: 0; margin-top: 14px; }
+    .test-actions { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+    <div class="eyebrow">— Internal · 体验版 push 前测试 —</div>
+    <h1>贯日翻译小程序<br>测试清单</h1>
+    <p class="lede">push 体验版前请按角色逐项测过。每项点 ✓ 标通过、点叉标失败。<strong>左边复选框点一下也能直接标通过</strong>。失败的项请描述问题(在该项下右键 → 备注 — 或截图发开发)。底部有进度条 + 导出结果。</p>
+    <p class="lede" style="margin-top: 12px;">⚠️ 因为只有一个号,标 <span style="background:var(--fail-soft);color:var(--fail);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;">需另号</span> 的请找别人配合测。</p>
+</header>
+
+<!-- ============ SETUP ============ -->
+<section class="s-setup">
+<h2><span class="num">00</span>部署前提<span class="role-tag">setup</span></h2>
+<p class="sub">客户端 push 之前,云函数和数据库必须先就位,否则功能失败。</p>
+
+<div class="test" data-test="setup-1">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">8 个云函数已上传部署</div>
+            <div class="test-body">
+                微信开发者工具 → 云开发 → 云函数 → 右键这些函数选"上传并部署所有文件":
+                <ul>
+                    <li><code>getStaffOrders</code> (改了:1 层可见)</li>
+                    <li><code>staffUpdateOrder</code> (改了:员工只能改自己直接 seller 的)</li>
+                    <li><code>whoAmI</code></li>
+                    <li><code>addStaff</code></li>
+                    <li><code>seedFakeOrders</code></li>
+                    <li><code>genOrderNo</code> (新订单号生成的命脉,不部署客户下单全挂)</li>
+                    <li><code>getMyQR</code> (新)</li>
+                    <li><code>getMyReferral</code> + <code>bindReferral</code> (新,客户推广码绑定)</li>
+                </ul>
+                <div class="expected">部署后云函数列表能看到全部,无报错</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="setup-2">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">数据库集合已建</div>
+            <div class="test-body">
+                云开发 → 数据库,确认这些集合存在:
+                <ul>
+                    <li><code>order</code> (老的,无变化)</li>
+                    <li><code>salesman</code> (员工/推广人表)</li>
+                    <li><code>customer_referral</code> (新,会被 bindReferral 自动建,但保险起见可手动建)</li>
+                </ul>
+                <div class="expected">3 个集合都在</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="setup-3">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">客户端代码已上传</div>
+            <div class="test-body">
+                微信开发者工具 → 上传 → 选择体验版。改动很多,确保无误。
+                <div class="expected">体验版能在微信里被搜到/打开</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ============ CUSTOMER ============ -->
+<section class="s-customer">
+<h2><span class="num">01</span>普通客户<span class="role-tag">customer</span></h2>
+<p class="sub">用一个未在 salesman 表里的微信号测(可以让一个朋友测,或者用没绑过的号)。重点:推广码弹窗 + 短订单号。</p>
+
+<div class="test" data-test="cust-1">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">首次进小程序(无 QR)→ 弹推广码窗</div>
+            <div class="test-body">
+                <ol>
+                    <li>用一个从未进过这个小程序的微信号</li>
+                    <li>从微信"搜一搜"找到小程序,点进</li>
+                </ol>
+                <div class="expected">首页加载完后弹出推广码弹窗:输入框 + "跳过" + "输入推广码"两个按钮。提示"一旦确认无法更改"</div>
+                <div class="needs-account">需另号(或清掉自己的 customer_referral 记录)</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-2">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">输入有效推广码 → 绑定成功</div>
+            <div class="test-body">
+                弹窗里输入 <code>anne</code>(或其他确实存在的 sellerCode)→ 点"输入推广码"
+                <div class="expected">弹窗关闭,toast 提示"已绑定 anne"。重启小程序不会再弹窗(已绑定)</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-3">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">输入不存在的推广码 → 报错</div>
+            <div class="test-body">
+                清掉 customer_referral 该 openid 记录 → 重启小程序 → 输入 <code>nobody123</code>
+                <div class="expected">弹错误"推广码 nobody123 不存在",不绑定,弹窗保留可以重新输</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-4">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">点"跳过" → 二次确认 → 永久绑 Official</div>
+            <div class="test-body">
+                清掉绑定 → 重启 → 点"跳过"
+                <div class="expected">先弹"确认跳过?跳过后将永久无法再绑定推广码"。点确认 → 永久绑定 Official,以后再也不弹</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-5">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">扫某个 seller 的二维码进 → 自动绑定,不弹窗</div>
+            <div class="test-body">
+                清掉绑定 → 让 admin 用推广码生成器生成 anne 的 QR → 长按识别打开小程序
+                <div class="expected">不弹窗,自动绑定到 anne</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-6">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">已绑定后,扫别的 seller 的 QR → 不改绑(忠诚锁定)</div>
+            <div class="test-body">
+                客户已绑定 anne → 现在用 bob 的 QR 进
+                <div class="expected">仍然按 anne 算,不会改成 bob。后续下单订单的 seller 字段还是 anne</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-7">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">下证件订单 → 短订单号生成,文件能上传</div>
+            <div class="test-body">
+                <ol>
+                    <li>首页点"证书翻译"</li>
+                    <li>选任意类型(如身份证)</li>
+                    <li>上传任意 PDF/图片</li>
+                </ol>
+                <div class="expected">订单号是新格式 <code>GXX####</code>(7字符),不卡在生成订单号那一步;详情页能看到文件、金额、订单号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-8">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">下文件翻译订单 → 同上</div>
+            <div class="test-body">
+                首页"文件翻译" → 选普通-英译中之类 → 上传文件
+                <div class="expected">订单号 <code>GF1####</code> 之类,流程通</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-9">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">支付流程能跑通(微信支付)</div>
+            <div class="test-body">
+                未付款订单 → 进详情 → 点"立即支付"
+                <div class="expected">微信支付窗弹出,可以付。付完订单状态变"已付款"</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-10">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">"我的订单"页面正确显示订单</div>
+            <div class="test-body">
+                首页 → 我的订单
+                <div class="expected">列表显示自己的订单,标题正确(用 type 字段而不是订单号解析),状态正确</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-11">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">合并支付 → 圆圈选中清晰</div>
+            <div class="test-body">
+                "我的订单"里有多笔待付款,点"合并付款"
+                <div class="expected">每个订单卡片左边出现空心圆圈,点一下变实心紫色 + ✓。视觉清楚,不再依赖左侧色条</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="cust-12">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">老订单(如果有)还能正常显示</div>
+            <div class="test-body">
+                如果数据库里有 push 之前生成的老格式订单(29 字符 <code>GRxxxxxx...</code>):查看它们的详情
+                <div class="expected">显示标题正确(用 type 或回退 charToTitle 解析老格式),不崩,可以下载付款</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ============ ADMIN ============ -->
+<section class="s-admin">
+<h2><span class="num">02</span>管理员<span class="role-tag">admin</span></h2>
+<p class="sub">用你自己(已经 bootstrap 成 admin 的号)测。这部分最重要,因为只有你能测全。</p>
+
+<div class="test" data-test="admin-1">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">首页 7 下底部"贯日翻译服务有限公司" → 弹自己 openid</div>
+            <div class="test-body">
+                进首页,连续点底部灰字 7 下
+                <div class="expected">弹窗显示自己 openid + 自动复制到剪切板</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-2">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">首页有紫色"员工后台"按钮</div>
+            <div class="test-body">
+                <div class="expected">底部能看到紫色卡片"员工后台",右下角写着"管理员 ›"</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-3">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工后台顶部 4 个按钮齐全</div>
+            <div class="test-body">
+                进员工后台
+                <div class="expected">顶部有这 4 个按钮:🔧 测试数据 / 🔗 推广码生成器 / + 添加下属 / 📱 我的推广码(紫底)</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-4">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">点"测试数据" → 重置 → 15 条假订单</div>
+            <div class="test-body">
+                <div class="expected">弹出 sheet 选"重置"。处理几秒后弹"清理 X 条/新增 15 条"。列表刷新出现假订单</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-5">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">月份切换 + 卡片宽度稳定</div>
+            <div class="test-body">
+                顶部切换 ‹ 月份 › 看不同月
+                <div class="expected">订单卡片宽度始终一样宽(不会一会窄一会宽);月度汇总数字跟着变</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-6">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">"仅看我自己"和"仅看官方"互斥过滤</div>
+            <div class="test-body">
+                <div class="expected">两个 chip 在 admin 后台都能看见;点开一个会自动关另一个;过滤生效;再点取消</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-7">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">订单详情 — 待付款的有"标记为已付款"按钮</div>
+            <div class="test-body">
+                找一条待付款的(测试数据有)→ 进详情
+                <div class="expected">看到"标记为已付款 (admin)"按钮。点一下二次确认 → 状态变已付款</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-8">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">订单详情 — 已付款的能上传译件</div>
+            <div class="test-body">
+                找一条已付款未完成的 → 点"上传译件"→ 选 sample-translation.pdf 或任意 PDF
+                <div class="expected">上传成功,状态变已完成,详情页显示"已上传译件"+ 预览按钮</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-9">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">已付款也能直接"标记为已完成"(不上传)</div>
+            <div class="test-body">
+                <div class="expected">"标记为已完成"按钮在已付款状态显示。点击 → 二次确认 → 状态变已完成</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-10">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">下载客户原件 → 能打开 PDF</div>
+            <div class="test-body">
+                <div class="expected">详情页"客户原件"区点下载,能打开假 PDF(显示 "Test Original Document - placeholder...")</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-11">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">"我的推广码"显示 QR + 推广码 + 可保存到相册</div>
+            <div class="test-body">
+                员工后台 → 📱 我的推广码
+                <div class="expected">弹窗显示自己的小程序码 + 紫色推广码(如 anne) + "保存到相册" + "复制推广码"按钮</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-12">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">"推广码生成器"为 andy/sara/anne/leah 生成 QR</div>
+            <div class="test-body">
+                员工后台 → 🔗 推广码生成器 → 4 个 chip 一一点击 + 生成
+                <div class="expected">每个 sellerCode 都能生成 QR + 保存到相册</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-13">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">"添加下属"能加 employee 和 promoter</div>
+            <div class="test-body">
+                添加下属 → 输入对方 openid + 名字 + sellerCode + 选 role
+                <div class="expected">添加成功;salesman 表里能看到新记录;parentOpenid 是你的 openid(或 null 如果加 admin)</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="admin-14">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">假订单显示真实假名称 + PDF 内容</div>
+            <div class="test-body">
+                <div class="expected">订单标题显示"身份证-中译英"等真实名称(不是"未知"),金额合理,下载得到 PDF 看到 "Test Original Document - placeholder..."</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ============ EMPLOYEE ============ -->
+<section class="s-employee">
+<h2><span class="num">03</span>员工<span class="role-tag">employee</span></h2>
+<p class="sub warn">⚠️ 全部"需另号"。先以 admin 身份在添加下属页给某个号(如 andy)添加为 employee + sellerCode = andy + parent = admin。然后让那个号测。</p>
+
+<div class="test" data-test="emp-1">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工进首页 → 看到紫色"员工后台"按钮</div>
+            <div class="test-body">
+                <div class="expected">该号进首页,有"员工后台"按钮,标签写"员工"</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="emp-2">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工后台顶部按钮 — 看不到 admin 专属按钮</div>
+            <div class="test-body">
+                <div class="expected">没有"测试数据" 和 "推广码生成器"按钮。能看到"添加下属"和"我的推广码"</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="emp-3">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工只看到自己 + 直接下属的订单</div>
+            <div class="test-body">
+                如果 admin 把 andy 加为员工,andy 下面又有推广人 X,那么 andy 看到的订单 = seller=andy 的 + seller=X 的
+                <div class="expected">不会看到 admin 名下的订单,也不会看到 X 的下属(如有)的订单</div>
+                <div class="needs-account">需另号 + 数据准备</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="emp-4">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">"仅看我自己"过滤生效(隐藏下属订单)</div>
+            <div class="test-body">
+                员工有"仅看我自己"chip,没有"仅看官方"
+                <div class="expected">点开 → 列表只剩 seller=andy 的订单</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="emp-5">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工进自己订单详情 → 能上传译件、能标记完成</div>
+            <div class="test-body">
+                找一条 seller=andy 且已付款的 → 详情
+                <div class="expected">能下载原件、上传译件、标记完成。<strong>看不到</strong>"标记为已付款"按钮(那是 admin 的)</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="emp-6">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工进下属订单详情 → 只能看不能改 (新规则)</div>
+            <div class="test-body">
+                找一条 seller=X (X 是 andy 的下属推广人)的订单 → 进详情
+                <div class="expected">能看到所有内容(原件、地址、客户备注等),但<strong>没有上传/标记按钮</strong>。底部有橙色提示"如需处理此订单,请联系 admin 授权"。译件区只显示状态,无编辑按钮</div>
+                <div class="needs-account">需另号 + 数据准备</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="emp-7">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工"添加下属" — 不能加 admin</div>
+            <div class="test-body">
+                员工进"+ 添加下属"页面
+                <div class="expected">role 选项只有 "员工" 和 "推广人",没有 "管理员"</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="emp-8">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">员工"我的推广码" — 拿到自己的 QR</div>
+            <div class="test-body">
+                <div class="expected">弹窗显示 andy 自己的 QR + 推广码 "andy"</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ============ PROMOTER ============ -->
+<section class="s-promoter">
+<h2><span class="num">04</span>推广人<span class="role-tag">promoter</span></h2>
+<p class="sub warn">⚠️ 同上,需另号。让 admin 把某号添加为 promoter,sellerCode = 该号的推广码,parent 任选(放在 admin 下或某员工下)。</p>
+
+<div class="test" data-test="prom-1">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">推广人进员工后台 → 角色显示"推广人"</div>
+            <div class="test-body">
+                <div class="expected">紫色"员工后台"按钮可见;点进去顶部 role tag 显示"推广人"(橙色)</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="prom-2">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">推广人顶部按钮 — 只有"我的推广码"</div>
+            <div class="test-body">
+                <div class="expected">没有 测试数据 / 推广码生成器 / 添加下属。只有"我的推广码"</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="prom-3">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">推广人没有"仅看自己"过滤(因为本来就只看自己)</div>
+            <div class="test-body">
+                <div class="expected">月份汇总下方没有任何 chip 过滤器</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="prom-4">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">推广人只看到 seller = 自己 sellerCode 的订单</div>
+            <div class="test-body">
+                <div class="expected">列表里订单的 seller 字段都是该推广人;能看到金额、类型、客户备注</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="prom-5">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">推广人订单详情 — 客户原件区显示提示而非下载</div>
+            <div class="test-body">
+                <div class="expected">"客户原件"区显示"推广人无原件下载权限"。完全没有下载按钮</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="prom-6">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">推广人订单详情 — 看不到译件区</div>
+            <div class="test-body">
+                <div class="expected">译件区 ⊥ 不显示。任何编辑按钮都没有</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="prom-7">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">推广人"我的推广码" — 拿到自己的 QR</div>
+            <div class="test-body">
+                <div class="expected">能正常显示 QR + sellerCode + 保存到相册</div>
+                <div class="needs-account">需另号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ============ E2E ============ -->
+<section class="s-e2e">
+<h2><span class="num">05</span>End-to-End 多账号场景<span class="role-tag">e2e</span></h2>
+<p class="sub">最接近真实使用场景。需 3 个号:admin + employee(andy) + promoter(carol,parent=andy)。</p>
+
+<div class="test" data-test="e2e-1">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">客户走 carol 二维码 → carol 和 andy 都看到这单</div>
+            <div class="test-body">
+                <ol>
+                    <li>用一个新客户号(D 号),清掉绑定</li>
+                    <li>D 长按 carol 的 QR → 自动绑定到 carol</li>
+                    <li>D 下一个证件订单</li>
+                </ol>
+                <div class="expected">订单 seller=carol。carol 自己后台能看到(只读)。andy 后台也能看到(carol 是 andy 的直接下属);但 andy 也只能看不能改(下属订单)。admin 当然能看 + 编辑</div>
+                <div class="needs-account">需 3-4 号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="e2e-2">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">D 又扫 anne 的 QR → 仍归 carol(已锁定)</div>
+            <div class="test-body">
+                <div class="expected">D 下一单还归 carol,不变</div>
+                <div class="needs-account">需 3-4 号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="e2e-3">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">admin 给 carol 的订单上传译件 + 标记完成</div>
+            <div class="test-body">
+                <div class="expected">admin 能改任何订单。客户 D 在"我的订单"看到状态变"已完成",可以下载译件</div>
+                <div class="needs-account">需 3-4 号</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+
+<div class="test" data-test="e2e-4">
+    <div class="test-header">
+        <div class="test-checkbox" data-action="toggle"></div>
+        <div class="test-content">
+            <div class="test-title" data-action="toggle">客户报订单号 → 你能秒查</div>
+            <div class="test-body">
+                客户给你 7 字符订单号 <code>GCIA3K9</code>,你打开 admin 后台
+                <div class="expected">订单列表里能看到这条;detail 页能查看原始字段</div>
+            </div>
+        </div>
+        <div class="test-actions">
+            <span class="test-action-btn fail-btn" data-action="fail">✗ 失败</span>
+        </div>
+    </div>
+</div>
+</section>
+
+</div>
+
+<div class="progress-bar">
+    <div class="progress-stats">
+        <span>总 <strong id="total-num">0</strong></span>
+        <span class="pass-count">通过 <strong id="pass-num">0</strong></span>
+        <span class="fail-count">失败 <strong id="fail-num">0</strong></span>
+        <span>未测 <strong id="untested-num">0</strong></span>
+    </div>
+    <div class="progress-bar-track">
+        <div class="progress-bar-pass" id="bar-pass" style="width:0%"></div>
+        <div class="progress-bar-fail" id="bar-fail" style="width:0%"></div>
+    </div>
+    <button class="export-btn" id="export-btn">导出结果</button>
+</div>
+
+<div class="modal-bg" id="modal">
+    <div class="modal">
+        <h3>测试结果</h3>
+        <p class="modal-hint">复制下面的内容回传给开发,定位失败项。</p>
+        <textarea readonly id="export-text"></textarea>
+        <div class="modal-actions">
+            <button id="close-btn">关闭</button>
+            <button class="primary" id="copy-btn">复制</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'guanri-test-checklist-v1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e){}
+
+function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    refreshUI();
+}
+
+function refreshUI(){
+    let pass = 0, fail = 0, total = 0;
+    document.querySelectorAll('.test').forEach(t => {
+        total++;
+        const id = t.dataset.test;
+        const v = state[id];
+        t.classList.toggle('passed', v === 'pass');
+        t.classList.toggle('failed', v === 'fail');
+        const cb = t.querySelector('.test-checkbox');
+        if (v === 'pass') cb.textContent = '✓';
+        else if (v === 'fail') cb.textContent = '✗';
+        else cb.textContent = '';
+        if (v === 'pass') pass++;
+        if (v === 'fail') fail++;
+    });
+    document.getElementById('total-num').textContent = total;
+    document.getElementById('pass-num').textContent = pass;
+    document.getElementById('fail-num').textContent = fail;
+    document.getElementById('untested-num').textContent = total - pass - fail;
+    document.getElementById('bar-pass').style.width = (pass / total * 100) + '%';
+    document.getElementById('bar-fail').style.width = (fail / total * 100) + '%';
+}
+
+document.querySelectorAll('.test').forEach(t => {
+    const id = t.dataset.test;
+    t.addEventListener('click', (e) => {
+        const action = e.target.dataset.action;
+        if (action === 'toggle') {
+            // 复选框/标题点 → 切换 通过 ↔ 未测
+            state[id] = state[id] === 'pass' ? null : 'pass';
+            save();
+        } else if (action === 'fail') {
+            state[id] = state[id] === 'fail' ? null : 'fail';
+            save();
+        }
+    });
+});
+
+const SECTION_LABELS = {
+    'setup': '部署', 'cust': '客户', 'admin': 'Admin',
+    'emp': '员工', 'prom': '推广人', 'e2e': 'E2E'
+};
+
+document.getElementById('export-btn').addEventListener('click', () => {
+    const lines = [
+        '# 贯日翻译 · 测试结果',
+        '',
+        '导出时间: ' + new Date().toLocaleString('zh-CN'),
+        ''
+    ];
+    let pass = 0, fail = 0, untested = 0;
+    const failedItems = [];
+    document.querySelectorAll('.test').forEach(t => {
+        const id = t.dataset.test;
+        const title = t.querySelector('.test-title').textContent.trim();
+        const v = state[id];
+        if (v === 'pass') pass++;
+        else if (v === 'fail') { fail++; failedItems.push({id, title}); }
+        else untested++;
+    });
+    lines.push('## 总览');
+    lines.push('通过: ' + pass + ' / 失败: ' + fail + ' / 未测: ' + untested);
+    lines.push('');
+    if (failedItems.length) {
+        lines.push('## ✗ 失败项 (' + failedItems.length + ')');
+        failedItems.forEach(i => lines.push('- [' + i.id + '] ' + i.title));
+        lines.push('');
+    }
+    lines.push('## 详细');
+    document.querySelectorAll('section').forEach(s => {
+        const h = s.querySelector('h2');
+        if (!h) return;
+        lines.push('### ' + h.textContent.replace(/\s+/g, ' ').trim());
+        s.querySelectorAll('.test').forEach(t => {
+            const id = t.dataset.test;
+            const title = t.querySelector('.test-title').textContent.trim();
+            const v = state[id];
+            const sym = v === 'pass' ? '✓' : v === 'fail' ? '✗' : '·';
+            lines.push(sym + ' ' + title);
+        });
+        lines.push('');
+    });
+    document.getElementById('export-text').value = lines.join('\n');
+    document.getElementById('modal').classList.add('open');
+});
+
+document.getElementById('close-btn').addEventListener('click', () => {
+    document.getElementById('modal').classList.remove('open');
+});
+document.getElementById('copy-btn').addEventListener('click', () => {
+    const ta = document.getElementById('export-text');
+    ta.select();
+    document.execCommand('copy');
+    const btn = document.getElementById('copy-btn');
+    const orig = btn.textContent;
+    btn.textContent = '已复制 ✓';
+    setTimeout(() => btn.textContent = orig, 1500);
+});
+document.getElementById('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') document.getElementById('modal').classList.remove('open');
+});
+
+refreshUI();
+</script>
+
+</body>
+</html>
