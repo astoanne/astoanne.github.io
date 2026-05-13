@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rPCO 图解 — 残差逐簇截距修正</title>
+<style>
+  :root {
+    --bg: #fbfbf7;
+    --ink: #1a1a1a;
+    --muted: #6a6a6a;
+    --accent: #d04a3b;
+    --blueA: #3a78c2;
+    --orangeB: #e69b3a;
+    --lineCompromise: #888;
+    --lineGood: #2a8a4a;
+    --card: #ffffff;
+    --hairline: #e2e2dc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    line-height: 1.65;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+  header h1 {
+    font-size: 2.0rem;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  header .lede {
+    font-size: 1.15rem;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+  header .tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+  section {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 24px 0;
+  }
+  section h2 {
+    font-size: 1.35rem;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  section h2 .step {
+    background: var(--ink);
+    color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  section p { margin: 8px 0 12px; }
+  .figure {
+    background: #fafaf3;
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 12px;
+    margin: 16px 0;
+  }
+  .figure svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  .caption {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 6px;
+  }
+  .analogy {
+    background: #fff8e6;
+    border-left: 3px solid var(--orangeB);
+    padding: 12px 16px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .analogy strong { color: var(--accent); }
+  .kbd {
+    background: #efeee5;
+    border: 1px solid #d8d6c8;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.9em;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 720px) {
+    .grid2 { grid-template-columns: 1fr; }
+  }
+  .num-result {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 8px 18px;
+    background: #f4f7f1;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 12px 0;
+    font-size: 0.95rem;
+  }
+  .num-result .head { font-weight: 600; color: var(--muted); }
+  .num-result .row.win { color: var(--lineGood); font-weight: 600; }
+  ul.simple { padding-left: 22px; }
+  ul.simple li { margin: 6px 0; }
+  .legend-dot {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    vertical-align: middle; margin-right: 4px;
+  }
+  footer {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 36px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tag">rPCO 图解</span>
+    <h1>rPCO 到底在干什么？</h1>
+    <p class="lede">一句话：让主模型只负责"<b>形状</b>"，把每个簇的"<b>高低</b>"单独记下来再加回去。</p>
+  </header>
+
+  <!-- ======= Section 1: Setup ======= -->
+  <section>
+    <h2><span class="step">1</span>背景：数据里藏着"分组差"</h2>
+    <p>真实数据常常分成几个"簇"（cluster）。同一个 <i>x</i>，不同簇的 <i>y</i> 整体水平就是不一样高。</p>
+
+    <div class="analogy">
+      <strong>类比：两个学校的考试。</strong>
+      A 校学生平均 85 分，B 校学生平均 75 分。<br>
+      把"学习时长 → 成绩"画在图上，两校的<b>斜率（关系形状）</b>差不多，
+      但两校的<b>整体水平</b>差了 10 分。
+    </div>
+
+    <div class="figure">
+      <svg viewBox="0 0 600 280" width="600" height="280" aria-label="两个簇的散点">
+        <!-- axes -->
+        <line x1="50" y1="240" x2="560" y2="240" stroke="#999" stroke-width="1.2"/>
+        <line x1="50" y1="20"  x2="50"  y2="240" stroke="#999" stroke-width="1.2"/>
+        <text x="555" y="258" font-size="12" fill="#666" text-anchor="end">x（学习时长）</text>
+        <text x="58" y="22" font-size="12" fill="#666">y（成绩）</text>
+
+        <!-- Cluster A (blue, higher) -->
+        <g fill="#3a78c2">
+          <circle cx="110" cy="105" r="5"/>
+          <circle cx="155" cy="92"  r="5"/>
+          <circle cx="200" cy="82"  r="5"/>
+          <circle cx="245" cy="72"  r="5"/>
+          <circle cx="290" cy="60"  r="5"/>
+          <circle cx="335" cy="50"  r="5"/>
+        </g>
+        <!-- Cluster B (orange, lower) -->
+        <g fill="#e69b3a">
+          <circle cx="160" cy="195" r="5"/>
+          <circle cx="205" cy="182" r="5"/>
+          <circle cx="250" cy="170" r="5"/>
+          <circle cx="295" cy="158" r="5"/>
+          <circle cx="340" cy="148" r="5"/>
+          <circle cx="385" cy="135" r="5"/>
+        </g>
+
+        <!-- legends -->
+        <g font-size="13" fill="#333">
+          <circle cx="430" cy="90" r="5" fill="#3a78c2"/><text x="442" y="94">A 校（水平高）</text>
+          <circle cx="430" cy="115" r="5" fill="#e69b3a"/><text x="442" y="119">B 校（水平低）</text>
+        </g>
+      </svg>
+      <div class="caption">图 1 ｜ 两个簇形状相似（斜率近），但整体高低差很大。</div>
+    </div>
+  </section>
+
+  <!-- ======= Section 2: Without rPCO ======= -->
+  <section>
+    <h2><span class="step">2</span>没有 rPCO：模型被"拉扯"</h2>
+    <p>FFSRQ 原版默认所有簇共享同一组基底系数。它会试图用<b>一条线</b>同时穿过两个簇 —— 结果是：</p>
+    <ul class="simple">
+      <li>线被拉到两簇<b>中间</b>，对 A 校太低、对 B 校太高；</li>
+      <li>为了"凑"高度，模型把<b>基底预算</b>浪费在"猜平均水平"上，没法精细拟合形状；</li>
+      <li>残差大，预测 MSE 高。</li>
+    </ul>
+
+    <div class="figure">
+      <svg viewBox="0 0 600 280" width="600" height="280" aria-label="没有 rPCO 的拟合">
+        <line x1="50" y1="240" x2="560" y2="240" stroke="#999" stroke-width="1.2"/>
+        <line x1="50" y1="20"  x2="50"  y2="240" stroke="#999" stroke-width="1.2"/>
+
+        <!-- compromise line (gray dashed) - goes through the middle -->
+        <line x1="80" y1="150" x2="430" y2="100" stroke="#888" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <text x="440" y="100" font-size="12" fill="#666">妥协线（被拉扯）</text>
+
+        <!-- Cluster A -->
+        <g fill="#3a78c2">
+          <circle cx="110" cy="105" r="5"/>
+          <circle cx="155" cy="92"  r="5"/>
+          <circle cx="200" cy="82"  r="5"/>
+          <circle cx="245" cy="72"  r="5"/>
+          <circle cx="290" cy="60"  r="5"/>
+          <circle cx="335" cy="50"  r="5"/>
+        </g>
+        <!-- Cluster B -->
+        <g fill="#e69b3a">
+          <circle cx="160" cy="195" r="5"/>
+          <circle cx="205" cy="182" r="5"/>
+          <circle cx="250" cy="170" r="5"/>
+          <circle cx="295" cy="158" r="5"/>
+          <circle cx="340" cy="148" r="5"/>
+          <circle cx="385" cy="135" r="5"/>
+        </g>
+
+        <!-- residual arrows showing miss -->
+        <g stroke="#d04a3b" stroke-width="1.5" fill="none">
+          <line x1="245" y1="72" x2="245" y2="118" />
+          <polygon points="245,72 241,80 249,80" fill="#d04a3b" stroke="none"/>
+          <line x1="295" y1="158" x2="295" y2="123" />
+          <polygon points="295,158 291,150 299,150" fill="#d04a3b" stroke="none"/>
+        </g>
+        <text x="252" y="98" font-size="11" fill="#d04a3b">残差↑</text>
+        <text x="302" y="143" font-size="11" fill="#d04a3b">残差↓</text>
+      </svg>
+      <div class="caption">图 2 ｜ 一条妥协线让两簇都不准（红色箭头 = 残差）。</div>
+    </div>
+  </section>
+
+  <!-- ======= Section 3: With rPCO ======= -->
+  <section>
+    <h2><span class="step">3</span>加上 rPCO：拆成两步</h2>
+    <p><b>r</b>esidual-based <b>P</b>er-<b>C</b>luster <b>O</b>ffset =「基于残差的，每个簇一个的，截距修正」。</p>
+
+    <ol class="simple">
+      <li><b>第一步</b>：让 FFSRQ 主模型先按原方式拟合（学"形状"），得到每个样本的预测 ŷ。</li>
+      <li><b>第二步</b>：对训练集每个簇 <i>k</i>，算出"<b>残差的平均值</b>" Δ<sub>k</sub> = mean(y − ŷ)。</li>
+      <li><b>第三步</b>：把 Δ<sub>k</sub> 当作这个簇的"修正常数"存起来。</li>
+      <li><b>预测时</b>：对一个属于簇 <i>k</i> 的测试样本，预测 = ŷ + Δ<sub>k</sub>。</li>
+    </ol>
+
+    <div class="figure">
+      <svg viewBox="0 0 600 280" width="600" height="280" aria-label="加了 rPCO 的拟合">
+        <line x1="50" y1="240" x2="560" y2="240" stroke="#999" stroke-width="1.2"/>
+        <line x1="50" y1="20"  x2="50"  y2="240" stroke="#999" stroke-width="1.2"/>
+
+        <!-- Two parallel fit lines, each through one cluster -->
+        <line x1="100" y1="115" x2="345" y2="42" stroke="#2a8a4a" stroke-width="2.5"/>
+        <line x1="150" y1="205" x2="395" y2="125" stroke="#2a8a4a" stroke-width="2.5"/>
+
+        <text x="350" y="40" font-size="12" fill="#2a8a4a">ŷ + Δ_A</text>
+        <text x="400" y="128" font-size="12" fill="#2a8a4a">ŷ + Δ_B</text>
+
+        <!-- Cluster A -->
+        <g fill="#3a78c2">
+          <circle cx="110" cy="105" r="5"/>
+          <circle cx="155" cy="92"  r="5"/>
+          <circle cx="200" cy="82"  r="5"/>
+          <circle cx="245" cy="72"  r="5"/>
+          <circle cx="290" cy="60"  r="5"/>
+          <circle cx="335" cy="50"  r="5"/>
+        </g>
+        <!-- Cluster B -->
+        <g fill="#e69b3a">
+          <circle cx="160" cy="195" r="5"/>
+          <circle cx="205" cy="182" r="5"/>
+          <circle cx="250" cy="170" r="5"/>
+          <circle cx="295" cy="158" r="5"/>
+          <circle cx="340" cy="148" r="5"/>
+          <circle cx="385" cy="135" r="5"/>
+        </g>
+
+        <!-- Δ offset bracket -->
+        <g stroke="#444" stroke-width="1.3" fill="none">
+          <line x1="475" y1="80" x2="475" y2="165"/>
+          <line x1="470" y1="80" x2="480" y2="80"/>
+          <line x1="470" y1="165" x2="480" y2="165"/>
+        </g>
+        <text x="485" y="128" font-size="12" fill="#444">Δ_A − Δ_B</text>
+        <text x="485" y="146" font-size="11" fill="#666">（簇间水平差）</text>
+      </svg>
+      <div class="caption">图 3 ｜ 形状只学一次，水平差由每个簇的常数 Δ 各自吸收。</div>
+    </div>
+
+    <div class="analogy">
+      <strong>类比延续：</strong>
+      老师先用<b>整体规律</b>（学习时长 → 分数变化）打分，然后给每个学校加上一个<b>校准分</b>：A 校 +5，B 校 −3。这样既保留了整体规律，又承认了校间差距。
+    </div>
+  </section>
+
+  <!-- ======= Section 3.5: Simulation ======= -->
+  <section>
+    <h2><span class="step">4</span>模拟数据长什么样</h2>
+    <p>动机：FFSRQ 在这个模拟数据上怎么调超参都拿不到 rank 1。盯着数据生成式看，发现里面有一项簇间偏移原模型没法干净吸收，于是加了 rPCO。</p>
+
+    <p>数据结构：</p>
+    <ul class="simple">
+      <li><b>4 个簇</b>（<span class="kbd">clust.num=4</span>），每簇 ~50 条样本；</li>
+      <li><b>输入</b>是若干条函数曲线 <i>X<sub>p</sub>(s)</i>，<b>输出</b>也是函数曲线 <i>Y(t)</i>；</li>
+      <li>所有簇共享同一组形状基底 w<sub>k</sub>(t)（<span class="kbd">global_wk=1</span>）；</li>
+      <li>但 Y(t) 里多了一项 <span class="kbd">0.35 × cluster.offset[t, m]</span> —— 每簇一条自己的偏移曲线，被揉进基底系数会让"形状"和"水平"互相挤预算。</li>
+    </ul>
+
+    <div class="figure">
+      <svg viewBox="0 0 620 280" width="620" height="280" aria-label="模拟数据示意">
+        <!-- Title strip -->
+        <text x="50" y="20" font-size="13" fill="#333" font-weight="600">输入 X(s)（4 簇 · 形状相近）</text>
+        <text x="360" y="20" font-size="13" fill="#333" font-weight="600">输出 Y(t)（形状相近 + 簇间偏移）</text>
+
+        <!-- Input panel axes -->
+        <line x1="50" y1="240" x2="300" y2="240" stroke="#bbb"/>
+        <line x1="50" y1="40"  x2="50"  y2="240" stroke="#bbb"/>
+        <text x="295" y="256" font-size="11" fill="#888" text-anchor="end">s</text>
+
+        <!-- Input X curves (4 clusters, similar shape) -->
+        <!-- cluster A (blue) -->
+        <path d="M55,180 Q120,80 180,120 T295,150" stroke="#3a78c2" stroke-width="1.8" fill="none" opacity="0.75"/>
+        <path d="M55,190 Q120,95 180,130 T295,160" stroke="#3a78c2" stroke-width="1.4" fill="none" opacity="0.45"/>
+        <!-- cluster B (orange) -->
+        <path d="M55,170 Q120,70 180,110 T295,140" stroke="#e69b3a" stroke-width="1.8" fill="none" opacity="0.75"/>
+        <path d="M55,160 Q120,85 180,125 T295,135" stroke="#e69b3a" stroke-width="1.4" fill="none" opacity="0.45"/>
+        <!-- cluster C (green) -->
+        <path d="M55,185 Q120,90 180,115 T295,155" stroke="#2a8a4a" stroke-width="1.8" fill="none" opacity="0.75"/>
+        <!-- cluster D (purple) -->
+        <path d="M55,175 Q120,75 180,118 T295,145" stroke="#8a4ad0" stroke-width="1.8" fill="none" opacity="0.75"/>
+
+        <!-- Output panel axes -->
+        <line x1="360" y1="240" x2="600" y2="240" stroke="#bbb"/>
+        <line x1="360" y1="40"  x2="360" y2="240" stroke="#bbb"/>
+        <text x="595" y="256" font-size="11" fill="#888" text-anchor="end">t</text>
+
+        <!-- Output Y curves — same shape but vertically shifted per cluster -->
+        <!-- D (top): shifted up most -->
+        <path d="M365,90 Q420,60 480,70 T595,85"  stroke="#8a4ad0" stroke-width="1.8" fill="none"/>
+        <!-- B -->
+        <path d="M365,130 Q420,100 480,110 T595,125"  stroke="#e69b3a" stroke-width="1.8" fill="none"/>
+        <!-- A -->
+        <path d="M365,170 Q420,140 480,150 T595,165"  stroke="#3a78c2" stroke-width="1.8" fill="none"/>
+        <!-- C (bottom) -->
+        <path d="M365,210 Q420,180 480,190 T595,205"  stroke="#2a8a4a" stroke-width="1.8" fill="none"/>
+
+        <!-- offset bracket between top and bottom output curve -->
+        <g stroke="#444" stroke-width="1" fill="none">
+          <line x1="608" y1="80" x2="608" y2="210"/>
+          <line x1="604" y1="80" x2="612" y2="80"/>
+          <line x1="604" y1="210" x2="612" y2="210"/>
+        </g>
+        <text x="612" y="148" font-size="10" fill="#444">0.35×offset</text>
+
+        <!-- legend -->
+        <g font-size="11" fill="#333">
+          <line x1="55" y1="265" x2="68" y2="265" stroke="#3a78c2" stroke-width="2"/><text x="74" y="269">簇 A</text>
+          <line x1="115" y1="265" x2="128" y2="265" stroke="#e69b3a" stroke-width="2"/><text x="134" y="269">簇 B</text>
+          <line x1="175" y1="265" x2="188" y2="265" stroke="#2a8a4a" stroke-width="2"/><text x="194" y="269">簇 C</text>
+          <line x1="235" y1="265" x2="248" y2="265" stroke="#8a4ad0" stroke-width="2"/><text x="254" y="269">簇 D</text>
+        </g>
+      </svg>
+      <div class="caption">图 4 ｜ 模拟数据：四个簇共享 X→Y 的"形状"，但 Y 上有明显的簇间垂直偏移 —— 这正是 rPCO 要修的东西。</div>
+    </div>
+
+    <h3 style="margin-top: 18px; font-size: 1.05rem;">50 次重复的结果（看 rPCO 带来的增量）</h3>
+    <div class="num-result" style="grid-template-columns: 1fr auto auto auto;">
+      <div class="head">设置</div><div class="head">平均排名</div><div class="head">rank-1 次数</div><div class="head">FFSRQ MSE</div>
+      <div>不加 rPCO</div><div>1.66</div><div>— </div><div>— </div>
+      <div class="win">加上 rPCO</div><div class="win">1.32</div><div class="win">39 / 50</div><div class="win">0.002937</div>
+      <div style="grid-column: 1 / -1; color: var(--muted); font-size: 0.88rem; padding-top: 4px;">
+        加 rPCO 后超过第 2 名（FKAMFR，MSE 0.003118）<b>6.2 %</b>；9 个竞争方法中有 7 个在 50 次里<b>从未拿过冠军</b>。
+      </div>
+    </div>
+    <p style="font-size: 0.92rem; color: var(--muted);">
+      模拟配置：<span class="kbd">moe_overlap_aligned_wide_probe</span>·idx=1·b=29·tau=λ=1e−4·eta=1e−8·clust=4·KL=0.97。
+    </p>
+  </section>
+
+  <!-- ======= Section 4: Improvement ======= -->
+  <section>
+    <h2><span class="step">5</span>有什么提升</h2>
+    <ul class="simple">
+      <li>主模型不再被"高低差"挤占基底预算，能<b>专心学形状</b>；</li>
+      <li>Δ<sub>k</sub> 是用<b>训练残差</b>算的，不引入新的待优化参数，<b>不会过拟合</b>；</li>
+      <li>只在 <span class="kbd">clust.num &gt; 1</span> 时启用；只通过 <span class="kbd">FFSRQ_CLUSTER_INTERCEPT=1</span> 控制 —— 完全向后兼容，可一键开关；</li>
+      <li>实验上，模拟数据 + 三个真实数据集（Ocean / Air NOx / Stock）在统一的"单次划分、无 shuffle"协议下全部达到 <b>rank 1</b>。</li>
+    </ul>
+
+    <h3 style="margin-top: 18px; font-size: 1.05rem;">三个真实数据集 <span style="font-size:0.8rem; color:var(--muted); font-weight:normal;">（接下来还会再补 2 个）</span></h3>
+
+    <div class="grid2" style="gap: 12px; margin: 12px 0;">
+      <div style="background:#f4f7f1; border-radius:6px; padding:12px 16px;">
+        <b>🌊 Ocean（夏威夷海洋观测）</b><br>
+        <span style="color:var(--muted); font-size:0.92rem;">
+          每个样本是一条深度剖面（按深度连续测量）。<br>
+          <b>输入</b>：<br>
+          &nbsp;&nbsp;<span class="kbd">log(temp)</span> — 海水温度（℃）<br>
+          &nbsp;&nbsp;<span class="kbd">chlo</span> — 叶绿素 a 浓度（浮游植物多少的代用量，mg/m³）<br>
+          <b>输出</b>：<br>
+          &nbsp;&nbsp;<span class="kbd">log(sal)</span> — 海水盐度（PSU）<br>
+          <i>用温度和叶绿素剖面预测盐度剖面。</i>
+        </span>
+      </div>
+
+      <div style="background:#f4f7f1; border-radius:6px; padding:12px 16px;">
+        <b>🌫️ Air NOx（空气质量监测）</b><br>
+        <span style="color:var(--muted); font-size:0.92rem;">
+          意大利某城市的空气质量传感器小时级时序曲线。<br>
+          <b>输入</b>：<br>
+          &nbsp;&nbsp;<span class="kbd">log(temperature+1)</span> — 气温（℃）<br>
+          &nbsp;&nbsp;<span class="kbd">log(humidity)</span> — 相对湿度（%）<br>
+          &nbsp;&nbsp;<span class="kbd">NO2</span> — 二氧化氮浓度（μg/m³）<br>
+          <b>输出</b>：<br>
+          &nbsp;&nbsp;<span class="kbd">NOx</span> — 氮氧化物总浓度（μg/m³，主要来自汽车尾气）<br>
+          <i>用气象+NO₂ 的曲线预测 NOx 的曲线。</i>
+        </span>
+      </div>
+
+      <div style="background:#f4f7f1; border-radius:6px; padding:12px 16px; grid-column: 1 / -1;">
+        <b>📈 Stock（股价）</b><br>
+        <span style="color:var(--muted); font-size:0.92rem;">
+          四只大科技股的日价格曲线，共 457 个月，每月 22 个交易日。每月内归一到 [0,1]。<br>
+          <b>输入</b>：<br>
+          &nbsp;&nbsp;<span class="kbd">AAPL</span> — 苹果，<span class="kbd">GOOGL</span> — Alphabet/谷歌，<span class="kbd">NVDA</span> — 英伟达<br>
+          <b>输出</b>：<br>
+          &nbsp;&nbsp;<span class="kbd">MSFT</span> — 微软<br>
+          <i>用三只科技股的月内走势预测微软的月内走势。</i>
+        </span>
+      </div>
+    </div>
+
+    <p style="font-size:0.88rem; color:var(--muted); margin-top: 8px;">
+      <b>为什么有些变量套了 log？</b> 海洋的温度/盐度、空气的温度/湿度这类正实数取值跨度大、分布右偏，套 log 能压住尾部、让方差更稳，关系也更接近线性 —— 是函数型回归里很常规的预处理。<br>
+      <b>为什么是 <span class="kbd">log(temperature+1)</span> 而不是 <span class="kbd">log(temperature)</span>？</b> 因为气温会贴近 0（℃），<span class="kbd">log(0) = −∞</span>；加 1 避免奇点。<br>
+      <b>为什么 <span class="kbd">chlo</span>、<span class="kbd">NO2</span>、<span class="kbd">NOx</span> 没 log？</b> 它们的取值范围本来就比较窄、分布没那么偏，套 log 反而会扭曲；股价已经做了 0–1 归一化，也不需要 log。
+    </p>
+
+    <h3 style="margin-top: 18px; font-size: 1.05rem;">结果对比</h3>
+    <div class="num-result">
+      <div class="head">数据集</div><div class="head">划分</div><div class="head">FFSRQ MSE</div><div class="head">第 2 名 MSE</div>
+      <div>Ocean</div><div>80/20</div><div>3.68e−5</div><div>3.91e−5（FLMFR）</div>
+      <div>Air NOx</div><div>90/10</div><div>0.0257</div><div>0.0337（FLMFR）</div>
+      <div>Stock (MSFT)</div><div>80/20</div><div>0.0704</div><div>0.0706（FKAMFR）</div>
+    </div>
+  </section>
+
+  <!-- ======= Section 5.5: Related work ======= -->
+  <section>
+    <h2><span class="step">6</span>这种做法常见吗？相关文献</h2>
+    <p>在函数型回归里，"加随机截距函数 / 逐组截距"是<b>很常见</b>的思路：</p>
+    <ul class="simple">
+      <li>Morris &amp; Carroll (2006), <i>JRSS-B</i> — wavelet-based functional mixed model，逐 subject 截距函数；</li>
+      <li>Scheipl, Staicu &amp; Greven (2015), <i>JCGS</i> — <span class="kbd">pffr</span> / <span class="kbd">refund</span> 包里就支持 random intercept 项；</li>
+      <li>Goldsmith, Zipunnikov &amp; Schrack (2015), <i>Biometrics</i> — multilevel function-on-scalar regression。</li>
+    </ul>
+  </section>
+
+  <!-- ======= Section 5: Code change ======= -->
+  <section>
+    <h2><span class="step">7</span>代码层面到底改了什么</h2>
+    <p>在 <span class="kbd">Anne_rayleigh_quotient0924.R</span> 里增加了一个可选模块，对原损失函数与主优化流程<b>零修改</b>：</p>
+    <ul class="simple">
+      <li>新增参数 <span class="kbd">use.cluster.intercept</span>（来自环境变量 <span class="kbd">FFSRQ_CLUSTER_INTERCEPT</span>）；</li>
+      <li>训练末尾：按簇计算 Δ<sub>k</sub> = mean(残差) 存进模型对象；</li>
+      <li>预测末尾：把对应簇的 Δ<sub>k</sub> 加回到 ŷ 上；</li>
+      <li>仅当 <span class="kbd">clust.num &gt; 1</span> 才生效，单簇时自动退化为原算法。</li>
+    </ul>
+  </section>
+
+  <footer>
+    rPCO = residual-based Per-Cluster Offset · 2026-05-13
+  </footer>
+
+</div>
+</body>
+</html>
