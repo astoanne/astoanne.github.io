@@ -317,77 +317,17 @@
     </div>
   </section>
 
-  <!-- ======= Section 3.5: Simulation ======= -->
+  <!-- ======= Section 4: Improvement (simulation results merged here) ======= -->
   <section>
-    <h2><span class="step">4</span>模拟数据长什么样</h2>
-    <p>动机：FFSRQ 在这个模拟数据上怎么调超参都拿不到 rank 1。盯着数据生成式看，发现里面有一项簇间偏移原模型没法干净吸收，于是加了 rPCO。</p>
-
-    <p>数据结构：</p>
+    <h2><span class="step">4</span>有什么提升</h2>
     <ul class="simple">
-      <li><b>4 个簇</b>（<span class="kbd">clust.num=4</span>），每簇 ~50 条样本；</li>
-      <li><b>输入</b>是若干条函数曲线 <i>X<sub>p</sub>(s)</i>，<b>输出</b>也是函数曲线 <i>Y(t)</i>；</li>
-      <li>所有簇共享同一组形状基底 w<sub>k</sub>(t)（<span class="kbd">global_wk=1</span>）；</li>
-      <li>但 Y(t) 里多了一项 <span class="kbd">0.35 × cluster.offset[t, m]</span> —— 每簇一条自己的偏移曲线，被揉进基底系数会让"形状"和"水平"互相挤预算。</li>
+      <li>主模型不再被"高低差"挤占基底预算，能<b>专心学形状</b>；</li>
+      <li>Δ<sub>k</sub> 是用<b>训练残差</b>算的，不引入新的待优化参数，<b>不会过拟合</b>；</li>
+      <li>只在 <span class="kbd">clust.num &gt; 1</span> 时启用；只通过 <span class="kbd">FFSRQ_CLUSTER_INTERCEPT=1</span> 控制 —— 完全向后兼容，可一键开关；</li>
+      <li>实验上，模拟数据（50 次重复）和三个真实数据集（Ocean / Air / Stock，单次划分、无 shuffle）下 FFSRQ 全部达到 <b>rank 1</b>。</li>
     </ul>
 
-    <div class="figure">
-      <svg viewBox="0 0 620 280" width="620" height="280" aria-label="模拟数据示意">
-        <!-- Title strip -->
-        <text x="50" y="20" font-size="13" fill="#333" font-weight="600">输入 X(s)（4 簇 · 形状相近）</text>
-        <text x="360" y="20" font-size="13" fill="#333" font-weight="600">输出 Y(t)（形状相近 + 簇间偏移）</text>
-
-        <!-- Input panel axes -->
-        <line x1="50" y1="240" x2="300" y2="240" stroke="#bbb"/>
-        <line x1="50" y1="40"  x2="50"  y2="240" stroke="#bbb"/>
-        <text x="295" y="256" font-size="11" fill="#888" text-anchor="end">s</text>
-
-        <!-- Input X curves (4 clusters, similar shape) -->
-        <!-- cluster A (blue) -->
-        <path d="M55,180 Q120,80 180,120 T295,150" stroke="#3a78c2" stroke-width="1.8" fill="none" opacity="0.75"/>
-        <path d="M55,190 Q120,95 180,130 T295,160" stroke="#3a78c2" stroke-width="1.4" fill="none" opacity="0.45"/>
-        <!-- cluster B (orange) -->
-        <path d="M55,170 Q120,70 180,110 T295,140" stroke="#e69b3a" stroke-width="1.8" fill="none" opacity="0.75"/>
-        <path d="M55,160 Q120,85 180,125 T295,135" stroke="#e69b3a" stroke-width="1.4" fill="none" opacity="0.45"/>
-        <!-- cluster C (green) -->
-        <path d="M55,185 Q120,90 180,115 T295,155" stroke="#2a8a4a" stroke-width="1.8" fill="none" opacity="0.75"/>
-        <!-- cluster D (purple) -->
-        <path d="M55,175 Q120,75 180,118 T295,145" stroke="#8a4ad0" stroke-width="1.8" fill="none" opacity="0.75"/>
-
-        <!-- Output panel axes -->
-        <line x1="360" y1="240" x2="600" y2="240" stroke="#bbb"/>
-        <line x1="360" y1="40"  x2="360" y2="240" stroke="#bbb"/>
-        <text x="595" y="256" font-size="11" fill="#888" text-anchor="end">t</text>
-
-        <!-- Output Y curves — same shape but vertically shifted per cluster -->
-        <!-- D (top): shifted up most -->
-        <path d="M365,90 Q420,60 480,70 T595,85"  stroke="#8a4ad0" stroke-width="1.8" fill="none"/>
-        <!-- B -->
-        <path d="M365,130 Q420,100 480,110 T595,125"  stroke="#e69b3a" stroke-width="1.8" fill="none"/>
-        <!-- A -->
-        <path d="M365,170 Q420,140 480,150 T595,165"  stroke="#3a78c2" stroke-width="1.8" fill="none"/>
-        <!-- C (bottom) -->
-        <path d="M365,210 Q420,180 480,190 T595,205"  stroke="#2a8a4a" stroke-width="1.8" fill="none"/>
-
-        <!-- offset bracket between top and bottom output curve -->
-        <g stroke="#444" stroke-width="1" fill="none">
-          <line x1="608" y1="80" x2="608" y2="210"/>
-          <line x1="604" y1="80" x2="612" y2="80"/>
-          <line x1="604" y1="210" x2="612" y2="210"/>
-        </g>
-        <text x="612" y="148" font-size="10" fill="#444">0.35×offset</text>
-
-        <!-- legend -->
-        <g font-size="11" fill="#333">
-          <line x1="55" y1="265" x2="68" y2="265" stroke="#3a78c2" stroke-width="2"/><text x="74" y="269">簇 A</text>
-          <line x1="115" y1="265" x2="128" y2="265" stroke="#e69b3a" stroke-width="2"/><text x="134" y="269">簇 B</text>
-          <line x1="175" y1="265" x2="188" y2="265" stroke="#2a8a4a" stroke-width="2"/><text x="194" y="269">簇 C</text>
-          <line x1="235" y1="265" x2="248" y2="265" stroke="#8a4ad0" stroke-width="2"/><text x="254" y="269">簇 D</text>
-        </g>
-      </svg>
-      <div class="caption">图 4 ｜ 模拟数据：四个簇共享 X→Y 的"形状"，但 Y 上有明显的簇间垂直偏移 —— 这正是 rPCO 要修的东西。</div>
-    </div>
-
-    <h3 style="margin-top: 18px; font-size: 1.05rem;">50 次重复的结果（看 rPCO 带来的增量）</h3>
+    <h3 style="margin-top: 18px; font-size: 1.05rem;">模拟数据 · 50 次重复（rPCO 的消融）</h3>
     <div class="num-result" style="grid-template-columns: 1fr auto auto auto;">
       <div class="head">设置</div><div class="head">平均排名</div><div class="head">rank-1 次数</div><div class="head">FFSRQ MSE</div>
       <div>不加 rPCO</div><div>1.66</div><div>— </div><div>— </div>
@@ -396,20 +336,6 @@
         加 rPCO 后超过第 2 名（FKAMFR，MSE 0.003118）<b>6.2 %</b>；9 个竞争方法中有 7 个在 50 次里<b>从未拿过冠军</b>。
       </div>
     </div>
-    <p style="font-size: 0.92rem; color: var(--muted);">
-      模拟配置：<span class="kbd">moe_overlap_aligned_wide_probe</span>·idx=1·b=29·tau=λ=1e−4·eta=1e−8·clust=4·KL=0.97。
-    </p>
-  </section>
-
-  <!-- ======= Section 4: Improvement ======= -->
-  <section>
-    <h2><span class="step">5</span>有什么提升</h2>
-    <ul class="simple">
-      <li>主模型不再被"高低差"挤占基底预算，能<b>专心学形状</b>；</li>
-      <li>Δ<sub>k</sub> 是用<b>训练残差</b>算的，不引入新的待优化参数，<b>不会过拟合</b>；</li>
-      <li>只在 <span class="kbd">clust.num &gt; 1</span> 时启用；只通过 <span class="kbd">FFSRQ_CLUSTER_INTERCEPT=1</span> 控制 —— 完全向后兼容，可一键开关；</li>
-      <li>实验上，模拟数据 + 三个真实数据集（Ocean / Air NOx / Stock）在统一的"单次划分、无 shuffle"协议下全部达到 <b>rank 1</b>。</li>
-    </ul>
 
     <h3 style="margin-top: 18px; font-size: 1.05rem;">三个真实数据集 <span style="font-size:0.8rem; color:var(--muted); font-weight:normal;">（接下来还会再补 2 个）</span></h3>
 
@@ -475,7 +401,7 @@
 
   <!-- ======= Section 5.5: Related work ======= -->
   <section>
-    <h2><span class="step">6</span>这种做法常见吗？相关文献</h2>
+    <h2><span class="step">5</span>这种做法常见吗？相关文献</h2>
     <p>在函数型回归里，"加随机截距函数 / 逐组截距"是<b>很常见</b>的思路：</p>
     <ul class="simple">
       <li>Morris &amp; Carroll (2006), <i>JRSS-B</i> — wavelet-based functional mixed model，逐 subject 截距函数；</li>
@@ -486,27 +412,21 @@
 
   <!-- ======= Section 5: Code change ======= -->
   <section>
-    <h2><span class="step">7</span>代码层面到底改了什么</h2>
+    <h2><span class="step">6</span>代码层面到底改了什么</h2>
     <p>在 <span class="kbd">Anne_rayleigh_quotient0924.R</span> 的 <span class="kbd">mainFFSRQ()</span> 里增加了一个可选模块，对原损失函数、β 估计与主优化流程<b>零修改</b>。两处改动如下。</p>
 
-    <h3 style="font-size:1.05rem; margin-top:14px;">① 开关声明（约 line 382–385）</h3>
-    <pre style="background:#0f1419; color:#d4d4d4; padding:14px 16px; border-radius:6px; overflow-x:auto; font-size:0.88rem; line-height:1.5;"><code>##### Residual-based per-cluster intercept is applied AFTER Y.hat is
-##### computed (post-hoc), so we don't disturb the β fit. See bottom of
-##### mainFFSRQ for the actual computation.
+    <h3 style="font-size:1.05rem; margin-top:14px;">① 开关声明</h3>
+    <pre style="background:#0f1419; color:#d4d4d4; padding:14px 16px; border-radius:6px; overflow-x:auto; font-size:0.88rem; line-height:1.5;"><code># per-cluster intercept switch (computed at end of mainFFSRQ)
 use.cluster.intercept &lt;- identical(Sys.getenv("FFSRQ_CLUSTER_INTERCEPT", ""), "1")</code></pre>
 
-    <h3 style="font-size:1.05rem; margin-top:14px;">② 训练末尾的残差修正块（约 line 693–715）</h3>
-    <pre style="background:#0f1419; color:#d4d4d4; padding:14px 16px; border-radius:6px; overflow-x:auto; font-size:0.88rem; line-height:1.5;"><code>##### Residual-based per-cluster intercept (post-hoc, env-controlled).
-##### Goal: capture cluster-specific output bias that β surfaces
-##### structurally cannot represent (e.g. simulator's 0.35*cluster.offset[t,m]).
-##### Stage 1 fit (just done) gives Y.hat. Stage 2: compute residuals,
-##### project per cluster, smooth, add back. Doesn't disturb β.
+    <h3 style="font-size:1.05rem; margin-top:14px;">② 训练末尾的残差修正块</h3>
+    <pre style="background:#0f1419; color:#d4d4d4; padding:14px 16px; border-radius:6px; overflow-x:auto; font-size:0.88rem; line-height:1.5;"><code># per-cluster intercept: membership-weighted residual mean per cluster,
+# smoothed on the y-basis with eta penalty, added back to Y.hat
 if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
   residuals.train &lt;- output.ori - Y.hat                         # ntrain x len.t
   weights_t      &lt;- t(active.k)                                 # K x ntrain
   weight_sums    &lt;- rowSums(weights_t) + 1e-12
   cluster.resid.mean &lt;- sweep((weights_t %*% residuals.train), 1, weight_sums, "/")
-  ## Smooth each cluster's residual curve via B-spline + eta penalty
   w.0.cluster &lt;- matrix(0, nrow = length(t), ncol = clust.num)
   smoother    &lt;- pinv(int.bly + eta * int.bly2)
   for (m in 1:clust.num) {
@@ -516,7 +436,6 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
     }
     w.0.cluster[, m] &lt;- as.numeric(bl.y.des %*% smoother %*% as.matrix(int_mean_m, ncol = 1))
   }
-  ## Add to Y.hat: active.k is ntrain x K, w.0.cluster is len.t x K
   Y.hat &lt;- Y.hat + active.k %*% t(w.0.cluster)
 }</code></pre>
 
@@ -527,7 +446,7 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
 
   <!-- ======= Section 8: Formal method writeup ======= -->
   <section>
-    <h2><span class="step">8</span>论文 method section 草稿</h2>
+    <h2><span class="step">7</span>论文 method section 草稿</h2>
 
     <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
       <button id="copy-latex-btn" onclick="copyLatex()" style="background:#1a1a1a; color:#fff; border:none; border-radius:5px; padding:8px 14px; font-size:0.9rem; cursor:pointer; font-family:inherit;">📋 Copy LaTeX source</button>
