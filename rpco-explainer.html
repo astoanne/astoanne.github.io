@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>rPCO 图解 — 残差逐簇截距修正</title>
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 <style>
   :root {
     --bg: #fbfbf7;
@@ -522,34 +529,34 @@ if (use.cluster.intercept &amp;&amp; clust.num &gt; 1) {
     <div style="background:#fdfdfa; border:1px solid var(--hairline); border-left:3px solid var(--ink); padding:18px 22px; border-radius:0 6px 6px 0; line-height:1.75;">
       <p><b>V-D. Residual-based Per-Cluster Offset (rPCO).</b></p>
 
-      <p>The fuzzy-rule structure of FFSRQ assumes that, within each cluster <i>k</i>, the input–output mapping can be expressed by the consequent parameters together with a shared functional component. While this design is effective in capturing the shape of the input–output relation, the location (or level) of each cluster's output cannot always be absorbed by the consequent parameters alone, especially when the underlying data generating process contains a cluster-specific additive component whose energy lies outside the chosen consequent basis. To address this issue, we introduce a simple post-hoc correction term, named the <i>residual-based Per-Cluster Offset</i> (rPCO).</p>
+      <p>The fuzzy-rule structure of FFSRQ assumes that, within each cluster $k$, the input–output mapping can be expressed by the consequent parameters together with a shared functional component. While this design is effective in capturing the shape of the input–output relation, the location (or level) of each cluster's output cannot always be absorbed by the consequent parameters alone, especially when the underlying data generating process contains a cluster-specific additive component whose energy lies outside the chosen consequent basis. To address this issue, we introduce a simple post-hoc correction term, named the <i>residual-based Per-Cluster Offset</i> (rPCO).</p>
 
-      <p>Let {(<i>x<sub>i</sub></i>(<i>s</i>), <i>y<sub>i</sub></i>(<i>t</i>))}<sub><i>i</i>=1</sub><sup><i>N</i></sup> denote the training samples and let <i>μ<sub>k</sub></i>(<i>x<sub>i</sub></i>(<i>s</i>)) be the membership of sample <i>i</i> in cluster <i>k</i>, <i>k</i> = 1, 2, …, <i>K</i>, as defined in (8). Once the antecedent and consequent parameters of FFSRQ have been estimated, denote by <i>ŷ<sub>i</sub></i>(<i>t</i>) the in-sample prediction of <i>y<sub>i</sub></i>(<i>t</i>). Define the per-cluster residual centre by</p>
+      <p>Let $\{(x_i(s), y_i(t))\}_{i=1}^{N}$ denote the training samples and let $\mu_k(x_i(s))$ be the membership of sample $i$ in cluster $k$, $k = 1, 2, \ldots, K$, as defined in (8). Once the antecedent and consequent parameters of FFSRQ have been estimated, denote by $\hat{y}_i(t)$ the in-sample prediction of $y_i(t)$. Define the per-cluster residual centre by</p>
 
-      <p style="text-align:center;">
-        <i>Δ̂<sub>k</sub></i>(<i>t</i>) = ( Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>μ<sub>k</sub></i>(<i>x<sub>i</sub></i>(<i>s</i>))·(<i>y<sub>i</sub></i>(<i>t</i>) − <i>ŷ<sub>i</sub></i>(<i>t</i>)) ) / ( Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>μ<sub>k</sub></i>(<i>x<sub>i</sub></i>(<i>s</i>)) + <i>ε</i> ),&nbsp;&nbsp;&nbsp;&nbsp;(★)
-      </p>
+      $$
+      \hat{\Delta}_k(t) \;=\; \frac{\displaystyle\sum_{i=1}^{N}\mu_k(x_i(s))\bigl(y_i(t)-\hat{y}_i(t)\bigr)}{\displaystyle\sum_{i=1}^{N}\mu_k(x_i(s)) + \varepsilon},\qquad k=1,2,\ldots,K,\qquad (\star)
+      $$
 
-      <p>where <i>ε</i> &gt; 0 is a small constant to avoid numerical instability. The function <i>Δ̂<sub>k</sub></i>(<i>t</i>) is the membership-weighted mean of the training residuals within cluster <i>k</i>.</p>
+      <p>where $\varepsilon > 0$ is a small constant to avoid numerical instability. The function $\hat{\Delta}_k(t)$ is the membership-weighted mean of the training residuals within cluster $k$.</p>
 
-      <p>To suppress observation noise and ensure smoothness, <i>Δ̂<sub>k</sub></i>(<i>t</i>) is projected onto the same B-spline basis {<i>B<sub>q</sub><sup>Y</sup></i>(<i>t</i>)}<sub><i>q</i>=1</sub><sup><i>Q</i></sup> as the output representation, with the same roughness penalty <i>η</i> used in the main estimator:</p>
+      <p>To suppress observation noise and ensure smoothness, $\hat{\Delta}_k(t)$ is projected onto the same B-spline basis $\{B^{Y}_q(t)\}_{q=1}^{Q}$ as the output representation, with the same roughness penalty $\eta$ used in the main estimator:</p>
 
-      <p style="text-align:center;">
-        <i>Δ̃<sub>k</sub></i>(<i>t</i>) = Σ<sub><i>q</i>=1</sub><sup><i>Q</i></sup> <i>d<sub>kq</sub></i> <i>B<sub>q</sub><sup>Y</sup></i>(<i>t</i>),&nbsp;&nbsp;
-        (<i>d<sub>k</sub></i><sub>1</sub>, …, <i>d<sub>kQ</sub></i>)<sup>T</sup> = (Φ + <i>η</i> Ψ)<sup>−1</sup> ∫<sub>Ω<sub>t</sub></sub> <i>Δ̂<sub>k</sub></i>(<i>t</i>) <i>B<sup>Y</sup></i>(<i>t</i>) d<i>t</i>,
-      </p>
+      $$
+      \tilde{\Delta}_k(t) \;=\; \sum_{q=1}^{Q} d_{kq}\, B^{Y}_q(t),\qquad
+      (d_{k1},\ldots,d_{kQ})^{\!\top} = (\Phi + \eta\,\Psi)^{-1}\!\int_{\Omega_t}\!\hat{\Delta}_k(t)\, B^{Y}(t)\,dt,
+      $$
 
-      <p>where Φ = ∫<sub>Ω<sub>t</sub></sub> <i>B<sup>Y</sup></i>(<i>t</i>) <i>B<sup>Y</sup></i>(<i>t</i>)<sup>T</sup> d<i>t</i> and Ψ = ∫<sub>Ω<sub>t</sub></sub> (<i>B<sup>Y</sup></i>)′′(<i>t</i>) (<i>B<sup>Y</sup></i>)′′(<i>t</i>)<sup>T</sup> d<i>t</i>.</p>
+      <p>where $\Phi = \int_{\Omega_t} B^{Y}(t)\,B^{Y}(t)^{\!\top}\,dt$ and $\Psi = \int_{\Omega_t} {B^{Y}}''(t)\,{B^{Y}}''(t)^{\!\top}\,dt$.</p>
 
       <p>The corrected FFSRQ prediction is then given by</p>
 
-      <p style="text-align:center;">
-        <i>ỹ</i>(<i>t</i>) = <i>ŷ</i>(<i>t</i>) + Σ<sub><i>k</i>=1</sub><sup><i>K</i></sup> <i>β<sub>k</sub></i>(<i>x</i>(<i>s</i>)) <i>Δ̃<sub>k</sub></i>(<i>t</i>),
-      </p>
+      $$
+      \tilde{y}(t) \;=\; \hat{y}(t) \;+\; \sum_{k=1}^{K}\beta_k\bigl(x(s)\bigr)\,\tilde{\Delta}_k(t),
+      $$
 
-      <p>where <i>β<sub>k</sub></i>(<i>x</i>(<i>s</i>)) is the normalised functional membership of <i>x</i>(<i>s</i>) in cluster <i>k</i>, as defined in Section IV. The same formula applies to test samples through the FFSRQ membership mapping <i>β<sub>k</sub></i>(·).</p>
+      <p>where $\beta_k(x(s))$ is the normalised functional membership of $x(s)$ in cluster $k$, as defined in Section IV. The same formula applies to test samples through the FFSRQ membership mapping $\beta_k(\cdot)$.</p>
 
-      <p>It should be noticed that rPCO is a strictly post-hoc correction: the antecedent and consequent estimation of FFSRQ is not affected by introducing rPCO, and the original training objective is preserved. Furthermore, rPCO introduces no additional hyperparameter that needs to be optimised, as <i>Δ̂<sub>k</sub></i>(<i>t</i>) is fully determined by the training residuals and shares the same smoothing parameter <i>η</i> with the main estimator. When the number of rules is <i>K</i> = 1, <i>Δ̃<sub>1</sub></i>(<i>t</i>) reduces to the overall residual mean and rPCO degenerates to a global intercept correction; therefore, rPCO is only activated when <i>K</i> &gt; 1.</p>
+      <p>It should be noticed that rPCO is a strictly post-hoc correction: the antecedent and consequent estimation of FFSRQ is not affected by introducing rPCO, and the original training objective is preserved. Furthermore, rPCO introduces no additional hyperparameter that needs to be optimised, as $\hat{\Delta}_k(t)$ is fully determined by the training residuals and shares the same smoothing parameter $\eta$ with the main estimator. When the number of rules is $K = 1$, $\tilde{\Delta}_1(t)$ reduces to the overall residual mean and rPCO degenerates to a global intercept correction; therefore, rPCO is only activated when $K > 1$.</p>
     </div>
   </section>
 
