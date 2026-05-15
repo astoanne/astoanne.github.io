@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>营收提升总览板 — 翻译公司</title>
+<style>
+  :root{
+    --bg:#f7f7f5; --card:#fff; --ink:#1a1a1a; --mute:#6b6b6b;
+    --line:#e5e4e0; --accent:#c8451e; --ok:#2f7d4f; --warn:#b8860b; --block:#a33;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px}
+  h1{margin:0 0 8px;font-size:32px;letter-spacing:-0.5px}
+  .sub{color:var(--mute);font-size:15px}
+  .legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;font-size:13px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)}
+  .dot.block{background:var(--block)} .dot.idea{background:#888}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:22px 24px;display:flex;flex-direction:column}
+  .card h2{margin:0 0 6px;font-size:18px;display:flex;align-items:center;gap:10px}
+  .tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:.5px}
+  .tag.ok{background:#e3f1e8;color:var(--ok)}
+  .tag.warn{background:#fbf1d8;color:var(--warn)}
+  .tag.block{background:#f7dede;color:var(--block)}
+  .tag.idea{background:#ececec;color:#555}
+  .where{font-size:12px;color:var(--mute);margin-bottom:12px}
+  ul{margin:8px 0 0;padding-left:18px}
+  li{margin:4px 0;font-size:14.5px}
+  .next{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:13.5px}
+  .next b{color:var(--accent)}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
+  a:hover{opacity:.7}
+  .qa{margin-top:40px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:24px 26px}
+  .qa h2{margin-top:0}
+  .qa h3{margin:18px 0 4px;font-size:15px}
+  .foot{margin-top:30px;color:var(--mute);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>营收提升总览板</h1>
+  <div class="sub">把目前正在推进的各条战线集中在一页 · 更新时间:2026-05-15</div>
+  <div class="legend">
+    <span><i class="dot ok"></i>进行顺利</span>
+    <span><i class="dot warn"></i>等待 / 待跟进</span>
+    <span><i class="dot block"></i>阻塞</span>
+    <span><i class="dot idea"></i>构想中</span>
+  </div>
+</header>
+
+<div class="grid">
+
+  <!-- 1. 小程序 -->
+  <div class="card">
+    <h2>① 微信小程序 · 证件翻译 <span class="tag block">阻塞</span></h2>
+    <div class="where">渠道:微信小程序 · 主业:标准化证件翻译下单</div>
+    <ul>
+      <li>新版本已提交腾讯审核</li>
+      <li>当前状态:<b>等待审核结果</b></li>
+      <li>这是公司目前最直接的成交入口之一</li>
+    </ul>
+    <div class="next"><b>下一步:</b>每日检查审核状态;通过后立即测试下单流程并发版公告。</div>
+  </div>
+
+  <!-- 2. 网站目录 -->
+  <div class="card">
+    <h2>② 网站服务目录(SEO 引流) <span class="tag ok">在跑</span></h2>
+    <div class="where">渠道:translationchina.com / tongshengfanyi.com</div>
+    <ul>
+      <li>婚介目录:188K 条目 / 197K sitemap URL,已生成完整 HTML</li>
+      <li>公证目录(公证处 + 公证人员):同架构搭建中</li>
+      <li>下一批扩展品类待选:律师 / 学校 / 房产中介 / 留学机构 等</li>
+    </ul>
+    <div class="next">
+      <b>已发布详情页:</b>
+      <a href="seo-todo.html">SEO 任务清单</a> ·
+      <a href="webmaster-checklist.html">站长工具清单</a>
+    </div>
+  </div>
+
+  <!-- 3. 内容自动化 -->
+  <div class="card">
+    <h2>③ 内容自动化(吸引流量) <span class="tag idea">构想中</span></h2>
+    <div class="where">目标:批量生成有价值的内容页 → 长尾搜索引流</div>
+    <ul>
+      <li>方向:翻译相关问答、地区办证指南、领事认证流程等</li>
+      <li>需要:选题库 + 自动生成脚本 + 人工审校抽样</li>
+      <li>与目录站协同:在目录页底部互链,提升整体权重</li>
+    </ul>
+    <div class="next"><b>下一步:</b>先定 3-5 个内容模板,跑通 100 篇 → 看 1 个月收录效果再决定是否扩量。</div>
+  </div>
+
+  <!-- 4. 首页移动端 -->
+  <div class="card">
+    <h2>④ 首页移动端重构 <span class="tag warn">推进中</span></h2>
+    <div class="where">目标:保留现有"老派但可信"的桌面版,同时给手机用户更友好的体验</div>
+    <ul>
+      <li>当前首页在手机上不够友好</li>
+      <li>核心问题:是改成响应式,还是单独做一个 m. 版本?</li>
+      <li>详见下方 FAQ:移动端跳转 vs 响应式 vs SEO 的取舍</li>
+    </ul>
+    <div class="next"><b>建议:</b>优先做响应式(单 URL),避免双站维护和 SEO 风险。</div>
+  </div>
+
+  <!-- 5. 客户管理 -->
+  <div class="card">
+    <h2>⑤ 客户管理 · 日常触达 <span class="tag ok">在跑</span></h2>
+    <div class="where">渠道:微信日常问候 / 节日祝福 / 轻提醒</div>
+    <ul>
+      <li>每日向现有客户发送温和的提醒类消息</li>
+      <li>目的:保持品牌存在感,下次有翻译需求时第一个想到我们</li>
+      <li>可优化:分组打标签(高频 / 沉睡 / VIP),消息差异化</li>
+    </ul>
+    <div class="next"><b>下一步:</b>给现有客户加标签 → 测试不同话术回复率 → 提炼最优模版。</div>
+  </div>
+
+  <!-- 6. CDN / HTTPS -->
+  <div class="card">
+    <h2>⑥ CDN 与 HTTPS(基础设施) <span class="tag warn">协调中</span></h2>
+    <div class="where">两个网站不同处境</div>
+    <ul>
+      <li><b>通胜翻译:</b>需联系服务商,开放第三方 CDN 接入</li>
+      <li><b>TranslationChina:</b>因域名含 "China" 关键词,不能转出 → 必须在原服务商侧加 HTTPS</li>
+      <li>目标:找免费证书(Let's Encrypt 等),且不明显拖慢响应</li>
+    </ul>
+    <div class="next">
+      <b>下一步:</b>
+      ① 给通胜翻译服务商发工单要求开放 CDN;
+      ② 询问 TranslationChina 服务商是否支持一键 Let's Encrypt(很多控制面板已内置)。
+    </div>
+  </div>
+
+</div>
+
+<!-- FAQ -->
+<div class="qa">
+  <h2>📱 关于「移动端跳转 vs 响应式」的最佳实践</h2>
+
+  <h3>问题:</h3>
+  <p>如果保留现有桌面站,然后检测手机用户自动跳到 m. 版本,这样会不会被搜索引擎判为有问题?</p>
+
+  <h3>三种主流方案对比:</h3>
+  <ul>
+    <li><b>① 响应式设计(Responsive)</b> — 一个 URL、一份 HTML,根据屏幕宽度自适应。<b>Google 官方首选</b>,SEO 风险最低,维护成本也最低。</li>
+    <li><b>② 动态服务(Dynamic Serving)</b> — 同一个 URL,但服务器根据 User-Agent 返回不同 HTML。需要正确设置 <code>Vary: User-Agent</code> 响应头,否则缓存层会串。</li>
+    <li><b>③ 独立移动站(m. 子域跳转)</b> — 桌面访问 www,手机自动 302 到 m.。需要双向 <code>rel="alternate"</code> + <code>rel="canonical"</code> 配对声明。维护成本高,出错点多。</li>
+  </ul>
+
+  <h3>跳转本身会不会伤 SEO?</h3>
+  <p>不会 —— <b>前提是声明正确</b>。Google 明确说明 m. 子域是合法做法,只要:</p>
+  <ul>
+    <li>桌面页加 <code>&lt;link rel="alternate" media="..." href="https://m...."&gt;</code></li>
+    <li>移动页加 <code>&lt;link rel="canonical" href="https://www...."&gt;</code></li>
+    <li>跳转用 302 而不是 301(因为是基于设备的临时定向,不是页面搬家)</li>
+  </ul>
+  <p>如果配对错了 / 落地页对不上 / 移动站内容比桌面少很多,才会被判为糟糕体验,排名才会掉。</p>
+
+  <h3>建议:</h3>
+  <p><b>优先响应式</b>。你现有桌面站"老派但可信"的视觉风格,可以通过 CSS 媒体查询在手机上局部调整(放大字号、堆叠卡片、放大按钮、隐藏次要装饰),而不必整个推倒。这样:</p>
+  <ul>
+    <li>保留桌面端的"老牌正规"观感</li>
+    <li>手机用户得到舒适体验</li>
+    <li>只维护一套代码,SEO 零风险</li>
+    <li>Google 给移动友好排名加分</li>
+  </ul>
+  <p>只有当响应式实在改不动(比如桌面 HTML 是表格化布局、改造代价大于重做)时,才考虑独立 m. 站。</p>
+</div>
+
+<div class="foot">本页面汇总自当前推进中的各项工作 · 由 astoanne.github.io 静态托管</div>
+
+</div>
+</body>
+</html>
