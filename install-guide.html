@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>装机步骤 — 内存 + 硬盘</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #fff8f3;
+    color: #2c2420;
+    line-height: 1.75;
+    margin: 0;
+    padding: 28px 20px 80px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 24px;
+    color: #c25a3a;
+    margin-bottom: 4px;
+  }
+  .sub {
+    color: #8a7568;
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+  .section {
+    background: white;
+    border: 1px solid #f0e0d0;
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 4px rgba(194, 90, 58, 0.06);
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #b04a30;
+    border-bottom: 2px dashed #f4d4c0;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  ol, ul { padding-left: 22px; margin: 8px 0; }
+  li { margin: 6px 0; }
+  .pill {
+    display: inline-block;
+    background: #fff0e8;
+    color: #c25a3a;
+    padding: 1px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .ok { color: #5ba87c; font-weight: 600; }
+  .warn { color: #c44; font-weight: 600; }
+  .callout {
+    background: #fff5e6;
+    border-left: 3px solid #e8a04a;
+    padding: 10px 14px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #6a4a20;
+  }
+  .case {
+    background: #f6fbf7;
+    border: 1px solid #d8ecdf;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 10px 0;
+  }
+  .case.bad { background: #fdf5f5; border-color: #f0d0d0; }
+  .case-label {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .faq-q { font-weight: 600; color: #5a3a30; margin-top: 12px; }
+  .faq-a { color: #6a5044; padding-left: 12px; font-size: 14px; }
+  hr {
+    border: none;
+    border-top: 1px dashed #e8d4c0;
+    margin: 14px 0;
+  }
+  .cheer {
+    text-align: center;
+    color: #c25a3a;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
+<h1>装机步骤 ♡</h1>
+<p class="sub">内存 + 硬盘 — 别怕，比看起来简单</p>
+
+<div class="section">
+  <div class="section-title">准备工作</div>
+  <ol>
+    <li>关机</li>
+    <li>拔电源线</li>
+    <li>按 5 秒开机键（放掉残留电）</li>
+    <li>摸一下机箱金属外壳放静电</li>
+    <li>打开机箱侧板</li>
+  </ol>
+  <div class="callout">工具：小号十字螺丝刀一把</div>
+</div>
+
+<div class="section">
+  <div class="section-title">1. 装内存（Colorfire 16GB）</div>
+  <p><strong>位置</strong>：<span class="pill">DIMM3 槽</span></p>
+  <p>4 个内存槽从 CPU 那一侧数过去——你现有的 Colorful 在 DIMM1，<strong>跳过 DIMM2</strong>，新的插 DIMM3。</p>
+  <ol>
+    <li>把 DIMM3 两边的白色卡扣往外扳开</li>
+    <li>内存条上有个缺口，对准槽里的凸起<br><span style="color:#8a7568;font-size:13px;">（只有一个方向能插，反了插不进，不要硬来）</span></li>
+    <li>两个大拇指均匀往下按</li>
+    <li>听到"咔哒" + 卡扣自动弹回扣住 = <span class="ok">完成 ✓</span></li>
+  </ol>
+</div>
+
+<div class="section">
+  <div class="section-title">2. 装硬盘（Mars 980 Blade）</div>
+  <p>主板有 2 个 M.2 槽：</p>
+  <ul>
+    <li><strong>上面 M2A_CPU</strong> = PCIe 4.0（快槽）</li>
+    <li><strong>下面 M2B_SB</strong> = PCIe 3.0（慢槽）</li>
+  </ul>
+  <p><strong>目标</strong>：Mars 980 装快槽，金士顿挪到慢槽</p>
+  <hr>
+  <ol>
+    <li>找到<strong>上面那个</strong> M.2 槽（靠近 CPU 散热器）</li>
+    <li>拆掉金士顿尾部的小螺丝<br><span class="warn">别丢这颗螺丝！</span></li>
+    <li>金士顿会自动翘起来，拿出来</li>
+    <li>把金士顿装到<strong>下面那个</strong> M.2 槽：
+      <ul>
+        <li>斜着 30° 插进去，金手指插到底</li>
+        <li>按下平贴主板</li>
+        <li>上小螺丝固定</li>
+      </ul>
+    </li>
+    <li>把 Mars 980 装到<strong>上面那个</strong> M.2 槽：
+      <ul>
+        <li>斜着 30° 插进去，金手指插到底</li>
+        <li>按下平贴主板</li>
+        <li>用刚才那颗小螺丝固定</li>
+      </ul>
+    </li>
+  </ol>
+</div>
+
+<div class="section">
+  <div class="section-title">3. 开机检查</div>
+  <p>盖机箱 → 插电源 → 按开机键</p>
+  <div class="case">
+    <div class="case-label ok">情况 1：直接进了 Windows ✓</div>
+    <p style="margin:6px 0;">什么都不用做。进系统后检查：</p>
+    <ul>
+      <li><strong>Win + Pause</strong> 看内存是不是 32GB</li>
+      <li>此电脑右键 → 管理 → 磁盘管理<br>找到 Mars 980（显示"未分配"）<br>右键 → 新建简单卷 → 分配盘符（E 盘）</li>
+    </ul>
+  </div>
+  <div class="case bad">
+    <div class="case-label warn">情况 2：黑屏没进系统</div>
+    <p style="margin:6px 0;">别慌！只是 BIOS 启动顺序乱了：</p>
+    <ol>
+      <li>重启时<strong>狂按 Delete 键</strong>进 BIOS</li>
+      <li>找 Boot 启动项页面</li>
+      <li>第一启动改成 KINGSTON SNV2S1000G</li>
+      <li>F10 保存退出 → 搞定</li>
+    </ol>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">常见担心 FAQ</div>
+
+  <div class="faq-q">Q: 内存/SSD 反方向插了怎么办？</div>
+  <div class="faq-a">反了根本插不进去，按不下去。感觉不对就翻面再试。只有硬掰才会坏，<strong>别硬来</strong>。</div>
+
+  <div class="faq-q">Q: 螺丝拧不动？</div>
+  <div class="faq-a">别用力。螺丝刀对准凹槽，垂直按下再转。滑了就停，换角度再来。</div>
+
+  <div class="faq-q">Q: 静电会烧坏吗？</div>
+  <div class="faq-a">拔电源 + 摸机箱外壳放电就够了。别穿毛衣装机就行，不用买静电手环。</div>
+
+  <div class="faq-q">Q: BIOS 看不懂英文？</div>
+  <div class="faq-a">Gigabyte BIOS 有中文，进去后角落能切换语言。</div>
+</div>
+
+<div class="cheer">加油！其实就是插和拧，不难 💪</div>
+
+</body>
+</html>
