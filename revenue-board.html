@@ -41,6 +41,22 @@
   .qa h2{margin-top:0}
   .qa h3{margin:18px 0 4px;font-size:15px}
   .foot{margin-top:30px;color:var(--mute);font-size:12px;text-align:center}
+  .todo{margin-bottom:32px;border:2px solid var(--ink);border-radius:12px;padding:22px 24px;background:#fffdf6}
+  .todo h2{margin:0 0 14px;font-size:20px;display:flex;align-items:center;gap:10px}
+  .todo ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  .todo li{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:8px;
+    font-size:15px;cursor:pointer;user-select:none;border:1px solid rgba(0,0,0,.06);
+    transition:transform .08s ease}
+  .todo li:hover{transform:translateX(2px)}
+  .todo li input{margin-top:4px;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+  .todo li .num{font-weight:700;margin-right:4px}
+  .todo li.done .text{text-decoration:line-through;opacity:.55}
+  .todo li.c1{background:#ffe8e0}
+  .todo li.c2{background:#fff3cf}
+  .todo li.c3{background:#e3f4dc}
+  .todo li.c4{background:#daeefb}
+  .todo li.c5{background:#ece0fb}
+  .todo li.c6{background:#fcdcec}
 </style>
 </head>
 <body>
@@ -56,6 +72,18 @@
     <span><i class="dot idea"></i>构想中</span>
   </div>
 </header>
+
+<section class="todo">
+  <h2>✅ 近期待办(按优先级)</h2>
+  <ul id="todo-list">
+    <li class="c1"><input type="checkbox"><span class="text"><span class="num">①</span>在客户群 / 朋友圈公告小程序新版本上线,跟进首批真实订单反馈</span></li>
+    <li class="c2"><input type="checkbox"><span class="text"><span class="num">②</span>定下一批目录扩展品类(律师 / 学校 / 留学机构…)并启动收集</span></li>
+    <li class="c3"><input type="checkbox"><span class="text"><span class="num">③</span>定 3-5 个内容模板,跑通 100 篇试水,观察 1 个月收录效果</span></li>
+    <li class="c4"><input type="checkbox"><span class="text"><span class="num">④</span>首页用响应式改造(CSS 媒体查询),保留桌面老派观感</span></li>
+    <li class="c5"><input type="checkbox"><span class="text"><span class="num">⑤</span>给现有客户加标签(高频 / 沉睡 / VIP),测试差异化话术</span></li>
+    <li class="c6"><input type="checkbox"><span class="text"><span class="num">⑥</span>同声翻译:工单要求服务商开放第三方 CDN;TranslationChina:确认服务商是否支持一键 Let's Encrypt</span></li>
+  </ul>
+</section>
 
 <div class="grid">
 
@@ -104,11 +132,11 @@
     <h2>④ 首页移动端重构 <span class="tag warn">推进中</span></h2>
     <div class="where">目标:保留现有"老派但可信"的桌面版,同时给手机用户更友好的体验</div>
     <ul>
-      <li>当前首页在手机上不够友好</li>
-      <li>核心问题:是改成响应式,还是单独做一个 m. 版本?</li>
-      <li>详见下方 FAQ:移动端跳转 vs 响应式 vs SEO 的取舍</li>
+      <li>现有页面结构难以改成响应式</li>
+      <li>路线:<b>完全重新设计</b>移动端页面,走<b>动态服务</b>(同一 URL,按 User-Agent 返回不同 HTML)</li>
+      <li>需注意 <code>Vary: User-Agent</code> 响应头,避免 CDN 缓存串版本</li>
     </ul>
-    <div class="next"><b>建议:</b>优先做响应式(单 URL),避免双站维护和 SEO 风险。</div>
+    <div class="next"><b>详见:</b><a href="mobile-strategy.html">移动端方案最佳实践</a></div>
   </div>
 
   <!-- 5. 客户管理 -->
@@ -141,42 +169,19 @@
 
 </div>
 
-<!-- FAQ -->
-<div class="qa">
-  <h2>📱 关于「移动端跳转 vs 响应式」的最佳实践</h2>
-
-  <h3>问题:</h3>
-  <p>如果保留现有桌面站,然后检测手机用户自动跳到 m. 版本,这样会不会被搜索引擎判为有问题?</p>
-
-  <h3>三种主流方案对比:</h3>
-  <ul>
-    <li><b>① 响应式设计(Responsive)</b> — 一个 URL、一份 HTML,根据屏幕宽度自适应。<b>Google 官方首选</b>,SEO 风险最低,维护成本也最低。</li>
-    <li><b>② 动态服务(Dynamic Serving)</b> — 同一个 URL,但服务器根据 User-Agent 返回不同 HTML。需要正确设置 <code>Vary: User-Agent</code> 响应头,否则缓存层会串。</li>
-    <li><b>③ 独立移动站(m. 子域跳转)</b> — 桌面访问 www,手机自动 302 到 m.。需要双向 <code>rel="alternate"</code> + <code>rel="canonical"</code> 配对声明。维护成本高,出错点多。</li>
-  </ul>
-
-  <h3>跳转本身会不会伤 SEO?</h3>
-  <p>不会 —— <b>前提是声明正确</b>。Google 明确说明 m. 子域是合法做法,只要:</p>
-  <ul>
-    <li>桌面页加 <code>&lt;link rel="alternate" media="..." href="https://m...."&gt;</code></li>
-    <li>移动页加 <code>&lt;link rel="canonical" href="https://www...."&gt;</code></li>
-    <li>跳转用 302 而不是 301(因为是基于设备的临时定向,不是页面搬家)</li>
-  </ul>
-  <p>如果配对错了 / 落地页对不上 / 移动站内容比桌面少很多,才会被判为糟糕体验,排名才会掉。</p>
-
-  <h3>建议:</h3>
-  <p><b>优先响应式</b>。你现有桌面站"老派但可信"的视觉风格,可以通过 CSS 媒体查询在手机上局部调整(放大字号、堆叠卡片、放大按钮、隐藏次要装饰),而不必整个推倒。这样:</p>
-  <ul>
-    <li>保留桌面端的"老牌正规"观感</li>
-    <li>手机用户得到舒适体验</li>
-    <li>只维护一套代码,SEO 零风险</li>
-    <li>Google 给移动友好排名加分</li>
-  </ul>
-  <p>只有当响应式实在改不动(比如桌面 HTML 是表格化布局、改造代价大于重做)时,才考虑独立 m. 站。</p>
-</div>
-
 <div class="foot">本页面汇总自当前推进中的各项工作 · 由 astoanne.github.io 静态托管</div>
 
 </div>
+<script>
+document.querySelectorAll('#todo-list li').forEach(li=>{
+  const cb=li.querySelector('input');
+  const key='todo-'+[...li.parentNode.children].indexOf(li);
+  if(localStorage.getItem(key)==='1'){cb.checked=true;li.classList.add('done');}
+  const toggle=()=>{li.classList.toggle('done',cb.checked);
+    localStorage.setItem(key,cb.checked?'1':'0');};
+  cb.addEventListener('change',toggle);
+  li.addEventListener('click',e=>{if(e.target!==cb){cb.checked=!cb.checked;toggle();}});
+});
+</script>
 </body>
 </html>

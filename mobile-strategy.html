@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移动端方案最佳实践 — 翻译公司</title>
+<style>
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:#f7f7f5;color:#1a1a1a;line-height:1.75;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+  h1{font-size:30px;margin:0 0 8px;letter-spacing:-0.5px}
+  .sub{color:#6b6b6b;margin-bottom:32px}
+  h2{font-size:20px;margin:32px 0 10px;border-left:4px solid #c8451e;padding-left:10px}
+  h3{font-size:16px;margin:22px 0 6px}
+  code{background:#eee;padding:1px 6px;border-radius:4px;font-size:13px}
+  .box{background:#fff;border:1px solid #e5e4e0;border-radius:10px;padding:20px 24px;margin:16px 0}
+  .ok{border-left:4px solid #2f7d4f;background:#f3faf5}
+  .warn{border-left:4px solid #b8860b;background:#fdf8eb}
+  .bad{border-left:4px solid #a33;background:#fdf2f2}
+  .back{display:inline-block;margin-bottom:20px;color:#c8451e;text-decoration:none;
+    border-bottom:1px dotted #c8451e;font-size:14px}
+  ul{padding-left:22px} li{margin:6px 0}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px;background:#fff}
+  th,td{border:1px solid #e5e4e0;padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:#f0efea;font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="back" href="revenue-board.html">← 返回营收总览板</a>
+
+<h1>📱 移动端方案最佳实践</h1>
+<div class="sub">把网站做成手机友好,同时不伤 SEO —— 三种方案的对比与选择</div>
+
+<h2>背景</h2>
+<p>现有翻译公司网站桌面版本"老派但可信",这种观感对客户的信任很重要,因此<b>保留桌面端不动</b>。但当前页面结构难以改造成响应式,因此需要为手机用户单独做一套界面。
+关键问题:是另起 <code>m.</code> 子域名做跳转?还是同 URL 按设备返回不同 HTML?会不会被搜索引擎判罚?</p>
+
+<h2>三种主流方案对比</h2>
+
+<table>
+  <tr><th>方案</th><th>做法</th><th>SEO 风险</th><th>维护成本</th></tr>
+  <tr>
+    <td><b>① 响应式</b></td>
+    <td>一个 URL、一份 HTML,CSS 媒体查询自适应屏幕</td>
+    <td>最低(Google 官方首选)</td>
+    <td>最低</td>
+  </tr>
+  <tr>
+    <td><b>② 动态服务</b></td>
+    <td>同一个 URL,服务器按 User-Agent 返回不同 HTML</td>
+    <td>低(需正确设置 <code>Vary</code>)</td>
+    <td>中</td>
+  </tr>
+  <tr>
+    <td><b>③ m. 子域</b></td>
+    <td>桌面访问 www,手机 302 跳到 m. 子域</td>
+    <td>中(需 alternate / canonical 配对)</td>
+    <td>高</td>
+  </tr>
+</table>
+
+<h2>我们的选择:② 动态服务</h2>
+
+<div class="box ok">
+  <h3>为什么不选响应式?</h3>
+  <p>现有桌面页面是早期表格 / 固定宽度布局,改造代价大于重做。强行改响应式既要重排版又不能动桌面观感,得不偿失。</p>
+
+  <h3>为什么不选 m. 子域?</h3>
+  <p>双站(www. 与 m.)维护成本高,容易出现:URL 配对错、canonical 写错、移动版内容比桌面少、跳转链失败等,任何一个出错都伤 SEO。</p>
+
+  <h3>为什么选动态服务?</h3>
+  <ul>
+    <li>URL 不变,所有外链权重保留,SEO 平稳过渡</li>
+    <li>只需新增一套移动模板,桌面端文件不动</li>
+    <li>用户分享的链接在任何设备都能直接打开</li>
+  </ul>
+</div>
+
+<h2>动态服务的正确做法</h2>
+
+<div class="box warn">
+  <h3>1. 服务器端检测 User-Agent,返回不同 HTML</h3>
+  <p>PHP 示例:</p>
+  <pre style="background:#1e1e1e;color:#e8e8e8;padding:14px;border-radius:6px;overflow:auto;font-size:13px;line-height:1.5">
+&lt;?php
+$ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+$isMobile = preg_match('/Mobile|Android|iPhone|iPad/i', $ua);
+header('Vary: User-Agent');     // 关键:告诉缓存这是按 UA 变化的
+include $isMobile ? 'index-mobile.html' : 'index-desktop.html';
+?&gt;</pre>
+
+  <h3>2. 必须加 <code>Vary: User-Agent</code> 响应头</h3>
+  <p>没有这一行 → CDN / 浏览器缓存会把第一个访问者拿到的版本缓存下来给所有人,导致桌面用户看到手机版或反之。<b>这是动态服务最常踩的坑</b>。</p>
+
+  <h3>3. 同 URL 的两份 HTML 内容要保持一致</h3>
+  <p>主体信息(标题、正文、价格、联系方式)必须对应。手机版可以简化布局,但不能缺失内容,否则 Google 判定为"移动版内容少",降权。</p>
+
+  <h3>4. 移动版要通过 Google Mobile-Friendly 测试</h3>
+  <p>地址:<code>search.google.com/test/mobile-friendly</code>。改完后用真实 URL 跑一遍。</p>
+</div>
+
+<h2>常见误区</h2>
+
+<div class="box bad">
+  <ul>
+    <li><b>用 301 跳转</b> —— 错。基于设备的定向应该是 302(临时),用 301 会污染索引。动态服务方案根本不跳转,这个坑不存在。</li>
+    <li><b>移动版只放电话和"返回桌面版"链接</b> —— 错。Google 视为低质量。</li>
+    <li><b>忘记 <code>Vary</code> 头</b> —— 最常见的事故源,会让 CDN 把版本串混。</li>
+    <li><b>桌面版有详情页、移动版没有</b> —— 错。两边页面结构要 1:1 对应。</li>
+  </ul>
+</div>
+
+<h2>实施清单</h2>
+<ul>
+  <li>[ ] 移动版首页设计稿(可参考 5118、Fanyi.com 等同行手机版)</li>
+  <li>[ ] 后端加 UA 判断 + <code>Vary: User-Agent</code></li>
+  <li>[ ] 对应每个核心桌面页(首页 / 服务 / 案例 / 联系)做移动模板</li>
+  <li>[ ] Google Search Console 提交 + 跑 Mobile-Friendly Test</li>
+  <li>[ ] 真机测试:iPhone Safari / Android Chrome / 微信内置浏览器</li>
+</ul>
+
+<a class="back" href="revenue-board.html" style="margin-top:30px">← 返回营收总览板</a>
+
+</div>
+</body>
+</html>
