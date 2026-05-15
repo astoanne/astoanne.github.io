@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广州全球同声传译翻译有限公司(响应式预览)</title>
+<meta name="description" content="新世界全球同声隶属于广州市贯日翻译服务有限公司，专业同声传译公司，提供同传译员、同传设备租赁服务。">
+<style>
+  :root{
+    --dark:#580000; --red:#a01515; --gold:#c8a85a;
+    --ink:#222; --mute:#777; --bg:#f6f1e8; --card:#fff; --line:#e8ddc7;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:"Microsoft YaHei","PingFang SC",-apple-system,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7;font-size:15px}
+  a{color:var(--dark);text-decoration:none}
+  a:hover{color:var(--red);text-decoration:underline}
+  img{max-width:100%;height:auto;display:block}
+
+  /* ───── top bar ───── */
+  .topbar{background:#fff;border-bottom:1px solid var(--line)}
+  .topbar-inner{max-width:1100px;margin:0 auto;padding:14px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .logo{font-size:22px;font-weight:700;color:var(--dark);letter-spacing:.5px}
+  .logo span{color:var(--red)}
+  .util{font-size:13px;color:var(--mute)}
+  .util a{margin:0 6px;color:var(--mute)}
+
+  /* ───── main nav ───── */
+  nav.main{background:var(--dark);position:sticky;top:0;z-index:10}
+  nav.main ul{max-width:1100px;margin:0 auto;padding:0 8px;list-style:none;
+    display:flex;flex-wrap:wrap;align-items:center}
+  nav.main li a{display:block;padding:14px 16px;color:#fff;font-size:14.5px;
+    border-right:1px solid rgba(255,255,255,.08)}
+  nav.main li a:hover{background:#3d0000;color:var(--gold);text-decoration:none}
+
+  /* ───── hero ───── */
+  .hero{background:linear-gradient(135deg,#580000 0%,#7a1a1a 100%);
+    color:#fff;padding:48px 24px;text-align:center}
+  .hero h1{margin:0 0 12px;font-size:clamp(22px,4vw,32px);font-weight:700}
+  .hero p{margin:0;font-size:clamp(14px,2.2vw,16px);opacity:.9}
+  .hero .badge{display:inline-block;margin-top:18px;background:var(--gold);
+    color:var(--dark);padding:8px 20px;border-radius:24px;font-weight:600;font-size:14px}
+
+  /* ───── notice ───── */
+  .notice{background:#fff5d8;border-bottom:1px solid var(--line);padding:10px 20px;
+    text-align:center;color:#8b3a00;font-size:14px}
+  .notice a{color:var(--red);font-weight:600}
+
+  /* ───── layout ───── */
+  .container{max-width:1100px;margin:0 auto;padding:24px 16px;
+    display:grid;grid-template-columns:240px 1fr 220px;gap:20px}
+  aside,main{min-width:0}
+
+  /* card style */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;margin-bottom:18px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card-h{background:linear-gradient(to right,var(--dark),#7a1a1a);color:#fff;
+    padding:11px 16px;font-size:15px;font-weight:600;letter-spacing:.5px}
+  .card-h::before{content:"";display:inline-block;width:4px;height:14px;
+    background:var(--gold);margin-right:8px;vertical-align:-2px}
+  .card-b{padding:14px 16px}
+  .card-b ul{margin:0;padding-left:18px}
+  .card-b li{margin:5px 0;font-size:14px}
+
+  /* contact card */
+  .contact{text-align:center}
+  .contact .ph{font-size:18px;color:var(--red);font-weight:700;margin:6px 0}
+  .contact .qr{width:140px;height:140px;margin:10px auto;background:#eee;
+    display:flex;align-items:center;justify-content:center;color:var(--mute);
+    font-size:13px;border:1px solid var(--line)}
+  .contact .lbl{font-size:13px;color:var(--mute);margin-top:8px}
+
+  /* about section */
+  .about{background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px}
+  .about h2{margin:0 0 14px;font-size:20px;color:var(--dark);
+    border-left:4px solid var(--red);padding-left:10px}
+  .about p{margin:0 0 12px;text-indent:2em;color:#333}
+  .about .red{color:var(--red);font-weight:600}
+
+  /* lang grid */
+  .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .lang-grid .col{background:#faf5ea;border:1px solid var(--line);
+    border-radius:6px;padding:14px}
+  .lang-grid h3{margin:0 0 8px;font-size:15px;color:var(--red)}
+  .lang-grid ul{margin:0;padding-left:18px;font-size:14px}
+  .lang-grid li{margin:3px 0}
+  .lang-grid u{text-decoration:none;color:var(--dark);font-weight:600}
+
+  /* flags */
+  .flags{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;justify-content:center}
+  .flag{width:54px;height:36px;background:#ddd;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:11px;
+    color:var(--mute);border-radius:3px}
+
+  /* equipment section */
+  .equip{margin-top:18px;background:#fff;border:1px solid var(--line);
+    border-radius:8px;padding:20px}
+  .equip h2{margin:0 0 12px;font-size:18px;color:var(--dark);
+    border-left:4px solid var(--red);padding-left:10px}
+  .equip-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+  .equip-grid h3{margin:0 0 6px;color:var(--red);font-size:15px}
+  .equip-grid .sub{font-weight:600;color:var(--red);margin-top:8px}
+
+  /* footer */
+  footer{background:var(--dark);color:#e8d8b0;text-align:center;padding:24px 20px;
+    margin-top:30px;font-size:13px;line-height:1.9}
+  footer a{color:var(--gold)}
+  footer .cities{color:var(--gold);font-weight:600;margin-bottom:6px}
+
+  /* ───── RESPONSIVE breakpoints ───── */
+  @media (max-width:980px){
+    .container{grid-template-columns:1fr;padding:16px 12px;gap:14px}
+    aside.left{order:2}
+    main.center{order:1}
+    aside.right{order:3}
+    nav.main ul{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;
+      -webkit-overflow-scrolling:touch}
+    nav.main li a{padding:12px 14px;font-size:14px;white-space:nowrap}
+    .lang-grid,.equip-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .topbar-inner{justify-content:center;text-align:center}
+    .util{font-size:12px}
+    .util a{margin:0 4px}
+    .hero{padding:36px 18px}
+    .about{padding:18px}
+    .about p{text-indent:1.5em;font-size:14.5px}
+  }
+</style>
+</head>
+<body>
+
+<!-- demo banner so this doesn't get confused with the real site -->
+<div style="background:#1a1a1a;color:#ffcf6b;padding:8px 14px;text-align:center;font-size:13px">
+  🧪 这是<b>响应式重设计预览</b> · 仅用于评估视觉与移动端表现 · 不替换现有
+  <a href="https://tongshengfanyi.com" style="color:#fff" target="_blank">tongshengfanyi.com</a> ·
+  <a href="revenue-board.html" style="color:#fff">返回总览板</a>
+</div>
+
+<!-- top utility bar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">新世界全球<span>同声</span>翻译</div>
+    <div class="util">
+      <a href="#">加入收藏</a> | <a href="#">最新优惠</a> |
+      <a href="#">网站地图</a> | <a href="#">友情链接</a>
+    </div>
+  </div>
+</div>
+
+<!-- main nav -->
+<nav class="main">
+  <ul>
+    <li><a href="#">同传首页</a></li>
+    <li><a href="#">同传译员简介</a></li>
+    <li><a href="#">同声传译报价</a></li>
+    <li><a href="#">同传设备简介</a></li>
+    <li><a href="#">设备售价与租赁价格</a></li>
+    <li><a href="#">同声传译案例</a></li>
+    <li><a href="#">同声传译技巧</a></li>
+    <li><a href="#">笔译</a></li>
+    <li><a href="#">口译</a></li>
+  </ul>
+</nav>
+
+<!-- hero -->
+<section class="hero">
+  <h1>专业同声传译 · 同传设备租赁</h1>
+  <p>广州 · 北京 · 上海 · 深圳 · 东莞 —— 一流的同声传译服务</p>
+  <a class="badge" href="#">在线填写翻译咨询表 →</a>
+</section>
+
+<!-- marquee notice -->
+<div class="notice">
+  📢 <a href="#">欢迎在线填写翻译咨询表，专人专业回复您的咨询...</a>
+</div>
+
+<!-- main layout -->
+<div class="container">
+
+  <!-- LEFT: contact + equipment list -->
+  <aside class="left">
+    <div class="card">
+      <div class="card-h">联系我们</div>
+      <div class="card-b contact">
+        <div>📧 <a href="mailto:chi@en-ch.com">chi@en-ch.com</a></div>
+        <div class="ph">📱 139 241 66640</div>
+        <div class="lbl">微信咨询</div>
+        <div class="qr">[ 微信二维码 ]</div>
+        <div class="lbl">QQ 154666954</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">同传设备产品</div>
+      <div class="card-b">
+        <ul>
+          <li><a href="#">BOSCH/PHILIPS 数字会议系统</a></li>
+          <li><a href="#">BOSCH LBB 3500/30 多 CCU 数字会议</a></li>
+          <li><a href="#">系统中央控制器</a></li>
+          <li><a href="#">BOSCH LBB 3520/10 译员台</a></li>
+          <li><a href="#">BOSCH LBB 3433/00 &amp; 3433/10</a></li>
+          <li><a href="#">七路语种红外线接收机</a></li>
+          <li><a href="#">丹麦 DIS 同声传译设备</a></li>
+          <li><a href="#">美国 Listen 无线导览设备</a></li>
+          <li><a href="#">台湾 MX 无线导览设备</a></li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER: about & languages -->
+  <main class="center">
+    <section class="about">
+      <h2>关于新世界全球同声</h2>
+      <p>新世界全球同声隶属于<b>广州市贯日翻译服务有限公司</b>，新世界全球同声（广州 | 北京 | 上海 | 深圳 | 东莞）是一家专业同声传译公司，致力于提供国际一流的同声传译翻译服务与同声传译设备租售服务。</p>
+      <p>公司注重翻译质量控制，竭诚为客户提供最满意的同声传译翻译服务与同传设备租售服务，目前的同声传译翻译服务与同传设备租赁服务<span class="red">客户的回头率达到 100%</span>，所售设备以完善的售后服务赢得客户的一致赞誉。</p>
+
+      <h2 style="margin-top:24px">专业各语种同声传译服务</h2>
+      <p>新世界全球同声汇聚各语种同传译员，专业提供多语种的同声传译服务：</p>
+
+      <div class="flags">
+        <div class="flag">🇨🇳 中</div>
+        <div class="flag">🇬🇧 英</div>
+        <div class="flag">🇫🇷 法</div>
+        <div class="flag">🇩🇪 德</div>
+        <div class="flag">🇯🇵 日</div>
+        <div class="flag">🇰🇷 韩</div>
+      </div>
+
+      <div class="lang-grid">
+        <div class="col">
+          <h3>中外互译</h3>
+          <ul>
+            <li>中文普通话 ↔ <u>英语</u></li>
+            <li>中文普通话 ↔ <u>日本语</u></li>
+            <li>中文普通话 ↔ <u>韩语</u></li>
+            <li>中文普通话 ↔ <u>法语</u></li>
+            <li>中文普通话 ↔ <u>德语</u></li>
+            <li>中文普通话 ↔ <u>西班牙语</u></li>
+            <li>中文普通话 ↔ <u>意大利语</u></li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>外外互译</h3>
+          <ul>
+            <li>英语 ↔ 日语</li>
+            <li>英语 ↔ 韩语</li>
+            <li>日语 ↔ 韩语</li>
+          </ul>
+          <h3 style="margin-top:14px">地方语言同传</h3>
+          <ul>
+            <li>中文普通话 ↔ 中文粤语</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="equip">
+      <h2>红外同声传译设备 · 无线导览系统</h2>
+      <div class="equip-grid">
+        <div>
+          <h3>🎙 红外设备</h3>
+          <p>目前是中大型同声传译会议的<b>主流设备</b>。</p>
+          <div class="sub">主要配置：</div>
+          <ul>
+            <li>中央控制器</li>
+            <li>翻译员控制台</li>
+            <li>翻译员耳机</li>
+            <li>红外线发射机 / 辐射板</li>
+            <li>红外线接收机 + 耳机</li>
+          </ul>
+        </div>
+        <div>
+          <h3>📡 无线导览系统</h3>
+          <p>便携式同声传译系统，又名"无线导游系统"。</p>
+          <div class="sub">适用场合：</div>
+          <ul>
+            <li>观光导游 / 博物馆 / 美术馆讲解</li>
+            <li>工厂参观介绍</li>
+            <li>多国实时翻译</li>
+            <li>小型非保密会议、视听语言教学</li>
+          </ul>
+          <div class="sub">主要配置：</div>
+          <ul>
+            <li>无线发射机 / 接收机 / 耳机</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- RIGHT: cases + fields -->
+  <aside class="right">
+    <div class="card">
+      <div class="card-h">应用案例</div>
+      <div class="card-b">
+        <ul>
+          <li><a href="#">同声传译译员翻译案例</a></li>
+          <li><a href="#">红外同声传译系统应用案例</a></li>
+          <li><a href="#">无线同声系统应用案例</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">翻译领域</div>
+      <div class="card-b" style="font-size:13.5px;color:#444;line-height:1.85">
+        计算机 · IT · 信息技术 · 软件工程 · 通信技术 · 经济 · 金融 · 保险 · 风险投资 · MBA · 财务 · 医学 · 整容 · 美容 · 医药 · 保健品 · 建筑 · 电气 · 隧道工程 · 汽车制造 · 机械电子 · 生命科学 · 能源 · 环境保护 · 广告媒介 · 网络营销 等各行各业。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">银行账户</div>
+      <div class="card-b" style="text-align:center;font-size:13.5px">
+        <a href="#">点击查看对公账户信息 →</a>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<footer>
+  <div class="cities">广州 | 北京 | 上海 | 深圳 | 东莞</div>
+  版权所有 © 1998 - 2026 广州市贯日翻译服务有限公司（总部）<br>
+  全国免费电话：139 241 66640 &nbsp;|&nbsp; 广州同声咨询电话：020-86266990<br>
+  企业营业执照 · 粤 ICP 备 05023286 号
+</footer>
+
+</body>
+</html>
