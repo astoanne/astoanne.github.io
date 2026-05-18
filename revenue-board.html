@@ -83,6 +83,8 @@
     <li class="c4"><input type="checkbox"><span class="text"><span class="num">④</span>首页用响应式改造(CSS 媒体查询),保留桌面老派观感</span></li>
     <li class="c5"><input type="checkbox"><span class="text"><span class="num">⑤</span>给现有客户加标签(高频 / 沉睡 / VIP),测试差异化话术</span></li>
     <li class="c6"><input type="checkbox"><span class="text"><span class="num">⑥</span>同声翻译:工单要求服务商开放第三方 CDN;TranslationChina:确认服务商是否支持一键 Let's Encrypt</span></li>
+    <li class="c3"><input type="checkbox"><span class="text"><span class="num">⑦</span>选 1 个高价值页面做"亲 AI Agent"样板:llms.txt + JSON-LD + 文本化关键信息 + FAQ</span></li>
+    <li class="c2"><input type="checkbox"><span class="text"><span class="num">⑧</span>新目录:世界机场 + 全球公证处 —— 选数据源,跑 100 条样本验证收录</span></li>
   </ul>
 </section>
 
@@ -162,6 +164,33 @@
       <li>可优化:分组打标签(高频 / 沉睡 / VIP),消息差异化</li>
     </ul>
     <div class="next"><b>下一步:</b>给现有客户加标签 → 测试不同话术回复率 → 提炼最优模版。</div>
+  </div>
+
+  <!-- 7. Agent-friendly -->
+  <div class="card">
+    <h2>⑦ 页面"亲 AI Agent"改造 <span class="tag idea">构想中</span></h2>
+    <div class="where">目标:让 ChatGPT / Perplexity / 豆包 等 AI 助手能正确读取、引用我们的页面 → 把我们推荐给用户</div>
+    <ul>
+      <li>新增 <code>/llms.txt</code>(类似 robots.txt 的 AI 索引文件):列出公司简介、核心服务、定价、联系方式的纯文本摘要</li>
+      <li>页面加 JSON-LD 结构化数据:<code>LocalBusiness</code>、<code>Service</code>、<code>FAQPage</code>、<code>BreadcrumbList</code></li>
+      <li>关键信息用<b>纯文本</b>而非图片(价格、电话、地址、服务范围 —— 现有页面很多是 jpg)</li>
+      <li>语义化 HTML:<code>h1/h2/h3</code> 层级、<code>main / article / aside</code>,告别表格嵌套</li>
+      <li>每页加 FAQ 模块,问答对直接被 AI 摘录</li>
+      <li>robots.txt 明确允许 GPTBot / PerplexityBot / ClaudeBot 等 AI 爬虫</li>
+    </ul>
+    <div class="next"><b>下一步:</b>先在 1 个高价值页面(如服务报价页)做完整改造作为样板 → 跑通后批量推广。</div>
+  </div>
+
+  <!-- 8. New directories -->
+  <div class="card">
+    <h2>⑧ 新目录扩展:机场 &amp; 全球公证处 <span class="tag idea">构想中</span></h2>
+    <div class="where">沿用婚介 / 公证目录的同款架构,扩展两个新品类</div>
+    <ul>
+      <li><b>世界各大机场信息:</b>机场名称、IATA/ICAO 代码、所在国家城市、航站楼、官网 —— 对应翻译需求(出国证件、登机文件)</li>
+      <li><b>世界各公证处信息:</b>从国内公证处延伸到海外,服务出国办证 / 海外认证客户</li>
+      <li>这两个目录与公司核心翻译业务高度相关 → 自然引流,转化路径短</li>
+    </ul>
+    <div class="next"><b>下一步:</b>① 选数据源(机场可用 OurAirports / OpenFlights;公证可用各国官方目录) ② 跑通 100 条样本页 → 收录测试 → 全量生成。</div>
   </div>
 
   <!-- 6. CDN / HTTPS -->
