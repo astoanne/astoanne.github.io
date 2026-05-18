@@ -13,7 +13,9 @@
   body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
     background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
-  header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px;
+    display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  header .htext{flex:1;min-width:240px}
   h1{margin:0 0 8px;font-size:32px;letter-spacing:-0.5px}
   .sub{color:var(--mute);font-size:15px}
   .legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;font-size:13px}
@@ -23,32 +25,31 @@
   .dot.block{background:var(--block)} .dot.idea{background:#888}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:22px 24px;display:flex;flex-direction:column}
-  .card h2{margin:0 0 6px;font-size:18px;display:flex;align-items:center;gap:10px}
-  .tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:.5px}
+    padding:22px 24px;display:flex;flex-direction:column;position:relative}
+  .card h2{margin:0 0 6px;font-size:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:.5px;cursor:default}
   .tag.ok{background:#e3f1e8;color:var(--ok)}
   .tag.warn{background:#fbf1d8;color:var(--warn)}
   .tag.block{background:#f7dede;color:var(--block)}
   .tag.idea{background:#ececec;color:#555}
   .where{font-size:12px;color:var(--mute);margin-bottom:12px}
-  ul{margin:8px 0 0;padding-left:18px}
-  li{margin:4px 0;font-size:14.5px}
+  .card ul{margin:8px 0 0;padding-left:18px}
+  .card li{margin:4px 0;font-size:14.5px}
   .next{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:13.5px}
   .next b{color:var(--accent)}
   a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
   a:hover{opacity:.7}
-  .qa{margin-top:40px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:24px 26px}
-  .qa h2{margin-top:0}
-  .qa h3{margin:18px 0 4px;font-size:15px}
   .foot{margin-top:30px;color:var(--mute);font-size:12px;text-align:center}
+
+  /* todo list */
   .todo{margin-bottom:32px;border:2px solid var(--ink);border-radius:12px;padding:22px 24px;background:#fffdf6}
   .todo h2{margin:0 0 14px;font-size:20px;display:flex;align-items:center;gap:10px}
   .todo ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
   .todo li{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:8px;
     font-size:15px;cursor:pointer;user-select:none;border:1px solid rgba(0,0,0,.06);
-    transition:transform .08s ease}
+    transition:transform .08s ease;position:relative}
   .todo li:hover{transform:translateX(2px)}
-  .todo li input{margin-top:4px;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+  .todo li input[type=checkbox]{margin-top:4px;width:16px;height:16px;cursor:pointer;flex-shrink:0}
   .todo li .num{font-weight:700;margin-right:4px}
   .todo li.done .text{text-decoration:line-through;opacity:.55}
   .todo li.c1{background:#ffe8e0}
@@ -57,187 +58,578 @@
   .todo li.c4{background:#daeefb}
   .todo li.c5{background:#ece0fb}
   .todo li.c6{background:#fcdcec}
+
+  /* edit mode affordances */
+  .mode-badge{font-size:12px;padding:4px 10px;border-radius:14px;font-weight:600;letter-spacing:.5px}
+  .mode-badge.edit{background:#fde68a;color:#7a3e00;border:1px solid #f5b942}
+  .mode-badge.view{background:#e5e4e0;color:var(--mute)}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .btn{background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:6px;
+    cursor:pointer;font-size:13px;color:var(--ink);transition:background .15s}
+  .btn:hover{background:#f0efea}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.primary:hover{background:#333}
+  body.edit-mode .editable{cursor:text}
+  body.edit-mode .editable:focus{outline:2px dashed var(--accent);outline-offset:2px;background:#fff7ed}
+  body.edit-mode .card,body.edit-mode .todo li{cursor:grab}
+  body.edit-mode .card.dragging,body.edit-mode .todo li.dragging{opacity:.4;cursor:grabbing}
+  body:not(.edit-mode) .edit-only{display:none!important}
+  .add-row{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+  .add-row .btn{font-size:12.5px}
+  .card-actions{position:absolute;top:8px;right:10px;display:none;gap:4px}
+  body.edit-mode .card:hover .card-actions,
+  body.edit-mode .todo li:hover .card-actions{display:flex}
+  .card-actions .ax{background:rgba(255,255,255,.9);border:1px solid var(--line);
+    width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;
+    justify-content:center;cursor:pointer;font-size:12px;line-height:1}
+  .card-actions .ax:hover{background:#fff;border-color:var(--accent)}
+
+  /* trash bin */
+  .bin{position:fixed;bottom:24px;right:24px;width:64px;height:64px;border-radius:50%;
+    background:#fff;border:2px dashed #aaa;display:none;align-items:center;justify-content:center;
+    font-size:28px;z-index:50;transition:all .15s;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+  body.edit-mode .bin{display:flex}
+  .bin.over{background:#fee;border-color:var(--block);border-style:solid;transform:scale(1.15)}
+  .bin .count{position:absolute;top:-4px;right:-4px;background:var(--accent);color:#fff;
+    font-size:11px;padding:2px 6px;border-radius:10px;font-weight:600}
+
+  /* context menu */
+  .ctx{position:fixed;background:#fff;border:1px solid var(--line);border-radius:8px;
+    box-shadow:0 6px 24px rgba(0,0,0,.12);padding:6px 0;z-index:200;min-width:160px;
+    display:none;font-size:14px}
+  .ctx.show{display:block}
+  .ctx button{display:block;width:100%;padding:8px 14px;background:none;border:0;text-align:left;
+    cursor:pointer;font-size:14px;color:var(--ink)}
+  .ctx button:hover{background:#f0efea}
+  .ctx button.danger{color:var(--block)}
+  .ctx hr{margin:4px 0;border:0;border-top:1px solid var(--line)}
+
+  /* archive */
+  .archive{margin-top:30px;background:#fafaf6;border:1px solid var(--line);border-radius:10px;
+    padding:0;overflow:hidden}
+  .archive summary{padding:14px 20px;cursor:pointer;font-weight:600;font-size:15px;
+    list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .archive summary::-webkit-details-marker{display:none}
+  .archive summary::after{content:"▾";color:var(--mute);font-size:14px;transition:transform .2s}
+  .archive[open] summary::after{transform:rotate(180deg)}
+  .archive .archive-body{padding:0 20px 20px;border-top:1px solid var(--line)}
+  .archive-item{background:#fff;border:1px solid var(--line);border-radius:6px;padding:10px 14px;
+    margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
+  .archive-item .meta{color:var(--mute);font-size:12px;margin-top:3px}
+  .archive-item .actions{display:flex;gap:6px;flex-shrink:0}
+  .empty{color:var(--mute);font-size:13.5px;text-align:center;padding:16px 0}
+
+  /* modal for edit */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;
+    justify-content:center;z-index:300;padding:20px}
+  .modal.show{display:flex}
+  .modal-inner{background:#fff;border-radius:10px;max-width:560px;width:100%;
+    padding:24px 26px;max-height:90vh;overflow-y:auto}
+  .modal h3{margin:0 0 16px;font-size:18px}
+  .modal label{display:block;font-size:13px;color:var(--mute);margin:10px 0 4px}
+  .modal input[type=text],.modal textarea,.modal select{width:100%;padding:8px 10px;
+    border:1px solid var(--line);border-radius:6px;font-family:inherit;font-size:14px}
+  .modal textarea{min-height:80px;resize:vertical}
+  .modal-actions{margin-top:18px;display:flex;justify-content:flex-end;gap:8px}
+
+  @media (max-width:600px){
+    .wrap{padding:24px 14px 80px}
+    h1{font-size:24px}
+    .card{padding:18px}
+    .todo{padding:18px}
+  }
 </style>
 </head>
 <body>
+
 <div class="wrap">
 
 <header>
-  <h1>营收提升总览板</h1>
-  <div class="sub">把目前正在推进的各条战线集中在一页 · 更新时间:2026-05-15</div>
-  <div class="legend">
-    <span><i class="dot ok"></i>进行顺利</span>
-    <span><i class="dot warn"></i>等待 / 待跟进</span>
-    <span><i class="dot block"></i>阻塞</span>
-    <span><i class="dot idea"></i>构想中</span>
+  <div class="htext">
+    <h1>营收提升总览板</h1>
+    <div class="sub">把目前正在推进的各条战线集中在一页 · 更新时间:<span class="editable" data-bind="updated" contenteditable="false">2026-05-15</span></div>
+    <div class="legend">
+      <span><i class="dot ok"></i>进行顺利</span>
+      <span><i class="dot warn"></i>等待 / 待跟进</span>
+      <span><i class="dot block"></i>阻塞</span>
+      <span><i class="dot idea"></i>构想中</span>
+    </div>
+  </div>
+  <div style="text-align:right">
+    <span id="mode-badge" class="mode-badge view">👁 只读模式</span>
+    <div class="toolbar edit-only">
+      <button class="btn" id="btn-export">💾 导出 HTML</button>
+      <button class="btn" id="btn-reset">↺ 还原</button>
+    </div>
   </div>
 </header>
 
 <section class="todo">
   <h2>✅ 近期待办(按优先级)</h2>
-  <ul id="todo-list">
-    <li class="c1"><input type="checkbox"><span class="text"><span class="num">①a</span>跟进证件翻译小程序员工内测,收齐反馈后正式投产</span></li>
-    <li class="c1"><input type="checkbox"><span class="text"><span class="num">①b</span>列出第二个小程序需要更新的功能点,评估开发量并排期</span></li>
-    <li class="c2"><input type="checkbox"><span class="text"><span class="num">②</span>定下一批目录扩展品类(律师 / 学校 / 留学机构…)并启动收集</span></li>
-    <li class="c3"><input type="checkbox"><span class="text"><span class="num">③</span>定 3-5 个内容模板,跑通 100 篇试水,观察 1 个月收录效果</span></li>
-    <li class="c4"><input type="checkbox"><span class="text"><span class="num">④</span>首页用响应式改造(CSS 媒体查询),保留桌面老派观感</span></li>
-    <li class="c5"><input type="checkbox"><span class="text"><span class="num">⑤</span>给现有客户加标签(高频 / 沉睡 / VIP),测试差异化话术</span></li>
-    <li class="c6"><input type="checkbox"><span class="text"><span class="num">⑥</span>同声翻译:工单要求服务商开放第三方 CDN;TranslationChina:确认服务商是否支持一键 Let's Encrypt</span></li>
-    <li class="c3"><input type="checkbox"><span class="text"><span class="num">⑦</span>选 1 个高价值页面做"亲 AI Agent"样板:llms.txt + JSON-LD + 文本化关键信息 + FAQ</span></li>
-    <li class="c2"><input type="checkbox"><span class="text"><span class="num">⑧</span>新目录:世界机场 + 全球公证处 —— 选数据源,跑 100 条样本验证收录</span></li>
-    <li class="c4"><input type="checkbox"><span class="text"><span class="num">⑨</span>根据同传市场趋势文档,拆 5-8 篇长尾文章发布到同声翻译站</span></li>
-  </ul>
+  <ul id="todo-list"></ul>
+  <div class="add-row edit-only">
+    <button class="btn" id="btn-add-todo">+ 添加待办</button>
+  </div>
 </section>
 
-<div class="grid">
+<div class="grid" id="cards-grid"></div>
 
-  <!-- 1. 小程序 -->
-  <div class="card">
-    <h2>①a 微信小程序 · 证件翻译 <span class="tag warn">员工内测中</span></h2>
-    <div class="where">渠道:微信小程序 · 主业:标准化证件翻译下单</div>
-    <ul>
-      <li>本次更新仅<b>新增员工后台</b>,客户侧功能未做任何改动</li>
-      <li>已通过腾讯审核(2026-05-15)</li>
-      <li>目前阶段:<b>员工内部测试新后台</b> —— 验证后台操作流程</li>
-    </ul>
-    <div class="next"><b>下一步:</b>员工跑完一遍真实工单流程 → 修复体验问题 → 后台才算可投产。</div>
-  </div>
-
-  <!-- 1b. 另一小程序 -->
-  <div class="card">
-    <h2>①b 微信小程序 · 另一类翻译服务下单 <span class="tag warn">待更新</span></h2>
-    <div class="where">渠道:微信小程序 · 公司第二个下单入口</div>
-    <ul>
-      <li>承接另一类翻译服务的客户下单</li>
-      <li>已上线运行,但<b>功能尚未跟进迭代</b></li>
-      <li>已识别需要更新,但还未排期开发</li>
-    </ul>
-    <div class="next"><b>下一步:</b>列出需要更新的功能点 → 评估开发量 → 排进 ①a 测试通过之后的时间窗。</div>
-  </div>
-
-  <!-- 2. 网站目录 -->
-  <div class="card">
-    <h2>② 网站服务目录(SEO 引流) <span class="tag ok">在跑</span></h2>
-    <div class="where">渠道:translationchina.com / tongshengfanyi.com</div>
-    <ul>
-      <li>婚介目录:188K 条目 / 197K sitemap URL,已生成完整 HTML</li>
-      <li>公证目录(公证处 + 公证人员):同架构搭建中</li>
-      <li>下一批扩展品类待选:律师 / 学校 / 房产中介 / 留学机构 等</li>
-    </ul>
-    <div class="next">
-      <b>已发布详情页:</b>
-      <a href="seo-todo.html">SEO 任务清单</a> ·
-      <a href="webmaster-checklist.html">站长工具清单</a>
-    </div>
-  </div>
-
-  <!-- 3. 内容自动化 -->
-  <div class="card">
-    <h2>③ 内容自动化(吸引流量) <span class="tag idea">构想中</span></h2>
-    <div class="where">目标:批量生成有价值的内容页 → 长尾搜索引流</div>
-    <ul>
-      <li>方向:翻译相关问答、地区办证指南、领事认证流程等</li>
-      <li>需要:选题库 + 自动生成脚本 + 人工审校抽样</li>
-      <li>与目录站协同:在目录页底部互链,提升整体权重</li>
-    </ul>
-    <div class="next"><b>下一步:</b>先定 3-5 个内容模板,跑通 100 篇 → 看 1 个月收录效果再决定是否扩量。</div>
-  </div>
-
-  <!-- 4. 首页移动端 -->
-  <div class="card">
-    <h2>④ 首页移动端重构 <span class="tag warn">推进中</span></h2>
-    <div class="where">目标:保留现有"老派但可信"的桌面版,同时给手机用户更友好的体验</div>
-    <ul>
-      <li>现有页面结构难以改成响应式</li>
-      <li>路线:<b>完全重新设计</b>移动端页面,走<b>动态服务</b>(同一 URL,按 User-Agent 返回不同 HTML)</li>
-      <li>需注意 <code>Vary: User-Agent</code> 响应头,避免 CDN 缓存串版本</li>
-    </ul>
-    <div class="next"><b>详见:</b><a href="mobile-strategy.html">移动端方案最佳实践</a></div>
-  </div>
-
-  <!-- 5. 客户管理 -->
-  <div class="card">
-    <h2>⑤ 客户管理 · 日常触达 <span class="tag ok">在跑</span></h2>
-    <div class="where">渠道:微信日常问候 / 节日祝福 / 轻提醒</div>
-    <ul>
-      <li>每日向现有客户发送温和的提醒类消息</li>
-      <li>目的:保持品牌存在感,下次有翻译需求时第一个想到我们</li>
-      <li>可优化:分组打标签(高频 / 沉睡 / VIP),消息差异化</li>
-    </ul>
-    <div class="next"><b>下一步:</b>给现有客户加标签 → 测试不同话术回复率 → 提炼最优模版。</div>
-  </div>
-
-  <!-- 7. Agent-friendly -->
-  <div class="card">
-    <h2>⑦ 页面"亲 AI Agent"改造 <span class="tag idea">构想中</span></h2>
-    <div class="where">目标:让 ChatGPT / Perplexity / 豆包 等 AI 助手能正确读取、引用我们的页面 → 把我们推荐给用户</div>
-    <ul>
-      <li>新增 <code>/llms.txt</code>(类似 robots.txt 的 AI 索引文件):列出公司简介、核心服务、定价、联系方式的纯文本摘要</li>
-      <li>页面加 JSON-LD 结构化数据:<code>LocalBusiness</code>、<code>Service</code>、<code>FAQPage</code>、<code>BreadcrumbList</code></li>
-      <li>关键信息用<b>纯文本</b>而非图片(价格、电话、地址、服务范围 —— 现有页面很多是 jpg)</li>
-      <li>语义化 HTML:<code>h1/h2/h3</code> 层级、<code>main / article / aside</code>,告别表格嵌套</li>
-      <li>每页加 FAQ 模块,问答对直接被 AI 摘录</li>
-      <li>robots.txt 明确允许 GPTBot / PerplexityBot / ClaudeBot 等 AI 爬虫</li>
-    </ul>
-    <div class="next"><b>下一步:</b>先在 1 个高价值页面(如服务报价页)做完整改造作为样板 → 跑通后批量推广。</div>
-  </div>
-
-  <!-- 8. New directories -->
-  <div class="card">
-    <h2>⑧ 新目录扩展:机场 &amp; 全球公证处 <span class="tag idea">构想中</span></h2>
-    <div class="where">沿用婚介 / 公证目录的同款架构,扩展两个新品类</div>
-    <ul>
-      <li><b>世界各大机场信息:</b>机场名称、IATA/ICAO 代码、所在国家城市、航站楼、官网 —— 对应翻译需求(出国证件、登机文件)</li>
-      <li><b>世界各公证处信息:</b>从国内公证处延伸到海外,服务出国办证 / 海外认证客户</li>
-      <li>这两个目录与公司核心翻译业务高度相关 → 自然引流,转化路径短</li>
-    </ul>
-    <div class="next"><b>下一步:</b>① 选数据源(机场可用 OurAirports / OpenFlights;公证可用各国官方目录) ② 跑通 100 条样本页 → 收录测试 → 全量生成。</div>
-  </div>
-
-  <!-- 9. SI articles -->
-  <div class="card">
-    <h2>⑨ 同声传译内容输出 <span class="tag idea">构想中</span></h2>
-    <div class="where">渠道:tongshengfanyi.com · 围绕同传市场趋势写一批长尾文章</div>
-    <ul>
-      <li>选题源头:<a href="si-market-trends.html" target="_blank">同传市场趋势分析(已整理)</a></li>
-      <li>把趋势分析拆成多篇可独立检索的文章(每篇瞄准一个具体长尾词)</li>
-      <li>方向举例:行业需求变化 / AI 对同传的冲击 / 设备技术迭代 / 价格区间解析 / 译员选择指南</li>
-      <li>与 ③ 内容自动化协同:同传题材是同声翻译站的"主场",优先级高于通用翻译选题</li>
-    </ul>
-    <div class="next"><b>下一步:</b>从趋势文档中切出 5-8 个独立选题 → 每篇 1500 字以上 → 发布到同声翻译站对应分类。</div>
-  </div>
-
-  <!-- 6. CDN / HTTPS -->
-  <div class="card">
-    <h2>⑥ CDN 与 HTTPS(基础设施) <span class="tag warn">协调中</span></h2>
-    <div class="where">两个网站不同处境</div>
-    <ul>
-      <li><b>同声翻译:</b>需联系服务商,开放第三方 CDN 接入</li>
-      <li><b>TranslationChina:</b>因域名含 "China" 关键词,不能转出 → 必须在原服务商侧加 HTTPS</li>
-      <li>目标:找免费证书(Let's Encrypt 等),且不明显拖慢响应</li>
-    </ul>
-    <div class="next">
-      <b>下一步:</b>
-      ① 给同声翻译服务商发工单要求开放 CDN;
-      ② 询问 TranslationChina 服务商是否支持一键 Let's Encrypt(很多控制面板已内置)。
-    </div>
-  </div>
-
+<div class="add-row edit-only" style="margin-top:20px">
+  <button class="btn primary" id="btn-add-card">+ 添加卡片</button>
 </div>
+
+<details class="archive" id="archive-section">
+  <summary>📦 已归档 (<span id="archive-count">0</span>)</summary>
+  <div class="archive-body" id="archive-body"></div>
+</details>
 
 <div class="foot">本页面汇总自当前推进中的各项工作 · 由 astoanne.github.io 静态托管</div>
 
 </div>
+
+<!-- trash bin -->
+<div class="bin" id="bin" title="拖到这里归档">🗑<span class="count" id="bin-count" style="display:none">0</span></div>
+
+<!-- context menu -->
+<div class="ctx" id="ctx"></div>
+
+<!-- edit modal -->
+<div class="modal" id="modal">
+  <div class="modal-inner" id="modal-body"></div>
+</div>
+
+<!-- ===== embedded state ===== -->
+<script type="application/json" id="board-data">
+{
+  "updated": "2026-05-15",
+  "todos": [
+    {"id":"t-1a","num":"①a","color":"c1","text":"跟进证件翻译小程序员工内测,收齐反馈后正式投产"},
+    {"id":"t-1b","num":"①b","color":"c1","text":"列出第二个小程序需要更新的功能点,评估开发量并排期"},
+    {"id":"t-2","num":"②","color":"c2","text":"定下一批目录扩展品类(律师 / 学校 / 留学机构…)并启动收集"},
+    {"id":"t-3","num":"③","color":"c3","text":"定 3-5 个内容模板,跑通 100 篇试水,观察 1 个月收录效果"},
+    {"id":"t-4","num":"④","color":"c4","text":"首页用响应式改造(CSS 媒体查询),保留桌面老派观感"},
+    {"id":"t-5","num":"⑤","color":"c5","text":"给现有客户加标签(高频 / 沉睡 / VIP),测试差异化话术"},
+    {"id":"t-6","num":"⑥","color":"c6","text":"同声翻译:工单要求服务商开放第三方 CDN;TranslationChina:确认服务商是否支持一键 Let's Encrypt"},
+    {"id":"t-7","num":"⑦","color":"c3","text":"选 1 个高价值页面做\"亲 AI Agent\"样板:llms.txt + JSON-LD + 文本化关键信息 + FAQ"},
+    {"id":"t-8","num":"⑧","color":"c2","text":"新目录:世界机场 + 全球公证处 —— 选数据源,跑 100 条样本验证收录"},
+    {"id":"t-9","num":"⑨","color":"c4","text":"根据同传市场趋势文档,拆 5-8 篇长尾文章发布到同声翻译站"}
+  ],
+  "cards": [
+    {"id":"c-1a","num":"①a","title":"微信小程序 · 证件翻译","tag":"员工内测中","tagColor":"warn","where":"渠道:微信小程序 · 主业:标准化证件翻译下单","items":["本次更新仅<b>新增员工后台</b>,客户侧功能未做任何改动","已通过腾讯审核(2026-05-15)","目前阶段:<b>员工内部测试新后台</b> —— 验证后台操作流程"],"next":"员工跑完一遍真实工单流程 → 修复体验问题 → 后台才算可投产。"},
+    {"id":"c-1b","num":"①b","title":"微信小程序 · 另一类翻译服务下单","tag":"待更新","tagColor":"warn","where":"渠道:微信小程序 · 公司第二个下单入口","items":["承接另一类翻译服务的客户下单","已上线运行,但<b>功能尚未跟进迭代</b>","已识别需要更新,但还未排期开发"],"next":"列出需要更新的功能点 → 评估开发量 → 排进 ①a 测试通过之后的时间窗。"},
+    {"id":"c-2","num":"②","title":"网站服务目录(SEO 引流)","tag":"在跑","tagColor":"ok","where":"渠道:translationchina.com / tongshengfanyi.com","items":["婚介目录:188K 条目 / 197K sitemap URL,已生成完整 HTML","公证目录(公证处 + 公证人员):同架构搭建中","下一批扩展品类待选:律师 / 学校 / 房产中介 / 留学机构 等"],"next":"<b>已发布详情页:</b><a href=\"seo-todo.html\">SEO 任务清单</a> · <a href=\"webmaster-checklist.html\">站长工具清单</a>"},
+    {"id":"c-3","num":"③","title":"内容自动化(吸引流量)","tag":"构想中","tagColor":"idea","where":"目标:批量生成有价值的内容页 → 长尾搜索引流","items":["方向:翻译相关问答、地区办证指南、领事认证流程等","需要:选题库 + 自动生成脚本 + 人工审校抽样","与目录站协同:在目录页底部互链,提升整体权重"],"next":"先定 3-5 个内容模板,跑通 100 篇 → 看 1 个月收录效果再决定是否扩量。"},
+    {"id":"c-4","num":"④","title":"首页移动端重构","tag":"推进中","tagColor":"warn","where":"目标:保留现有\"老派但可信\"的桌面版,同时给手机用户更友好的体验","items":["现有页面结构难以改成响应式","路线:<b>完全重新设计</b>移动端页面,走<b>动态服务</b>(同一 URL,按 User-Agent 返回不同 HTML)","需注意 <code>Vary: User-Agent</code> 响应头,避免 CDN 缓存串版本"],"next":"<b>详见:</b><a href=\"mobile-strategy.html\">移动端方案最佳实践</a>"},
+    {"id":"c-5","num":"⑤","title":"客户管理 · 日常触达","tag":"在跑","tagColor":"ok","where":"渠道:微信日常问候 / 节日祝福 / 轻提醒","items":["每日向现有客户发送温和的提醒类消息","目的:保持品牌存在感,下次有翻译需求时第一个想到我们","可优化:分组打标签(高频 / 沉睡 / VIP),消息差异化"],"next":"给现有客户加标签 → 测试不同话术回复率 → 提炼最优模版。"},
+    {"id":"c-7","num":"⑦","title":"页面\"亲 AI Agent\"改造","tag":"构想中","tagColor":"idea","where":"目标:让 ChatGPT / Perplexity / 豆包 等 AI 助手能正确读取、引用我们的页面 → 把我们推荐给用户","items":["新增 <code>/llms.txt</code>(类似 robots.txt 的 AI 索引文件):列出公司简介、核心服务、定价、联系方式的纯文本摘要","页面加 JSON-LD 结构化数据:<code>LocalBusiness</code>、<code>Service</code>、<code>FAQPage</code>、<code>BreadcrumbList</code>","关键信息用<b>纯文本</b>而非图片(价格、电话、地址、服务范围 —— 现有页面很多是 jpg)","语义化 HTML:<code>h1/h2/h3</code> 层级、<code>main / article / aside</code>,告别表格嵌套","每页加 FAQ 模块,问答对直接被 AI 摘录","robots.txt 明确允许 GPTBot / PerplexityBot / ClaudeBot 等 AI 爬虫"],"next":"先在 1 个高价值页面(如服务报价页)做完整改造作为样板 → 跑通后批量推广。"},
+    {"id":"c-8","num":"⑧","title":"新目录扩展:机场 & 全球公证处","tag":"构想中","tagColor":"idea","where":"沿用婚介 / 公证目录的同款架构,扩展两个新品类","items":["<b>世界各大机场信息:</b>机场名称、IATA/ICAO 代码、所在国家城市、航站楼、官网 —— 对应翻译需求(出国证件、登机文件)","<b>世界各公证处信息:</b>从国内公证处延伸到海外,服务出国办证 / 海外认证客户","这两个目录与公司核心翻译业务高度相关 → 自然引流,转化路径短"],"next":"① 选数据源(机场可用 OurAirports / OpenFlights;公证可用各国官方目录) ② 跑通 100 条样本页 → 收录测试 → 全量生成。"},
+    {"id":"c-9","num":"⑨","title":"同声传译内容输出","tag":"构想中","tagColor":"idea","where":"渠道:tongshengfanyi.com · 围绕同传市场趋势写一批长尾文章","items":["选题源头:<a href=\"si-market-trends.html\" target=\"_blank\">同传市场趋势分析(已整理)</a>","把趋势分析拆成多篇可独立检索的文章(每篇瞄准一个具体长尾词)","方向举例:行业需求变化 / AI 对同传的冲击 / 设备技术迭代 / 价格区间解析 / 译员选择指南","与 ③ 内容自动化协同:同传题材是同声翻译站的\"主场\",优先级高于通用翻译选题"],"next":"从趋势文档中切出 5-8 个独立选题 → 每篇 1500 字以上 → 发布到同声翻译站对应分类。"},
+    {"id":"c-6","num":"⑥","title":"CDN 与 HTTPS(基础设施)","tag":"协调中","tagColor":"warn","where":"两个网站不同处境","items":["<b>同声翻译:</b>需联系服务商,开放第三方 CDN 接入","<b>TranslationChina:</b>因域名含 \"China\" 关键词,不能转出 → 必须在原服务商侧加 HTTPS","目标:找免费证书(Let's Encrypt 等),且不明显拖慢响应"],"next":"① 给同声翻译服务商发工单要求开放 CDN;② 询问 TranslationChina 服务商是否支持一键 Let's Encrypt(很多控制面板已内置)。"}
+  ],
+  "archive": []
+}
+</script>
+
 <script>
-document.querySelectorAll('#todo-list li').forEach(li=>{
-  const cb=li.querySelector('input');
-  const key='todo-'+[...li.parentNode.children].indexOf(li);
-  if(localStorage.getItem(key)==='1'){cb.checked=true;li.classList.add('done');}
-  const toggle=()=>{li.classList.toggle('done',cb.checked);
-    localStorage.setItem(key,cb.checked?'1':'0');};
-  cb.addEventListener('change',toggle);
-  li.addEventListener('click',e=>{if(e.target!==cb){cb.checked=!cb.checked;toggle();}});
+// ============ State management ============
+const COLORS = ["c1","c2","c3","c4","c5","c6"];
+const TAG_COLORS = {ok:"在跑",warn:"待跟进",block:"阻塞",idea:"构想中"};
+const STORAGE_KEY = "revenue-board-state";
+
+const initialData = JSON.parse(document.getElementById("board-data").textContent);
+let state = loadState() || JSON.parse(JSON.stringify(initialData));
+let editMode = detectEditMode();
+let dragSrc = null;
+
+function detectEditMode(){
+  if (location.hash === "#edit") return true;
+  if (location.hash === "#view") return false;
+  // file:// origin OR localhost = local machine → edit by default
+  return location.protocol === "file:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){return null}
+}
+
+function saveState(){
+  if (!editMode) return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function uid(prefix){return prefix + "-" + Math.random().toString(36).slice(2,8)}
+
+// ============ Render ============
+function render(){
+  document.body.classList.toggle("edit-mode", editMode);
+  document.getElementById("mode-badge").textContent = editMode ? "✏️ 编辑模式" : "👁 只读模式";
+  document.getElementById("mode-badge").className = "mode-badge " + (editMode ? "edit" : "view");
+
+  // updated date
+  const upd = document.querySelector('[data-bind="updated"]');
+  upd.textContent = state.updated;
+  upd.setAttribute("contenteditable", editMode ? "true" : "false");
+
+  // todos
+  const tl = document.getElementById("todo-list");
+  tl.innerHTML = "";
+  state.todos.forEach(t=>{
+    const li = document.createElement("li");
+    li.className = t.color + (t.done ? " done" : "");
+    li.dataset.id = t.id;
+    li.dataset.type = "todo";
+    li.draggable = editMode;
+    li.innerHTML = `
+      <input type="checkbox" ${t.done?"checked":""}>
+      <span class="text"><span class="num">${escapeHtml(t.num)}</span><span class="editable" data-field="text" ${editMode?'contenteditable="true"':''}>${t.text}</span></span>
+      <span class="card-actions edit-only">
+        <span class="ax" title="归档" data-act="archive">📦</span>
+      </span>`;
+    tl.appendChild(li);
+  });
+
+  // cards
+  const cg = document.getElementById("cards-grid");
+  cg.innerHTML = "";
+  state.cards.forEach(c=>{
+    const div = document.createElement("div");
+    div.className = "card";
+    div.dataset.id = c.id;
+    div.dataset.type = "card";
+    div.draggable = editMode;
+    const itemsHtml = c.items.map(it=>`<li><span class="editable" data-field="item" ${editMode?'contenteditable="true"':''}>${it}</span></li>`).join("");
+    div.innerHTML = `
+      <h2><span class="num-prefix">${escapeHtml(c.num)}</span> <span class="editable" data-field="title" ${editMode?'contenteditable="true"':''}>${escapeHtml(c.title)}</span> <span class="tag ${c.tagColor}" data-field="tag" ${editMode?'contenteditable="true"':''}>${escapeHtml(c.tag)}</span></h2>
+      <div class="where"><span class="editable" data-field="where" ${editMode?'contenteditable="true"':''}>${c.where}</span></div>
+      <ul>${itemsHtml}</ul>
+      <div class="next"><b>下一步:</b><span class="editable" data-field="next" ${editMode?'contenteditable="true"':''}>${c.next}</span></div>
+      <div class="card-actions edit-only">
+        <span class="ax" title="编辑" data-act="edit">✏️</span>
+        <span class="ax" title="归档" data-act="archive">📦</span>
+      </div>`;
+    cg.appendChild(div);
+  });
+
+  // archive
+  const ab = document.getElementById("archive-body");
+  document.getElementById("archive-count").textContent = state.archive.length;
+  document.getElementById("bin-count").textContent = state.archive.length;
+  document.getElementById("bin-count").style.display = state.archive.length ? "inline-block" : "none";
+  if (state.archive.length === 0){
+    ab.innerHTML = '<div class="empty">没有已归档的项目</div>';
+  } else {
+    ab.innerHTML = state.archive.map((a,i)=>{
+      const title = a.type === "card" ? (a.data.num + " " + a.data.title) : (a.data.num + " " + stripHtml(a.data.text).slice(0,60));
+      return `<div class="archive-item">
+        <div><div>${escapeHtml(title)}</div><div class="meta">${a.type === "card" ? "卡片" : "待办"} · 归档于 ${a.archivedAt}</div></div>
+        <div class="actions edit-only">
+          <button class="btn" data-restore="${i}">↻ 还原</button>
+          <button class="btn" data-delete="${i}" style="color:var(--block)">永久删除</button>
+        </div>
+      </div>`;
+    }).join("");
+  }
+}
+
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function stripHtml(s){const d=document.createElement('div');d.innerHTML=s;return d.textContent||""}
+
+// ============ Edit handlers ============
+document.addEventListener("input", e=>{
+  if (!editMode) return;
+  const el = e.target;
+  if (!el.classList.contains("editable") && el.getAttribute("data-bind")!=="updated") return;
+  const field = el.dataset.field;
+  if (el.dataset.bind === "updated"){state.updated = el.textContent.trim(); saveState(); return;}
+  const host = el.closest("[data-id]");
+  if (!host) return;
+  const id = host.dataset.id, type = host.dataset.type;
+  if (type === "todo"){
+    const t = state.todos.find(x=>x.id===id); if (!t) return;
+    if (field === "text") t.text = el.innerHTML;
+  } else {
+    const c = state.cards.find(x=>x.id===id); if (!c) return;
+    if (field === "title") c.title = el.textContent;
+    else if (field === "tag") c.tag = el.textContent;
+    else if (field === "where") c.where = el.innerHTML;
+    else if (field === "next") c.next = el.innerHTML;
+    else if (field === "item"){
+      const idx = [...host.querySelectorAll('[data-field="item"]')].indexOf(el);
+      if (idx >= 0) c.items[idx] = el.innerHTML;
+    }
+  }
+  saveState();
 });
+
+// todo checkbox
+document.addEventListener("change", e=>{
+  if (e.target.type === "checkbox" && e.target.closest("#todo-list")){
+    const li = e.target.closest("li");
+    const t = state.todos.find(x=>x.id===li.dataset.id);
+    if (t){t.done = e.target.checked; li.classList.toggle("done", t.done); saveState();}
+  }
+});
+
+// click on card-actions
+document.addEventListener("click", e=>{
+  const ax = e.target.closest(".ax");
+  if (ax){
+    const host = ax.closest("[data-id]");
+    if (!host) return;
+    const act = ax.dataset.act;
+    if (act === "archive") archiveItem(host.dataset.id, host.dataset.type);
+    else if (act === "edit") openEdit(host.dataset.id);
+    return;
+  }
+  const restore = e.target.dataset.restore;
+  if (restore !== undefined){restoreArchive(parseInt(restore)); return;}
+  const del = e.target.dataset.delete;
+  if (del !== undefined){
+    if (confirm("永久删除这个归档项?")){state.archive.splice(parseInt(del),1); saveState(); render();}
+  }
+});
+
+// ============ Archive / restore ============
+function archiveItem(id, type){
+  let item;
+  if (type === "todo"){
+    const idx = state.todos.findIndex(x=>x.id===id);
+    if (idx < 0) return;
+    item = {type:"todo", data: state.todos[idx], archivedAt: new Date().toISOString().slice(0,10)};
+    state.todos.splice(idx, 1);
+  } else {
+    const idx = state.cards.findIndex(x=>x.id===id);
+    if (idx < 0) return;
+    item = {type:"card", data: state.cards[idx], archivedAt: new Date().toISOString().slice(0,10)};
+    state.cards.splice(idx, 1);
+  }
+  state.archive.unshift(item);
+  saveState(); render();
+}
+
+function restoreArchive(i){
+  const a = state.archive[i]; if (!a) return;
+  if (a.type === "todo") state.todos.push(a.data);
+  else state.cards.push(a.data);
+  state.archive.splice(i,1);
+  saveState(); render();
+}
+
+// ============ Drag & drop to bin / reorder ============
+document.addEventListener("dragstart", e=>{
+  if (!editMode) return;
+  const host = e.target.closest("[data-id]");
+  if (!host) return;
+  dragSrc = host;
+  host.classList.add("dragging");
+  e.dataTransfer.effectAllowed = "move";
+  e.dataTransfer.setData("text/plain", host.dataset.id);
+});
+document.addEventListener("dragend", e=>{
+  if (dragSrc){dragSrc.classList.remove("dragging"); dragSrc=null;}
+  document.getElementById("bin").classList.remove("over");
+});
+
+const bin = document.getElementById("bin");
+bin.addEventListener("dragover", e=>{e.preventDefault(); bin.classList.add("over")});
+bin.addEventListener("dragleave", ()=>bin.classList.remove("over"));
+bin.addEventListener("drop", e=>{
+  e.preventDefault();
+  bin.classList.remove("over");
+  if (dragSrc) archiveItem(dragSrc.dataset.id, dragSrc.dataset.type);
+});
+
+// reorder within todos
+document.addEventListener("dragover", e=>{
+  if (!editMode || !dragSrc) return;
+  const target = e.target.closest("[data-id]");
+  if (!target || target === dragSrc) return;
+  if (target.dataset.type !== dragSrc.dataset.type) return;
+  e.preventDefault();
+  const rect = target.getBoundingClientRect();
+  const after = (e.clientY - rect.top) > rect.height/2;
+  const parent = target.parentNode;
+  parent.insertBefore(dragSrc, after ? target.nextSibling : target);
+});
+document.addEventListener("drop", e=>{
+  if (!editMode || !dragSrc) return;
+  const target = e.target.closest("[data-id]");
+  if (!target || target.dataset.type !== dragSrc.dataset.type) return;
+  // re-sync state from DOM order
+  const type = dragSrc.dataset.type;
+  if (type === "todo"){
+    const order = [...document.querySelectorAll("#todo-list li")].map(li=>li.dataset.id);
+    state.todos.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
+  } else {
+    const order = [...document.querySelectorAll("#cards-grid .card")].map(c=>c.dataset.id);
+    state.cards.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
+  }
+  saveState();
+});
+
+// ============ Context menu (right-click + long-press) ============
+const ctx = document.getElementById("ctx");
+function showCtx(x, y, host){
+  if (!editMode) return;
+  const type = host.dataset.type;
+  const buttons = type === "card" ? [
+    {label:"✏️ 编辑详情", act:()=>openEdit(host.dataset.id)},
+    {label:"📋 复制一份", act:()=>duplicate(host.dataset.id, type)},
+    {sep:true},
+    {label:"📦 归档", act:()=>archiveItem(host.dataset.id, type)},
+    {label:"🗑 删除", danger:true, act:()=>{if(confirm("删除?")){deleteItem(host.dataset.id,type)}}}
+  ] : [
+    {label:"📋 复制一份", act:()=>duplicate(host.dataset.id, type)},
+    {label:"🎨 换颜色", act:()=>cycleColor(host.dataset.id)},
+    {sep:true},
+    {label:"📦 归档", act:()=>archiveItem(host.dataset.id, type)},
+    {label:"🗑 删除", danger:true, act:()=>{if(confirm("删除?")){deleteItem(host.dataset.id,type)}}}
+  ];
+  ctx.innerHTML = buttons.map(b=>{
+    if (b.sep) return '<hr>';
+    return `<button class="${b.danger?'danger':''}">${b.label}</button>`;
+  }).join("");
+  [...ctx.querySelectorAll("button")].forEach((btn, i)=>{
+    const def = buttons.filter(b=>!b.sep)[i];
+    if (def) btn.addEventListener("click", ()=>{ctx.classList.remove("show"); def.act();});
+  });
+  // position
+  const vw = innerWidth, vh = innerHeight;
+  ctx.style.left = Math.min(x, vw-180) + "px";
+  ctx.style.top  = Math.min(y, vh-200) + "px";
+  ctx.classList.add("show");
+}
+document.addEventListener("contextmenu", e=>{
+  const host = e.target.closest("[data-id]");
+  if (!host || !editMode) return;
+  if (e.target.classList.contains("editable")) return;  // let text edits keep native menu
+  e.preventDefault();
+  showCtx(e.clientX, e.clientY, host);
+});
+document.addEventListener("click", e=>{
+  if (!ctx.contains(e.target)) ctx.classList.remove("show");
+});
+
+// long-press for mobile
+let pressTimer = null, pressTarget = null;
+document.addEventListener("touchstart", e=>{
+  if (!editMode) return;
+  const host = e.target.closest("[data-id]");
+  if (!host) return;
+  pressTarget = host;
+  pressTimer = setTimeout(()=>{
+    const t = e.touches[0];
+    showCtx(t.clientX, t.clientY, host);
+    pressTimer = null;
+  }, 550);
+});
+document.addEventListener("touchend", ()=>{if(pressTimer){clearTimeout(pressTimer); pressTimer=null}});
+document.addEventListener("touchmove", ()=>{if(pressTimer){clearTimeout(pressTimer); pressTimer=null}});
+
+// ============ Add / duplicate / delete / color cycle ============
+function nextNumForCard(){
+  // try to generate a Chinese numeral if possible, else fallback
+  return "★";
+}
+document.getElementById("btn-add-todo").addEventListener("click", ()=>{
+  const t = {id:uid("t"), num:"★", color:COLORS[state.todos.length % COLORS.length], text:"新待办(双击编辑)"};
+  state.todos.push(t); saveState(); render();
+});
+document.getElementById("btn-add-card").addEventListener("click", ()=>{
+  const c = {id:uid("c"), num:"★", title:"新卡片", tag:"构想中", tagColor:"idea",
+    where:"目标 / 渠道 / 背景", items:["要点 1","要点 2"], next:"下一步行动..."};
+  state.cards.push(c); saveState(); render();
+});
+function duplicate(id, type){
+  if (type === "todo"){
+    const t = state.todos.find(x=>x.id===id); if (!t) return;
+    const copy = {...t, id:uid("t"), text: t.text + "(副本)"};
+    const idx = state.todos.indexOf(t);
+    state.todos.splice(idx+1, 0, copy);
+  } else {
+    const c = state.cards.find(x=>x.id===id); if (!c) return;
+    const copy = JSON.parse(JSON.stringify(c));
+    copy.id = uid("c"); copy.title += "(副本)";
+    const idx = state.cards.indexOf(c);
+    state.cards.splice(idx+1, 0, copy);
+  }
+  saveState(); render();
+}
+function deleteItem(id, type){
+  if (type === "todo") state.todos = state.todos.filter(x=>x.id!==id);
+  else state.cards = state.cards.filter(x=>x.id!==id);
+  saveState(); render();
+}
+function cycleColor(id){
+  const t = state.todos.find(x=>x.id===id); if (!t) return;
+  const i = COLORS.indexOf(t.color);
+  t.color = COLORS[(i+1) % COLORS.length];
+  saveState(); render();
+}
+
+// ============ Edit modal (full card edit) ============
+function openEdit(id){
+  const c = state.cards.find(x=>x.id===id); if (!c) return;
+  const m = document.getElementById("modal"), mb = document.getElementById("modal-body");
+  mb.innerHTML = `
+    <h3>编辑卡片</h3>
+    <label>编号</label><input type="text" id="m-num" value="${escapeHtml(c.num)}">
+    <label>标题</label><input type="text" id="m-title" value="${escapeHtml(c.title)}">
+    <label>标签文字</label><input type="text" id="m-tag" value="${escapeHtml(c.tag)}">
+    <label>标签颜色</label>
+    <select id="m-tagColor">
+      <option value="ok" ${c.tagColor==="ok"?"selected":""}>绿色(进行顺利)</option>
+      <option value="warn" ${c.tagColor==="warn"?"selected":""}>黄色(待跟进)</option>
+      <option value="block" ${c.tagColor==="block"?"selected":""}>红色(阻塞)</option>
+      <option value="idea" ${c.tagColor==="idea"?"selected":""}>灰色(构想中)</option>
+    </select>
+    <label>渠道 / 背景</label><textarea id="m-where">${escapeHtml(c.where)}</textarea>
+    <label>要点(每行一个,支持 &lt;b&gt;、&lt;a href&gt; 等 HTML)</label>
+    <textarea id="m-items" style="min-height:140px">${c.items.map(it=>it).join("\n")}</textarea>
+    <label>下一步</label><textarea id="m-next">${c.next}</textarea>
+    <div class="modal-actions">
+      <button class="btn" id="m-cancel">取消</button>
+      <button class="btn primary" id="m-save">保存</button>
+    </div>`;
+  m.classList.add("show");
+  document.getElementById("m-cancel").onclick = ()=>m.classList.remove("show");
+  document.getElementById("m-save").onclick = ()=>{
+    c.num = document.getElementById("m-num").value;
+    c.title = document.getElementById("m-title").value;
+    c.tag = document.getElementById("m-tag").value;
+    c.tagColor = document.getElementById("m-tagColor").value;
+    c.where = document.getElementById("m-where").value;
+    c.items = document.getElementById("m-items").value.split("\n").map(s=>s.trim()).filter(Boolean);
+    c.next = document.getElementById("m-next").value;
+    saveState(); m.classList.remove("show"); render();
+  };
+}
+
+// ============ Export / Reset ============
+document.getElementById("btn-export").addEventListener("click", ()=>{
+  // serialize state into the data script and download the HTML
+  const html = document.documentElement.outerHTML.replace(
+    /(<script type="application\/json" id="board-data">)[\s\S]*?(<\/script>)/,
+    "$1\n" + JSON.stringify(state, null, 2) + "\n$2"
+  );
+  const blob = new Blob(["<!DOCTYPE html>\n" + html], {type:"text/html"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "revenue-board.html"; a.click();
+  URL.revokeObjectURL(url);
+});
+document.getElementById("btn-reset").addEventListener("click", ()=>{
+  if (!confirm("还原到文件中保存的版本?(会丢失浏览器里的本地修改)")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = JSON.parse(JSON.stringify(initialData));
+  render();
+});
+
+// ============ Init ============
+render();
 </script>
 </body>
 </html>
