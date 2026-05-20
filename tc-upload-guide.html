@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>translationchina.com 文件上传新方法</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f8fafc; color: #0f172a;
+    padding: 24px 20px; line-height: 1.75;
+    max-width: 800px; margin: 0 auto;
+  }
+  h1 { font-size: 24px; margin-bottom: 6px; }
+  .subtitle { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+
+  .banner {
+    background: linear-gradient(135deg, #fef3c7, #fed7aa);
+    border-left: 4px solid #ea580c;
+    padding: 14px 18px; margin-bottom: 28px;
+    border-radius: 6px;
+    color: #7c2d12; font-size: 14px;
+  }
+
+  h2 {
+    font-size: 19px; font-weight: 700;
+    margin: 32px 0 14px 0; color: #1e293b;
+    padding-bottom: 8px; border-bottom: 2px solid #e2e8f0;
+  }
+  h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: #334155; }
+
+  .step {
+    background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 10px; padding: 18px 22px;
+    margin-bottom: 14px;
+  }
+  .step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .step-num {
+    background: #6366f1; color: #fff;
+    width: 28px; height: 28px; border-radius: 50%;
+    text-align: center; line-height: 28px;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .step-title { font-size: 16px; font-weight: 700; }
+  .step-body { color: #475569; font-size: 14px; padding-left: 40px; }
+
+  table.fields {
+    width: 100%; border-collapse: collapse;
+    background: #f8fafc; border-radius: 6px; overflow: hidden;
+    margin: 10px 0; font-size: 13px;
+  }
+  table.fields td {
+    padding: 8px 14px; border-bottom: 1px solid #e2e8f0;
+  }
+  table.fields tr:last-child td { border-bottom: none; }
+  table.fields td:first-child { color: #71717a; width: 140px; }
+  table.fields td:last-child {
+    font-family: "Menlo", "Consolas", monospace;
+    color: #18181b;
+  }
+  .secret { color: #c2410c; font-weight: 600; font-family: inherit; }
+
+  code {
+    background: #f1f5f9; padding: 2px 7px;
+    border-radius: 4px; font-size: 13px;
+    font-family: "Menlo", "Consolas", monospace;
+    color: #be185d;
+  }
+  pre {
+    background: #0f172a; color: #e2e8f0;
+    padding: 14px 18px; border-radius: 8px;
+    font-family: "Menlo", "Consolas", monospace;
+    font-size: 13px; line-height: 1.6;
+    overflow-x: auto; margin: 10px 0;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 14px 0;
+  }
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+  .compare-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    background: #fff;
+  }
+  .compare-card.old {
+    background: #fef2f2; border-color: #fecaca;
+  }
+  .compare-card.old .head { color: #991b1b; }
+  .compare-card.new {
+    background: #f0fdf4; border-color: #86efac;
+  }
+  .compare-card.new .head { color: #166534; }
+  .compare-card .head {
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .compare-card .body {
+    font-family: "Menlo", "Consolas", monospace;
+    font-size: 13px; color: #18181b;
+    line-height: 1.6;
+  }
+
+  .callout {
+    background: #eff6ff;
+    border-left: 3px solid #3b82f6;
+    padding: 10px 14px; margin: 10px 0;
+    font-size: 13px; color: #1e3a8a;
+    border-radius: 4px;
+  }
+  .callout.warn {
+    background: #fff7ed; border-color: #ea580c; color: #9a3412;
+  }
+  .callout.tip {
+    background: #f0fdf4; border-color: #22c55e; color: #166534;
+  }
+
+  ul, ol { padding-left: 22px; }
+  ul li, ol li { margin-bottom: 4px; color: #475569; font-size: 14px; }
+
+  .footer {
+    color: #94a3b8; font-size: 12px;
+    text-align: center; margin-top: 32px;
+    padding-top: 16px; border-top: 1px solid #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<h1>📤 translationchina.com 上传方法变了</h1>
+<p class="subtitle">迁移到云服务器之后,用 SFTP 替代之前的 FTP</p>
+
+<div class="banner">
+  <strong>简单说</strong>:网站现在在新的云服务器上了,**之前用 FileZilla 连的 FTP 失效了**。
+  下面教你换成 SFTP,基本一样,只是协议和地址变了。
+</div>
+
+<h2>📊 新旧对比</h2>
+
+<div class="compare">
+  <div class="compare-card old">
+    <div class="head">❌ 之前(虚拟主机 FTP)</div>
+    <div class="body">
+      协议:&nbsp;&nbsp;FTP<br>
+      主机:&nbsp;&nbsp;guanri.gotoftp3.com<br>
+      端口:&nbsp;&nbsp;21<br>
+      用户名:guanri<br>
+      根目录:/wwwroot/
+    </div>
+  </div>
+  <div class="compare-card new">
+    <div class="head">✅ 现在(云服务器 SFTP)</div>
+    <div class="body">
+      协议:&nbsp;&nbsp;<b>SFTP</b>(不是 FTP)<br>
+      主机:&nbsp;&nbsp;<span class="secret">(向 Anne 索取)</span><br>
+      端口:&nbsp;&nbsp;<span class="secret">22000</span>(不是 22)<br>
+      用户名:root<br>
+      密码:&nbsp;&nbsp;<span class="secret">(向 Anne 索取)</span><br>
+      根目录:/var/www/translationchina/html/
+    </div>
+  </div>
+</div>
+
+<div class="callout warn">
+  🔒 <strong>主机 IP 和密码不能在这个公开页面里写</strong>。Anne 会通过微信单聊另外发给你。
+  你拿到后填在 FileZilla 里就行。
+</div>
+
+<h2>🛠️ FileZilla 设置步骤</h2>
+
+<div class="step">
+  <div class="step-header">
+    <span class="step-num">1</span>
+    <span class="step-title">打开 FileZilla → 站点管理器</span>
+  </div>
+  <div class="step-body">
+    顶部菜单点 <strong>文件 → 站点管理器</strong>(快捷键 Ctrl+S)。
+    左侧找到原来的"translationchina"那个站点 — 我们要在它旁边新建一个。
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header">
+    <span class="step-num">2</span>
+    <span class="step-title">新建站点</span>
+  </div>
+  <div class="step-body">
+    点 <strong>新站点</strong>,起个名字叫 <code>translationchina 云服务器</code>(或者你顺手的名字)。
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header">
+    <span class="step-num">3</span>
+    <span class="step-title">填连接信息</span>
+  </div>
+  <div class="step-body">
+    右侧"常规"标签里填:
+    <table class="fields">
+      <tr><td>协议</td><td>SFTP - SSH File Transfer Protocol</td></tr>
+      <tr><td>主机</td><td><span class="secret">(Anne 微信发的 IP)</span></td></tr>
+      <tr><td>端口</td><td><strong>22000</strong></td></tr>
+      <tr><td>登录类型</td><td>正常</td></tr>
+      <tr><td>用户</td><td>root</td></tr>
+      <tr><td>密码</td><td><span class="secret">(Anne 微信发的密码)</span></td></tr>
+    </table>
+
+    <div class="callout warn">
+      <strong>注意端口是 22000,不是默认的 22</strong>。填错会连不上。
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header">
+    <span class="step-num">4</span>
+    <span class="step-title">设默认远程目录(可选)</span>
+  </div>
+  <div class="step-body">
+    点 <strong>高级</strong> 标签 → "默认远程目录" 填:
+    <pre>/var/www/translationchina/html/</pre>
+    这样连上就直接在网站根目录,不用手动找。
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header">
+    <span class="step-num">5</span>
+    <span class="step-title">连接</span>
+  </div>
+  <div class="step-body">
+    点 <strong>连接</strong> 按钮。第一次连接会问"未知主机密钥",勾选"始终信任",然后确定。
+
+    <div class="callout tip">
+      ✅ 看到右侧出现一堆文件 + 文件夹(<code>1</code> / <code>1207</code> / <code>notary</code> / <code>airports</code> / <code>index.html</code> ...)就成功了。
+    </div>
+  </div>
+</div>
+
+<h2>📁 跟之前比有什么不同?</h2>
+
+<ul>
+  <li><strong>整体目录结构一样</strong>。你之前传文件到哪个文件夹,现在还是传到那个文件夹。</li>
+  <li>看到的 <code>notary/</code>、<code>airports/</code> 是新加的目录,别动它们。</li>
+  <li>看到的 <code>index.html</code>、<code>enindex.htm</code>、<code>1120备份/</code> 等等都是原来你熟悉的文件,完全没动。</li>
+  <li>大部分操作跟之前一样:左边电脑,右边服务器,拖拽传。</li>
+</ul>
+
+<h2>🧪 怎么确认现在网站真的走云服务器了?</h2>
+
+<p>给 Anne 看的验证方法(她可能想自己确认):</p>
+
+<h3>方法 1:浏览器 DevTools</h3>
+<ol>
+  <li>打开 <code>https://www.translationchina.com/</code></li>
+  <li>按 <code>F12</code> 打开开发者工具 → <strong>Network</strong> 标签</li>
+  <li>刷新页面(<code>Ctrl+F5</code> 强刷)</li>
+  <li>点列表里第一条(通常是主页文档),看右侧 Headers:
+    <ul>
+      <li><strong>Remote Address</strong> 应该是 <code>211.149.228.244:443</code>(云服务器)</li>
+      <li><strong>Server</strong> header 应该是 <code>nginx/1.18.0 (Ubuntu)</code>(老服务器是 <code>wts/1.x.x</code>)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3>方法 2:命令行(更快)</h3>
+<pre>curl -sI https://www.translationchina.com/ | head -5</pre>
+<p>看到的应该是:</p>
+<pre>HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)   ← 新服务器
+...</pre>
+<p>如果还是 <code>Server: wts/1.x.x</code>,那是 DNS 缓存,等 10-30 分钟自然就刷过来。</p>
+
+<h3>方法 3:DNS 查询</h3>
+<pre>nslookup www.translationchina.com 8.8.8.8</pre>
+<p>地址应该是 <code>211.149.228.244</code>。如果是 <code>211.149.244.115</code> 或 <code>211.149.229.49</code> 等旧 IP,那是 DNS 还没传播完,等。</p>
+
+<h3>方法 4:用无痕窗口确认不是浏览器缓存</h3>
+<p>打开 Chrome <strong>无痕窗口</strong>(Ctrl+Shift+N)→ 访问 <code>https://www.translationchina.com/</code> → F12 看 Server header。无痕窗口没缓存,绝对反映真实状态。</p>
+
+<h2>❓ 万一连不上 FileZilla 怎么办</h2>
+
+<ol>
+  <li><strong>"连接超时" / "无法连接"</strong> → 检查协议是不是 SFTP(不是 FTP)、端口是不是 22000(不是 21 也不是 22)</li>
+  <li><strong>"密码错误"</strong> → 让 Anne 重新发一次密码</li>
+  <li><strong>"主机密钥已更改"</strong> → 在站点管理器里删了重新加这个站点</li>
+  <li><strong>仍然不行</strong> → 截图错误信息发给 Anne</li>
+</ol>
+
+<div class="footer">
+  最后更新: 2026-05-20 · 迁移完成日<br>
+  老虚拟主机 (FTP guanri.gotoftp3.com) 还在,2 周后再关
+</div>
+
+</body>
+</html>
