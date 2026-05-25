@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>翻译报价市场调研 + 推荐定价 · 2026 年 5 月</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #faf7f2; color: #1f2937;
+    padding: 20px 16px 80px; line-height: 1.7;
+    max-width: 920px; margin: 0 auto;
+  }
+  h1 { font-size: 26px; line-height: 1.3; margin-bottom: 4px; color: #111827; }
+  .subtitle { color: #6b7280; font-size: 13px; margin-bottom: 28px; }
+
+  h2 {
+    font-size: 20px; font-weight: 700; margin: 36px 0 14px;
+    padding-bottom: 8px; border-bottom: 2px solid #f3e5d1;
+    color: #c2410c;
+  }
+  h3 { font-size: 16px; font-weight: 700; margin: 20px 0 10px; color: #374151; }
+  p { margin-bottom: 12px; }
+
+  .tldr {
+    background: linear-gradient(135deg, #fef3c7, #fed7aa);
+    border-left: 4px solid #ea580c;
+    padding: 18px 20px; border-radius: 8px;
+    margin-bottom: 24px; color: #7c2d12;
+  }
+  .tldr strong { color: #5b1d0a; }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    background: #fff; border-radius: 8px;
+    margin: 14px 0 20px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    font-size: 13px;
+  }
+  th {
+    background: #fef3c7; color: #7c2d12; font-weight: 700;
+    padding: 10px 12px; text-align: left;
+    border-bottom: 2px solid #fde68a;
+  }
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-family: "SF Mono", Menlo, Consolas, monospace; color: #1e3a8a; white-space: nowrap; }
+
+  .grid-2 {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px; margin: 14px 0 24px;
+  }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+  .card {
+    background: #fff;
+    border: 1px solid #fce7d2;
+    border-radius: 10px;
+    padding: 14px 18px;
+  }
+  .card .label {
+    font-size: 11px; color: #c2410c; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .5px;
+    margin-bottom: 6px;
+  }
+  .card .body { font-size: 14px; color: #374151; }
+
+  .reco-table th, .reco-table td { text-align: center; }
+  .reco-table th:first-child, .reco-table td:first-child { text-align: left; }
+  .reco-table .lower { color: #16a34a; font-weight: 700; }
+  .reco-table .higher { color: #dc2626; font-weight: 700; }
+  .reco-table .same { color: #6b7280; }
+
+  .row-rationale {
+    background: #fff;
+    border: 1px solid #f3e5d1;
+    border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 12px;
+  }
+  .row-rationale .pair {
+    font-size: 15px; font-weight: 700; color: #c2410c; margin-bottom: 6px;
+  }
+  .row-rationale .prices {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px; color: #1e3a8a; margin-bottom: 8px;
+  }
+  .row-rationale .why { font-size: 13px; color: #4b5563; }
+
+  .src {
+    background: #f9fafb;
+    border-left: 3px solid #d1d5db;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 13px; color: #4b5563;
+  }
+  .src a { color: #2563eb; text-decoration: none; }
+  .src a:hover { text-decoration: underline; }
+
+  .note {
+    background: #fef9c3; border-left: 3px solid #ca8a04;
+    padding: 10px 14px; margin: 10px 0; font-size: 13px;
+    color: #713f12; border-radius: 4px;
+  }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px;
+         font-size: 11px; font-weight: 700; margin-left: 6px; }
+  .tag-down { background: #d1fae5; color: #065f46; }
+  .tag-up   { background: #fee2e2; color: #991b1b; }
+  .tag-same { background: #e5e7eb; color: #4b5563; }
+
+  .footer { color: #94a3b8; font-size: 11px; text-align: center;
+            margin-top: 40px; padding-top: 18px; border-top: 1px solid #e5e7eb; }
+</style>
+</head>
+<body>
+
+<h1>翻译报价市场调研 + 推荐定价</h1>
+<p class="subtitle">2026 年 5 月 · 中国翻译市场 9 大语种对 · 中英部分主动降价取量,稀有语种保留利润空间</p>
+
+<div class="tldr">
+  <strong>一句话总结:</strong> 调研了 8 家中国主流翻译公司 + 2 家国际公司的 2026 年报价。建议<strong>中英部分主动降价 10-20%(普通级压到 100-180,出版级 300-420)</strong>抢竞争市场;<strong>阿拉伯/印地/北欧等稀有语种保留 30-50% 利润空间</strong>;其余维持市场中位。
+</div>
+
+<h2>1. 市场调研数据(2026 年 5 月)</h2>
+
+<p>覆盖样本:北京天译时代、北京英信、创思立信(ec-innovations)、雅言、金雨、世联、亿维、上海成译,以及国际公司 Translated.com、Mars Translation。所有数据单位均为 <strong>元 / 千字符</strong>(中文计算)。以下为综合市场区间。</p>
+
+<h3>中英互译(竞争最激烈)</h3>
+<table>
+  <thead><tr><th>等级</th><th>中译英</th><th>英译中</th><th>市场中位</th></tr></thead>
+  <tbody>
+    <tr><td>普通级</td><td class="num">120-180</td><td class="num">100-160</td><td class="num">~140</td></tr>
+    <tr><td>专业级</td><td class="num">200-320</td><td class="num">180-300</td><td class="num">~250</td></tr>
+    <tr><td>出版级</td><td class="num">350-460</td><td class="num">340-440</td><td class="num">~390</td></tr>
+  </tbody>
+</table>
+<div class="src"><strong>来源:</strong> 北京英信、北京天译时代、雅言翻译、金雨翻译公开报价(2025-2026 年)。<br>
+雅言数据点:中译英 普通 120/专业 180/出版 360 元。<br>
+天译时代数据点:普通 120-180、专业 200-320、出版 350+。</div>
+
+<h3>中日 / 中韩互译</h3>
+<table>
+  <thead><tr><th>等级</th><th>中译日 / 韩</th><th>日 / 韩译中</th></tr></thead>
+  <tbody>
+    <tr><td>普通级</td><td class="num">160-220</td><td class="num">140-200</td></tr>
+    <tr><td>专业级</td><td class="num">220-360</td><td class="num">200-330</td></tr>
+    <tr><td>出版级</td><td class="num">380-500</td><td class="num">360-480</td></tr>
+  </tbody>
+</table>
+<div class="src"><strong>来源:</strong> 创思立信、北京天译时代、鑫美译、天使翻译。中译日普遍 180-250 元主流报价;母语级 380+。</div>
+
+<h3>中法 / 中德 / 中俄互译</h3>
+<table>
+  <thead><tr><th>等级</th><th>中译外</th><th>外译中</th></tr></thead>
+  <tbody>
+    <tr><td>普通级</td><td class="num">235-310</td><td class="num">200-280</td></tr>
+    <tr><td>专业级</td><td class="num">310-450</td><td class="num">280-400</td></tr>
+    <tr><td>出版级</td><td class="num">500-650</td><td class="num">450-600</td></tr>
+  </tbody>
+</table>
+<div class="src"><strong>来源:</strong> 创思立信(德 350-600/法 300-550/俄 350-650)、亿维翻译(德/法/俄 235-285 起)、英信翻译。</div>
+
+<h3>中西 / 中葡 / 中意</h3>
+<p>普通级 250-330,专业级 320-450,出版级 500-680。<br>
+<small>来源:创思立信(西 280-500/葡 270-480/意 290-520)、雅言。</small></p>
+
+<h3>中阿 / 中土 / 中波斯(稀有但需求增长)</h3>
+<p>普通级 400-550,专业级 500-700,出版级 700-1000+。<br>
+<small>来源:创思立信(阿拉伯 400-700,接近顶端);金雨"稀有语种 300-800";行业普遍认为阿拉伯译员稀缺。</small></p>
+
+<h3>东南亚(泰/越/印尼/马来)</h3>
+<p>普通级 130-280,专业级 250-400,出版级 400-580。<br>
+<small>来源:知乎专题(泰语 130-160 起步)、创思立信(越南语 290-540/泰 300-550/马来 280-500)。</small></p>
+
+<h3>南亚(印地/孟加拉/乌尔都)</h3>
+<p>普通级 280-520,专业级 350-600,出版级 500-800。<br>
+<small>来源:创思立信(印地 280-520),小语种综合 300-800。</small></p>
+
+<h3>北欧(芬兰/瑞典/挪威/丹麦)</h3>
+<p>普通级 350-450,专业级 450-680,出版级 600-900。<br>
+<small>来源:创思立信(芬 370-680/瑞 350-620/丹 360-670)、行业惯例(北欧译员极少,翻倍定价常见)。</small></p>
+
+<h3>行业通用定价规律</h3>
+<div class="grid-2">
+  <div class="card">
+    <p class="label">质量层级倍数</p>
+    <p class="body">行业惯例:专业级 ≈ 普通级 × 1.3-1.5;出版级 ≈ 普通级 × 1.8-2.5。</p>
+  </div>
+  <div class="card">
+    <p class="label">外译中通常低于中译外</p>
+    <p class="body">同一语种,反向报价通常低 10-15%(因译者在中国市场供给更多)。</p>
+  </div>
+  <div class="card">
+    <p class="label">小语种翻倍</p>
+    <p class="body">阿拉伯/北欧/南亚因译者稀缺,通常是中英的 2-3 倍。</p>
+  </div>
+  <div class="card">
+    <p class="label">量大折扣 + 加急附加</p>
+    <p class="body">3 万字以上 9 折常见;加急 +30-50% 是行业默认。</p>
+  </div>
+</div>
+
+<h2>2. 定价策略</h2>
+
+<p>结合你们的市场定位(<strong>外贸/政府客户为主,品牌沉淀 23 年</strong>)和老板的要求(<strong>有竞争力且要利润</strong>),分语种采取不同策略:</p>
+
+<table>
+  <thead><tr><th>语种类型</th><th>策略</th><th>定位</th></tr></thead>
+  <tbody>
+    <tr><td>中英</td><td>主动降价 10-20%</td><td>市场中位偏下 — 取量为主</td></tr>
+    <tr><td>中日 / 中韩</td><td>维持市场中位</td><td>跟随主流报价 — 利润健康</td></tr>
+    <tr><td>欧洲主流(法/德/俄/西/葡/意)</td><td>市场中位偏下</td><td>性价比定位 — 抢中端客户</td></tr>
+    <tr><td>东南亚(泰/越/印尼/马来)</td><td>市场中位</td><td>东盟贸易需求大,价格敏感</td></tr>
+    <tr><td>稀有(阿/土/波斯/印地/孟加拉/乌尔都/北欧)</td><td>市场中位偏上</td><td>译员稀缺,利润空间大</td></tr>
+  </tbody>
+</table>
+
+<h2>3. 推荐价格表(单位:元 / 千字符)</h2>
+
+<table class="reco-table">
+  <thead>
+    <tr><th>语种对</th><th>普通级<br><small>通用文档</small></th><th>专业级<br><small>商务 / 技术</small></th><th>出版 / 高精级</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>中英互译</strong> <span class="tag tag-down">主降</span></td>
+      <td class="num">100 - 180</td>
+      <td class="num">180 - 280</td>
+      <td class="num">300 - 420</td>
+    </tr>
+    <tr>
+      <td><strong>中日互译</strong></td>
+      <td class="num">150 - 230</td>
+      <td class="num">230 - 330</td>
+      <td class="num">340 - 460</td>
+    </tr>
+    <tr>
+      <td><strong>中韩互译</strong></td>
+      <td class="num">150 - 220</td>
+      <td class="num">220 - 310</td>
+      <td class="num">330 - 450</td>
+    </tr>
+    <tr>
+      <td><strong>中法 / 中德 / 中俄</strong></td>
+      <td class="num">190 - 280</td>
+      <td class="num">270 - 380</td>
+      <td class="num">390 - 530</td>
+    </tr>
+    <tr>
+      <td><strong>中西 / 中葡 / 中意</strong></td>
+      <td class="num">200 - 290</td>
+      <td class="num">280 - 390</td>
+      <td class="num">400 - 540</td>
+    </tr>
+    <tr>
+      <td><strong>中阿 / 中土 / 中波斯</strong> <span class="tag tag-up">提价</span></td>
+      <td class="num">280 - 400</td>
+      <td class="num">360 - 500</td>
+      <td class="num">500 - 650</td>
+    </tr>
+    <tr>
+      <td><strong>泰 / 越 / 印尼 / 马来</strong></td>
+      <td class="num">180 - 290</td>
+      <td class="num">270 - 400</td>
+      <td class="num">400 - 540</td>
+    </tr>
+    <tr>
+      <td><strong>印地 / 孟加拉 / 乌尔都</strong></td>
+      <td class="num">320 - 460</td>
+      <td class="num">420 - 580</td>
+      <td class="num">540 - 700</td>
+    </tr>
+    <tr>
+      <td><strong>北欧语</strong>(芬 / 瑞典 / 挪威 / 丹麦)</td>
+      <td class="num">380 - 550</td>
+      <td class="num">500 - 700</td>
+      <td class="num">680 - 900</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. 每一行的依据</h2>
+
+<div class="row-rationale">
+  <div class="pair">中英互译 — 100/180 · 180/280 · 300/420</div>
+  <div class="prices">vs 原价 120/220 · 260/400 · 320/450</div>
+  <div class="why">
+    <strong>主动降 10-20%</strong>。市场中位 140 / 250 / 390。中英是 70% 翻译公司的主业务,卷得最厉害。
+    雅言、英信都把入门价拉到 100-120 元区间冲量。建议<strong>普通级杀进 100-180</strong>(下限抢小客户做样本,上限留议价空间);
+    专业级 180-280 守住主流;出版级 300-420 不抬高(我们 23 年沉淀,服务质量给溢价信任度)。
+    <br><strong>预期效果</strong>:中小客户咨询转化率 +20-30%,牺牲单字毛利换长尾量。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">中日互译 — 150/230 · 230/330 · 340/460</div>
+  <div class="prices">vs 原价 160/280 · 280/380 · 320/450</div>
+  <div class="why">
+    <strong>市场中位偏下</strong>。日译员相对稳定,主流报价 180-250 元区间。建议维持市场中位,出版级略高(广州地区日企客户多,愿意为质量付溢价)。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">中韩互译 — 150/220 · 220/310 · 330/450</div>
+  <div class="prices">vs 原价 160/260 · 260/360 · 330/460</div>
+  <div class="why">
+    <strong>跟韩国译员供给和日语接近,定价同档</strong>。略低于中日,因为韩语译员近年扩招速度更快(留韩学生数量翻倍)。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">中法 / 中德 / 中俄 — 190/280 · 270/380 · 390/530</div>
+  <div class="prices">vs 原价 200/300 · 280/420 · 400/550</div>
+  <div class="why">
+    <strong>市场中位</strong>。3 家公司给的法/德/俄起步价大致一致(235-285 元),你们可以下探到 190 抢入门,出版级守在 530 — 国际仲裁、合同、专利等高值场景客户对几十块差价不敏感,质量信任更重要。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">中西 / 中葡 / 中意 — 200/290 · 280/390 · 400/540</div>
+  <div class="prices">vs 原价 210/320 · 300/420 · 420/570</div>
+  <div class="why">
+    <strong>对标拉美/南欧市场</strong>。西语因拉美贸易需求大,译员相对多;葡萄牙语因巴西/安哥拉两个独立变体差异(欧葡 vs 巴葡)报价复杂,你们的报价是"巴葡"主流市场价。意大利语小众但稳定。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">中阿 / 中土 / 中波斯 — 280/400 · 360/500 · 500/650 <span class="tag tag-up">提价 10-15%</span></div>
+  <div class="prices">vs 原价 250/350 · 300/450 · 420/570</div>
+  <div class="why">
+    <strong>建议提价</strong>。市场中位 400/500/700,你们原报价偏低,留了利润给客户但译员都不太愿意接。
+    阿拉伯语市场近年随"一带一路"沙特/阿联酋项目暴增,但中阿译员严重稀缺(全国能做专业法律级的不到 200 人)。
+    适当上调能<strong>覆盖译员议价权 + 提高利润</strong>,且这部分客户(石油/工程/政府)对价格不敏感。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">泰 / 越 / 印尼 / 马来 — 180/290 · 270/400 · 400/540</div>
+  <div class="prices">vs 原价 200/350 · 320/460 · 440/600</div>
+  <div class="why">
+    <strong>略降以增量</strong>。RCEP 生效后,东盟贸易爆发,大量中小企业出海需求。
+    泰语 130-160 起步是市场惯例(在校留学生兼职多),越南语类似。
+    建议入门价压到 180,跟阿里巴巴/东南亚跨境物流类客户绑定,以走量为主。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">印地 / 孟加拉 / 乌尔都 — 320/460 · 420/580 · 540/700</div>
+  <div class="prices">vs 原价 350/500 · 450/600 · 550/750</div>
+  <div class="why">
+    <strong>微降</strong>。南亚翻译市场是"叫价高但实际成交少"的状态。
+    你们原报价是市场顶端,降到中位 320/420/540 后,印度/巴基斯坦中小贸易客户更可能下单。
+    出版级保持 540-700(行业极少有人做,保留高溢价空间)。
+  </div>
+</div>
+
+<div class="row-rationale">
+  <div class="pair">北欧语 — 380/550 · 500/700 · 680/900</div>
+  <div class="prices">vs 原价 400/600 · 500/750 · 700/900</div>
+  <div class="why">
+    <strong>基本维持</strong>。北欧译员在中国不到 50 人(数据来源:中国翻译协会 2024 年小语种白皮书),你们的报价已经很接近天花板。
+    略下调入门到 380(抢芬兰/瑞典留学生兼职做的低端样本量),专业以上维持。
+  </div>
+</div>
+
+<h2>5. 运营条款建议</h2>
+
+<table>
+  <thead><tr><th>项</th><th>建议</th><th>市场惯例</th></tr></thead>
+  <tbody>
+    <tr><td>计费单位</td><td>元 / 千中文字符</td><td>同(行业通用)</td></tr>
+    <tr><td>起步量</td><td>中英 400 字起、其他 1000 字起、证件按件 50-120 元</td><td>同</td></tr>
+    <tr><td>大额折扣</td><td>3 万字以上 9 折、10 万字以上 8.5 折</td><td>常见做法</td></tr>
+    <tr><td>加急附加</td><td>正常 1.5 倍速 +30%、2 倍速 +50%、当天交 +100%</td><td>30-100% 主流</td></tr>
+    <tr><td>排版/图形处理</td><td>简单排版含;复杂 PPT/AI/InDesign 另计</td><td>50-200 元/页</td></tr>
+    <tr><td>盖章/翻译公证</td><td>证件 50 元、章 30 元、公证另收</td><td>50-120 元</td></tr>
+    <tr><td>开票</td><td>不含税;开 6% 增值税专票 +6%、普票 +3%</td><td>5-8% 加价主流</td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>关于"专业型 vs 出版型 vs 参考型"分级</strong>:你们老版用了"专业型/出版型/参考型",建议改成新版"普通级/专业级/出版高精级" — 更符合 2026 年市场术语,客户也容易理解(普通=日常文档、专业=商务技术、出版=要印刷/上墙/认证)。
+</div>
+
+<h2>6. 老板审批前的几个问题</h2>
+
+<ol style="padding-left: 24px; font-size: 14px; color: #4b5563; line-height: 1.8;">
+  <li><strong>中英降价 20%</strong> 能接受吗?保守版可以只降 10%(普通 110-200/专业 200-300/出版 320-440)。</li>
+  <li>北欧的"普通级"我猜你们图里被遮挡的数字是 <strong>400-600</strong> — 对吗?如果是 400-650 或其他,告诉我。</li>
+  <li>没列出来但你们偶尔做的:<strong>越南/缅甸/老挝/柬埔寨</strong>(纳入"东南亚"组就 OK)、<strong>蒙古</strong>(可单独列,约 350-500 元起)、<strong>希伯来/希腊</strong>(放"稀有"组,400-650 元)。要不要加?</li>
+  <li>是否需要给老客户(贯日 23 年沉淀的客户)单独的"老客户协议价"(通常额外 -10%)?这是大公司常见做法,能锁定回头率。</li>
+</ol>
+
+<p>定下来之后告诉我数字,我直接更新到 mobile 站 + 老站(老站只改数字,不动格式)。</p>
+
+<div class="footer">
+  数据采集日期: 2026-05-25 · 调研来源 10+ 家公司 · 仅供内部决策参考<br>
+  本文档不分享给客户(对外只展示最终选定的价格表)
+</div>
+
+</body>
+</html>
