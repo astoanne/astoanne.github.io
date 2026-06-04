@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Airport Directory 访客统计</title>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.0/dist/apexcharts.min.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:#f6f7f9;
+    color:#0f172a;
+    line-height:1.6;
+    font-size:15px;
+  }
+  .container{max-width:780px;margin:0 auto;padding:24px 16px 64px}
+  header{margin-bottom:20px}
+  h1{font-size:24px;font-weight:700;margin:0 0 6px;letter-spacing:-0.01em}
+  .meta{color:#64748b;font-size:13px;margin:0}
+  .meta .pill{display:inline-block;padding:1px 7px;border-radius:6px;background:#dbeafe;color:#1e40af;font-size:11.5px;margin-left:6px;vertical-align:1px}
+  section{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:14px;
+  }
+  section h2{font-size:16px;font-weight:600;margin:0 0 14px;color:#0f172a}
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:14px;
+  }
+  @media(min-width:640px){.stat-grid{grid-template-columns:repeat(4,1fr)}}
+  .stat-card{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .stat-label{color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+  .stat-value{font-size:24px;font-weight:700;color:#0f172a;font-variant-numeric:tabular-nums}
+  .stat-value.loading{color:#cbd5e1}
+  .period-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .period-btn{
+    padding:6px 12px;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    border-radius:7px;
+    font-size:13px;
+    color:#475569;
+    cursor:pointer;
+    transition:all 0.15s;
+  }
+  .period-btn:hover{border-color:#3b82f6;color:#3b82f6}
+  .period-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #f1f5f9}
+  th{color:#64748b;font-weight:500;background:#fafbfc;font-size:11.5px;text-transform:uppercase}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;color:#334155}
+  tr:last-child td{border-bottom:none}
+  .footnote{font-size:12.5px;color:#94a3b8;margin-top:10px}
+  footer{margin-top:20px;text-align:center;color:#64748b;font-size:13px}
+  footer a{color:#3b82f6;text-decoration:none;margin:0 8px}
+  footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Airport Directory 访客统计</h1>
+  <p class="meta">数据源：translationchina.com 站长 tracker · 实时拉取 <span class="pill" id="updatedAt">加载中…</span></p>
+</header>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-label">累计访问</div>
+    <div class="stat-value loading" id="statTotal">…</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">今天</div>
+    <div class="stat-value loading" id="statToday">…</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">本期合计</div>
+    <div class="stat-value loading" id="statPeriod">…</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">日均</div>
+    <div class="stat-value loading" id="statAvg">…</div>
+  </div>
+</div>
+
+<section>
+  <h2>访问趋势</h2>
+  <div class="period-row">
+    <button class="period-btn active" data-period="7d">最近 7 天</button>
+    <button class="period-btn" data-period="30d">最近 30 天</button>
+    <button class="period-btn" data-period="6m">最近 6 个月</button>
+    <button class="period-btn" data-period="12m">最近 12 个月</button>
+  </div>
+  <div id="timeChart" style="min-height:280px"></div>
+</section>
+
+<section>
+  <h2>访问来源（全站合计，含 airport 与其他 section）</h2>
+  <div id="refTable">加载中…</div>
+  <p class="footnote">注：来源数据是站级别的（translationchina.com），目前 tracker 没按 section 拆分来源。所以这一段反映的是整个 translationchina 的来源结构。</p>
+</section>
+
+<footer>
+  <a href="http://www.translationchina.com/airports/" target="_blank">Airport Directory 主页</a>
+  ·
+  <a href="http://www.translationchina.com/visitor-stats.html" target="_blank">完整 dashboard（全 section）</a>
+  ·
+  <a href="notary-stats.html">Notary 单独看</a>
+</footer>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var API = 'https://www.translationchina.com/api/visit.php';
+var PREFIX = 'grtrans.v1';
+var SECTION = 'airports';
+
+var KNOWN_REFS = ['direct','google-com','bing-com','baidu-com','yandex-ru','duckduckgo-com','yahoo-com','sogou-com','so-com','facebook-com','twitter-com','linkedin-com','instagram-com','t-co','weibo-com','zhihu-com','douyin-com','tiktok-com','reddit-com','github-com'];
+var REF_LABELS = {
+  'direct':'直接访问','google-com':'Google','bing-com':'Bing','baidu-com':'百度','yandex-ru':'Yandex',
+  'duckduckgo-com':'DuckDuckGo','yahoo-com':'Yahoo','sogou-com':'搜狗','so-com':'360',
+  'facebook-com':'Facebook','twitter-com':'Twitter','linkedin-com':'LinkedIn','instagram-com':'Instagram',
+  't-co':'Twitter (t.co)','weibo-com':'微博','zhihu-com':'知乎','douyin-com':'抖音','tiktok-com':'TikTok',
+  'reddit-com':'Reddit','github-com':'GitHub'
+};
+
+var currentPeriod = '7d';
+var timeChart = null;
+
+function fetchCount(key){
+  return fetch(API+'?domain='+encodeURIComponent(key),{method:'GET',cache:'no-store',credentials:'omit'})
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(function(d){return d&&typeof d.totalCount==='number'?d.totalCount:0;})
+    .catch(function(){return 0;});
+}
+
+function fmt(n){return n>=1000?n.toLocaleString():String(n);}
+
+function animateValue(el,target){
+  el.classList.remove('loading');
+  var start=parseInt(el.textContent.replace(/[^0-9]/g,''))||0;
+  if(start===target){el.textContent=fmt(target);return;}
+  var dur=500,t0=performance.now();
+  function tick(now){
+    var p=Math.min((now-t0)/dur,1);
+    var ease=1-Math.pow(1-p,3);
+    el.textContent=fmt(Math.floor(start+(target-start)*ease));
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function getDailyKeys(days){
+  var keys=[];var now=new Date();
+  for(var i=0;i<days;i++){
+    var d=new Date(now);d.setDate(d.getDate()-i);
+    var iso=d.toISOString().slice(0,10);
+    keys.push({key:PREFIX+'__s__'+SECTION+'__d__'+iso,label:iso});
+  }
+  return keys;
+}
+function getMonthlyKeys(months){
+  var keys=[];var now=new Date();
+  for(var i=0;i<months;i++){
+    var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    var mm=d.toISOString().slice(0,7);
+    keys.push({key:PREFIX+'__s__'+SECTION+'__m__'+mm,label:mm});
+  }
+  return keys;
+}
+
+function loadSummary(){
+  var today=new Date().toISOString().slice(0,10);
+  Promise.all([
+    fetchCount(PREFIX+'__s__'+SECTION),
+    fetchCount(PREFIX+'__s__'+SECTION+'__d__'+today)
+  ]).then(function(r){
+    animateValue(document.getElementById('statTotal'),r[0]);
+    animateValue(document.getElementById('statToday'),r[1]);
+    document.getElementById('updatedAt').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})+' 刷新';
+  });
+}
+
+function loadTimeSeries(){
+  var keys,useMonthly=false;
+  if(currentPeriod==='7d'){keys=getDailyKeys(7);}
+  else if(currentPeriod==='30d'){keys=getDailyKeys(30);}
+  else if(currentPeriod==='6m'){keys=getMonthlyKeys(6);useMonthly=true;}
+  else{keys=getMonthlyKeys(12);useMonthly=true;}
+
+  var promises=keys.map(function(k){return fetchCount(k.key).then(function(c){return{label:k.label,count:c};});});
+  Promise.all(promises).then(function(results){
+    results.reverse();
+    var labels=[],data=[],total=0;
+    for(var i=0;i<results.length;i++){
+      labels.push(results[i].label);data.push(results[i].count);total+=results[i].count;
+    }
+    animateValue(document.getElementById('statPeriod'),total);
+    var avg=results.length>0?Math.round(total/(useMonthly?results.length*30:results.length)):0;
+    animateValue(document.getElementById('statAvg'),avg);
+    renderChart(labels,data,useMonthly);
+  });
+}
+
+function renderChart(labels,data,isMonthly){
+  if(timeChart){timeChart.destroy();}
+  timeChart=new ApexCharts(document.getElementById('timeChart'),{
+    chart:{type:'area',height:280,toolbar:{show:false},fontFamily:'inherit',animations:{enabled:true,easing:'easeinout',speed:400}},
+    series:[{name:'访问',data:data}],
+    xaxis:{categories:labels,labels:{style:{fontSize:'11px',colors:'#94a3b8'},rotate:-45,rotateAlways:labels.length>10,formatter:function(v){if(!v)return'';return isMonthly?v:v.slice(5);}}},
+    yaxis:{labels:{style:{fontSize:'11px',colors:'#94a3b8'},formatter:function(v){return v>=1000?(v/1000).toFixed(1)+'k':Math.round(v);}}},
+    colors:['#3b82f6'],
+    fill:{type:'gradient',gradient:{shadeIntensity:1,opacityFrom:.45,opacityTo:.05,stops:[0,100]}},
+    stroke:{curve:'smooth',width:2.5},
+    dataLabels:{enabled:data.length<=12,formatter:function(v){return v>0?v:'';},style:{fontSize:'11px',fontWeight:600},offsetY:-6},
+    grid:{borderColor:'#f1f5f9',strokeDashArray:3},
+    tooltip:{y:{formatter:function(v){return fmt(v)+' 次访问';}}}
+  });
+  timeChart.render();
+}
+
+function loadReferrers(){
+  var promises=KNOWN_REFS.map(function(r){return fetchCount(PREFIX+'__ref__'+r).then(function(c){return{ref:r,count:c};});});
+  Promise.all(promises).then(function(results){
+    results=results.filter(function(r){return r.count>0;}).sort(function(a,b){return b.count-a.count;});
+    var tbl=document.getElementById('refTable');
+    if(results.length===0){tbl.innerHTML='<p style="color:#94a3b8">暂无数据</p>';return;}
+    var total=results.reduce(function(s,r){return s+r.count;},0);
+    var html='<table><thead><tr><th>来源</th><th class="num">访问</th><th class="num">占比</th></tr></thead><tbody>';
+    for(var i=0;i<results.length;i++){
+      var pct=(results[i].count/total*100).toFixed(1);
+      html+='<tr><td>'+(REF_LABELS[results[i].ref]||results[i].ref)+'</td><td class="num">'+fmt(results[i].count)+'</td><td class="num">'+pct+'%</td></tr>';
+    }
+    html+='</tbody></table>';
+    tbl.innerHTML=html;
+  });
+}
+
+function setPeriod(p){
+  currentPeriod=p;
+  var btns=document.querySelectorAll('.period-btn');
+  for(var i=0;i<btns.length;i++){btns[i].classList.toggle('active',btns[i].getAttribute('data-period')===p);}
+  loadTimeSeries();
+}
+
+document.querySelectorAll('.period-btn').forEach(function(b){
+  b.addEventListener('click',function(){setPeriod(b.getAttribute('data-period'));});
+});
+
+loadSummary();
+loadTimeSeries();
+loadReferrers();
+
+})();
+</script>
+</body>
+</html>
