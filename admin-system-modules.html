@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>贯日译社管理系统 V2.0 — 模块勾选清单</title>
+<style>
+  :root {
+    --bg: #faf7f2;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --ink-faint: #767676;
+    --line: #e6decf;
+    --line-soft: #efe9dd;
+    --warm: #fef6e9;
+    --warm-2: #fcecd0;
+    --accent: #b85a1f;
+    --accent-soft: #e58a47;
+    --green: #2d8a4a;
+    --green-soft: #e6f4ea;
+    --red: #c33b3b;
+    --red-soft: #fce8e8;
+    --yellow: #b88c1f;
+    --yellow-soft: #fdf5d8;
+    --gray: #6c757d;
+    --gray-soft: #eef0f2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: clamp(16px, 4vw, 40px) clamp(12px, 4vw, 24px) 90px;
+  }
+  main { max-width: 800px; margin: 0 auto; }
+
+  header { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: clamp(20px, 5.2vw, 26px);
+    line-height: 1.3;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 620px;
+  }
+  .instr {
+    margin-top: 14px;
+    background: var(--warm);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #6b4d10;
+    border-left: 3px solid var(--accent-soft);
+  }
+  .instr strong { color: var(--accent); }
+
+  section { margin-bottom: 28px; }
+  h2 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  h2.red .dot   { background: var(--red); }
+  h2.yellow .dot { background: var(--yellow); }
+  h2.gray .dot   { background: var(--gray); }
+  h2 .note {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    margin-left: auto;
+  }
+
+  .item-list {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 44px 32px 1fr;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line-soft);
+    cursor: pointer;
+    transition: background 0.15s;
+    align-items: start;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--warm); }
+  .item.checked { background: rgba(45, 138, 74, 0.04); }
+  .item.checked:hover { background: rgba(45, 138, 74, 0.07); }
+  .item .checkbox {
+    width: 22px; height: 22px;
+    border: 2px solid var(--line);
+    border-radius: 6px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    margin-top: 2px;
+  }
+  .item.checked .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .item.checked .checkbox::after {
+    content: "";
+    width: 6px;
+    height: 11px;
+    border-right: 2.5px solid white;
+    border-bottom: 2.5px solid white;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .item .num {
+    font-weight: 700;
+    color: var(--ink-faint);
+    font-size: 13px;
+    text-align: right;
+    margin-top: 3px;
+    font-variant-numeric: tabular-nums;
+  }
+  .item .text { min-width: 0; }
+  .item .name {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .item .desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+
+  /* 3-state radio question */
+  .question {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .question .q-text {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .question .q-desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .radio-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .radio-opt {
+    flex: 1;
+    min-width: 90px;
+    padding: 9px 12px;
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .radio-opt:hover { border-color: var(--accent-soft); }
+  .radio-opt.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .remarks {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .remarks label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .remarks textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    background: var(--bg);
+  }
+  .remarks textarea:focus {
+    outline: none;
+    border-color: var(--accent-soft);
+    background: white;
+  }
+
+  /* Bottom export bar */
+  .export-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: white;
+    border-top: 1px solid var(--line);
+    padding: 12px clamp(12px, 4vw, 24px);
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+    z-index: 50;
+  }
+  .export-bar-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .counter {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .counter strong { color: var(--accent); font-weight: 700; }
+  .export-btn {
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .export-btn:hover { background: #9c4915; }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 100;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .modal p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+  .modal textarea {
+    width: 100%;
+    flex: 1;
+    min-height: 320px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.55;
+    background: var(--bg);
+    resize: vertical;
+  }
+  .modal-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .btn {
+    border: 1px solid var(--line);
+    background: white;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .btn.primary:hover { background: #9c4915; }
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--green);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 200;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 600px) {
+    .export-bar-inner { gap: 8px; }
+    .export-btn { padding: 10px 16px; font-size: 13px; }
+    .counter { font-size: 12px; }
+    .item { padding: 10px 12px; }
+    .item .name { font-size: 13.5px; }
+    .item .desc { font-size: 11.5px; }
+    .modal textarea { min-height: 240px; font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="eyebrow">管理后台迁移 · 范围确认</div>
+  <h1>贯日译社管理系统 V2.0<br>模块勾选清单</h1>
+  <p class="lead">
+    原有的家庭服务器后台(<code>Apache 2.2 + PHP 5.2 + MySQL 4.x</code>,2005-2025 持续运营)即将整体迁到云服务器。请勾选要保留的模块,完成后点底部"导出结果"。
+  </p>
+  <div class="instr">
+    <strong>使用方法</strong>:默认全部勾选(全套搬过去)。如有不需要的模块,点一下取消勾选。下方还有 3 个具体问题需要回答。完成后点底部"导出"按钮,把结果文本发回来即可。
+  </div>
+</header>
+
+<!-- CORE -->
+<section>
+  <h2 class="red"><span class="dot"></span>核心模块<span class="note">支撑日常业务,默认保留</span></h2>
+  <div class="item-list" data-group="core">
+    <div class="item checked" data-name="译员管理">
+      <div class="checkbox"></div><div class="num">1</div>
+      <div class="text">
+        <div class="name">译员管理</div>
+        <div class="desc">译员档案、语种、级别、价格、银行账户、简历附件等</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="客户管理">
+      <div class="checkbox"></div><div class="num">2</div>
+      <div class="text">
+        <div class="name">客户管理</div>
+        <div class="desc">客户档案 + 跟进记录 + 订单关联</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="企业客户管理">
+      <div class="checkbox"></div><div class="num">3</div>
+      <div class="text">
+        <div class="name">企业客户管理</div>
+        <div class="desc">公司类型客户(法人/营业执照/行业/地址等)</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="项目中心">
+      <div class="checkbox"></div><div class="num">4</div>
+      <div class="text">
+        <div class="name">项目中心</div>
+        <div class="desc">翻译项目创建、分派译员、跟踪、交付与验收</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="在线订单">
+      <div class="checkbox"></div><div class="num">5</div>
+      <div class="text">
+        <div class="name">在线订单</div>
+        <div class="desc">从官网提交进来的订单接收</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="管理员账号 / 权限">
+      <div class="checkbox"></div><div class="num">6</div>
+      <div class="text">
+        <div class="name">管理员账号 / 权限</div>
+        <div class="desc">登录账号、角色权限(没这个就没人能进后台)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSIST -->
+<section>
+  <h2 class="yellow"><span class="dot"></span>业务辅助模块<span class="note">不确定的可保留</span></h2>
+  <div class="item-list" data-group="assist">
+    <div class="item checked" data-name="结算 / 付款">
+      <div class="checkbox"></div><div class="num">7</div>
+      <div class="text">
+        <div class="name">结算 / 付款</div>
+        <div class="desc">给译员结算稿费 / 向企业客户收款记录</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="同传中心">
+      <div class="checkbox"></div><div class="num">8</div>
+      <div class="text">
+        <div class="name">同传中心</div>
+        <div class="desc">同声传译项目(独立工作流,跟普通笔译分开)</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="企业招标 / 招聘">
+      <div class="checkbox"></div><div class="num">9</div>
+      <div class="text">
+        <div class="name">企业招标 / 招聘</div>
+        <div class="desc">企业发布翻译需求(招标);译员对外招聘</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="短信 / 邮件通知">
+      <div class="checkbox"></div><div class="num">10</div>
+      <div class="text">
+        <div class="name">短信 / 邮件通知</div>
+        <div class="desc">给译员/客户发任务通知短信(对接早年的短信网关)</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="统计">
+      <div class="checkbox"></div><div class="num">11</div>
+      <div class="text">
+        <div class="name">统计</div>
+        <div class="desc">按客户、按年度的业绩统计报表</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="HTML 生成器">
+      <div class="checkbox"></div><div class="num">12</div>
+      <div class="text">
+        <div class="name">HTML 生成器</div>
+        <div class="desc">把数据库内容自动生成静态网页(早年 SEO 做法,可能已闲置)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDGE -->
+<section>
+  <h2 class="gray"><span class="dot"></span>边缘模块<span class="note">这些年用得少,可以不选</span></h2>
+  <div class="item-list" data-group="edge">
+    <div class="item checked" data-name="BBS 论坛">
+      <div class="checkbox"></div><div class="num">13</div>
+      <div class="text">
+        <div class="name">BBS 论坛</div>
+        <div class="desc">早年自家译员/客户论坛 — 这年代基本无人使用</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="留言板">
+      <div class="checkbox"></div><div class="num">14</div>
+      <div class="text">
+        <div class="name">留言板</div>
+        <div class="desc">早年 Guestbook 时代的访客留言</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="广告位">
+      <div class="checkbox"></div><div class="num">15</div>
+      <div class="text">
+        <div class="name">广告位</div>
+        <div class="desc">网站广告位管理</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="图文 / 简易 CMS">
+      <div class="checkbox"></div><div class="num">16</div>
+      <div class="text">
+        <div class="name">图文 / 简易 CMS</div>
+        <div class="desc">早年自己改新闻 / 案例展示用(目前主站和 mobile 站已用其他方式)</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="简历库">
+      <div class="checkbox"></div><div class="num">17</div>
+      <div class="text">
+        <div class="name">简历库</div>
+        <div class="desc">译员简历存档(可能跟"译员管理"重叠)</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="MBA 子站">
+      <div class="checkbox"></div><div class="num">18</div>
+      <div class="text">
+        <div class="name">MBA 子站</div>
+        <div class="desc">第二套系统,用同一套框架,数据库独立,跟翻译业务无关</div>
+      </div>
+    </div>
+    <div class="item checked" data-name="客户跟进 / 分配">
+      <div class="checkbox"></div><div class="num">19</div>
+      <div class="text">
+        <div class="name">客户跟进 / 分配</div>
+        <div class="desc">把客户分配给业务员跟进(跟"客户管理"有部分重叠)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIFIC QUESTIONS -->
+<section>
+  <h2 class="yellow"><span class="dot"></span>三个需要确认的具体问题</h2>
+
+  <div class="question" data-q="MBA 子站还需要吗">
+    <div class="q-text">1. MBA 子站(<code>www_sysmba_com</code>)还需要保留吗?</div>
+    <div class="q-desc">第二套用同一框架搭的系统,数据库独立,跟翻译业务没有数据关联。</div>
+    <div class="radio-group">
+      <div class="radio-opt" data-val="要">要</div>
+      <div class="radio-opt" data-val="不要">不要</div>
+      <div class="radio-opt" data-val="不确定">不确定</div>
+    </div>
+  </div>
+
+  <div class="question" data-q="HTML 生成器还在用吗">
+    <div class="q-text">2. HTML 生成器(#12)还在用吗?</div>
+    <div class="q-desc">早年用来把数据库内容自动生成静态网页做 SEO,目前主站和 mobile 站都已用了其他方式。</div>
+    <div class="radio-group">
+      <div class="radio-opt" data-val="在用">在用</div>
+      <div class="radio-opt" data-val="不在用">不在用</div>
+      <div class="radio-opt" data-val="不确定">不确定</div>
+    </div>
+  </div>
+
+  <div class="question" data-q="短信网关账号是否还有效">
+    <div class="q-text">3. 短信通知用的那个短信网关账号还有效吗?</div>
+    <div class="q-desc">系统里挂着一个早年的 SMS 平台账号(发任务通知短信用)。如果欠费/停用了,需要单独标记。</div>
+    <div class="radio-group">
+      <div class="radio-opt" data-val="有效">有效</div>
+      <div class="radio-opt" data-val="已停用">已停用</div>
+      <div class="radio-opt" data-val="不确定">不确定</div>
+    </div>
+  </div>
+</section>
+
+<!-- REMARKS -->
+<section>
+  <h2 class="gray"><span class="dot"></span>其他备注(选填)</h2>
+  <div class="remarks">
+    <label for="remarks-input">还有别的事要说明吗?(例:某个模块要保留但只读、新增某个模块需求、希望迁移后某个改造……)</label>
+    <textarea id="remarks-input" placeholder="选填……"></textarea>
+  </div>
+</section>
+
+</main>
+
+<!-- Bottom export bar -->
+<div class="export-bar">
+  <div class="export-bar-inner">
+    <div class="counter"><strong id="checked-count">19</strong> / 19 模块已勾选 · <span id="q-answered">0</span> / 3 问题已答</div>
+    <button class="export-btn" onclick="showExport()">导出结果</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>导出结果</h3>
+    <p>把下面这段文字复制 → 发回去就行。</p>
+    <textarea id="export-text" readonly></textarea>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">关闭</button>
+      <button class="btn primary" onclick="copyText()">复制全文</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+  // Toggle module checkboxes
+  document.querySelectorAll('.item').forEach(el => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('checked');
+      updateCounter();
+    });
+  });
+
+  // Toggle radio for questions
+  document.querySelectorAll('.question').forEach(q => {
+    q.querySelectorAll('.radio-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        q.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        updateCounter();
+      });
+    });
+  });
+
+  function updateCounter() {
+    const checked = document.querySelectorAll('.item.checked').length;
+    document.getElementById('checked-count').textContent = checked;
+    const answered = document.querySelectorAll('.question .radio-opt.selected').length;
+    document.getElementById('q-answered').textContent = answered;
+  }
+
+  function getGroup(name) {
+    const items = document.querySelectorAll(`[data-group="${name}"] .item`);
+    return Array.from(items).map(el => ({
+      name: el.getAttribute('data-name'),
+      num: el.querySelector('.num').textContent,
+      checked: el.classList.contains('checked')
+    }));
+  }
+
+  function showExport() {
+    const core = getGroup('core');
+    const assist = getGroup('assist');
+    const edge = getGroup('edge');
+
+    let txt = '';
+    txt += '=== 贯日译社管理系统 V2.0 — 模块勾选结果 ===\n\n';
+
+    const fmt = arr => arr.map(it =>
+      `[${it.checked ? '✓ 要' : '✗ 不要'}]  ${it.num}. ${it.name}`
+    ).join('\n');
+
+    txt += '【核心模块】\n' + fmt(core) + '\n\n';
+    txt += '【业务辅助模块】\n' + fmt(assist) + '\n\n';
+    txt += '【边缘模块】\n' + fmt(edge) + '\n\n';
+
+    // Questions
+    txt += '【三个具体问题】\n';
+    document.querySelectorAll('.question').forEach((q, i) => {
+      const qText = q.getAttribute('data-q');
+      const sel = q.querySelector('.radio-opt.selected');
+      const ans = sel ? sel.getAttribute('data-val') : '(未回答)';
+      txt += `${i + 1}. ${qText}? → ${ans}\n`;
+    });
+
+    // Remarks
+    const remarks = document.getElementById('remarks-input').value.trim();
+    if (remarks) txt += '\n【其他备注】\n' + remarks + '\n';
+
+    // Summary line
+    const total = core.length + assist.length + edge.length;
+    const yesCount = [...core, ...assist, ...edge].filter(x => x.checked).length;
+    txt += `\n---\n汇总:${yesCount} / ${total} 个模块要保留`;
+
+    document.getElementById('export-text').value = txt;
+    document.getElementById('modal-bg').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-bg').classList.remove('show');
+  }
+
+  function copyText() {
+    const ta = document.getElementById('export-text');
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    try {
+      navigator.clipboard.writeText(ta.value).then(showToast, fallbackCopy);
+    } catch (e) {
+      fallbackCopy();
+    }
+  }
+
+  function fallbackCopy() {
+    try {
+      document.execCommand('copy');
+      showToast();
+    } catch (e) {
+      alert('复制失败,请手动选择文字 Ctrl+C 复制');
+    }
+  }
+
+  function showToast() {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // Initial counter render
+  updateCounter();
+</script>
+
+</body>
+</html>
