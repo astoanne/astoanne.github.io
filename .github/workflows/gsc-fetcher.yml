@@ -1,0 +1,26 @@
+name: GSC Daily Fetcher
+
+on:
+  schedule:
+    - cron: '15 4 * * *'  # 04:15 UTC = 12:15 北京时间 — after GSC's daily data finalization
+  workflow_dispatch:      # manual trigger button
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install google-auth google-api-python-client
+
+      - name: Run fetcher
+        env:
+          GSC_SA_KEY_JSON: ${{ secrets.GSC_SA_KEY_JSON }}
+          TC_INGEST_TOKEN: ${{ secrets.TC_INGEST_TOKEN }}
+        run: python scripts/gsc_fetcher.py
