@@ -2,7 +2,7 @@ name: GSC Daily Fetcher
 
 on:
   schedule:
-    - cron: '15 4 * * *'  # 04:15 UTC = 12:15 北京时间 — after GSC's daily data finalization
+    - cron: '0 0 * * *'   # 00:00 UTC = 08:00 北京时间 — done before boss checks at 11am
   workflow_dispatch:      # manual trigger button
 
 jobs:
