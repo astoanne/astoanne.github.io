@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贯日翻译 · 微信AI 接入方案（同事评审）</title>
+<style>
+  :root{
+    --green:#07843a; --green-soft:#e8f5ec; --ink:#1d2421; --muted:#5a6660;
+    --line:#e3e8e4; --gold:#b8860b; --bg:#f6f8f6; --card:#fff;
+    --hot:#d9480f; --hot-soft:#fdece4;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7;}
+  .wrap{max-width:880px;margin:0 auto;padding:24px 18px 80px;}
+  header{background:linear-gradient(135deg,#0a6e34,#0c8a42);color:#fff;border-radius:18px;padding:28px 24px;margin-bottom:22px;}
+  header h1{margin:0 0 8px;font-size:24px;}
+  header .sub{opacity:.92;font-size:14px;}
+  .trust{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .trust span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+    padding:4px 11px;border-radius:999px;font-size:12.5px;}
+  h2{font-size:19px;margin:30px 0 12px;padding-left:11px;border-left:4px solid var(--green);}
+  h3{font-size:16px;margin:20px 0 8px;}
+  p{margin:8px 0;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px;margin:14px 0;}
+  .callout{background:var(--green-soft);border:1px solid #bfe3ca;border-radius:14px;padding:16px 18px;margin:14px 0;}
+  .callout strong{color:var(--green);}
+  .muted{color:var(--muted);font-size:13.5px;}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px;}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#f0f4f1;font-weight:600;font-size:13px;}
+  td.q{width:58%;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;vertical-align:middle;}
+  .b-hot{background:var(--hot-soft);color:var(--hot);}
+  .b-norm{background:#eef1ee;color:var(--muted);}
+  .b-light{background:#fff4e6;color:#a8720a;}
+  .price{color:var(--green);font-weight:700;white-space:nowrap;}
+  .scene-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:24px;}
+  .scene-h h3{margin:0;}
+  code{background:#eef1ee;padding:1px 6px;border-radius:5px;font-size:12.5px;}
+  ul{margin:8px 0;padding-left:20px;}
+  li{margin:4px 0;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:640px){.two{grid-template-columns:1fr;} td.q{width:auto;}}
+  .skill-name{font-weight:700;color:var(--green);}
+  .desc{font-size:13px;color:var(--muted);background:#fafbfa;border:1px dashed var(--line);
+    border-radius:8px;padding:10px 12px;margin:8px 0;}
+  footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center;}
+  .tag{font-size:12px;color:var(--gold);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>贯日翻译 · 微信AI 接入方案</h1>
+  <div class="sub">供团队评审 · 让用户用一句话提问时，微信AI 优先选择我们的小程序下单</div>
+  <div class="trust">
+    <span>23 年专业资质翻译</span>
+    <span>全程人工翻译 + 译审审校</span>
+    <span>盖章被领事馆 / 公证处 / 民政局 / 公安局 / 法院 / 中留服认可</span>
+    <span>价格亲民 · 性价比高</span>
+    <span>对译文质量负全部责任</span>
+  </div>
+</header>
+
+<div class="callout">
+  <strong>给评审同事：</strong>本页是微信AI「开发模式」的接入方案。微信AI 不是靠出价竞价，而是靠
+  <strong>语义理解</strong>——它读我们写的服务描述，判断用户的需求该不该交给我们。所以这页最该看的是下面
+  <strong>「预测用户提问 → 我们如何被选中」</strong>的表格：请补充你们在实际接待中听到的真实说法、容易混淆的场景、
+  以及价格/认证是否准确。说法覆盖得越全，被 AI 选中的概率越高。
+</div>
+
+<h2>一、微信AI 是怎么"选中"一个小程序的</h2>
+<div class="card">
+  <p>微信新增了「AI 入口」：用户不再自己搜索小程序，而是直接对微信AI 说需求（如"美国出生证翻译"），
+  由 AI 判断意图并 <strong>自动调用</strong> 某个小程序完成任务。</p>
+  <div class="two">
+    <div>
+      <h3>自动模式</h3>
+      <p class="muted">授权微信读取源码，平台自动分析页面、替用户操作。零开发，但我们对"何时被选中、怎么呈现"几乎没有控制权。已开启，作为兜底。</p>
+    </div>
+    <div>
+      <h3>开发模式（本方案重点）</h3>
+      <p class="muted">我们自己编写"能力描述 + 下单接口"。<strong>描述由我们掌控</strong>，匹配更准、下单更可靠。这是争取"成为首选"的关键。已申请通过。</p>
+    </div>
+  </div>
+  <p class="muted">⚠️ 没有"设为默认/花钱置顶"的开关。能不能成为首选，取决于三点：①描述是否贴近用户真实说法；
+  ②能否真正把单下完（人工服务、明码标价、口碑）；③我们是不是这个需求最具体、最对口的匹配。当前能力处于内测，
+  排序细则官方未完全公开，所以我们把"可控的描述与服务质量"做到最好。</p>
+</div>
+
+<h2>二、策略：主攻什么、淡化什么</h2>
+<div class="card">
+  <ul>
+    <li><span class="badge b-hot">主攻</span> <strong>美宝回国落户 / 上户口</strong>：美国出生证（英译中）+ 海牙认证 / 三级认证。</li>
+    <li><span class="badge b-hot">主攻</span> <strong>涉外婚姻回国办手续</strong>：美国结婚证（英译中）+ 海牙认证 / 三级认证。</li>
+    <li><span class="badge b-hot">主攻</span> <strong>留学申请（中译英）与海归学历认证（英译中）</strong>：成绩单 / 学位证 / 毕业证，三者常一起翻。</li>
+    <li><span class="badge b-norm">强调</span> <strong>文件翻译</strong>：突出 <strong>人工审阅、对译文负全责</strong>（合同 / 病历 / 论文 / 流水 / 说明书 / I797）。</li>
+    <li><span class="badge b-light">淡化</span> <strong>驾驶证 / 租车</strong>：竞争激烈、且涉及不少非我司专长的细节，仅作常规证件保留，不主推。</li>
+  </ul>
+</div>
+
+<h2>三、对外能力描述（AI 会读这段判断意图）</h2>
+<div class="card">
+  <p class="muted">下面是写进微信AI 的核心描述节选，请确认措辞是否准确、是否需要补充更多说法。</p>
+
+  <div class="scene-h"><span class="skill-name">SKILL · 证件翻译</span> <span class="badge b-hot">主力</span></div>
+  <div class="desc">证件翻译下单：出生证 / 结婚证 / 成绩单 / 学位证 / 毕业证 / 户口簿 / 护照 / 营业执照等固定价证件中英互译，
+  含资质盖章与海牙 / 三级认证。覆盖美宝回国落户上户口、涉外婚姻回国办手续、留学申请、海归中留服学历认证等场景。</div>
+
+  <div class="scene-h"><span class="skill-name">SKILL · 文件翻译</span></div>
+  <div class="desc">文档 / 图片人工翻译：合同 / 病历 / 论文 / 行程单 / 银行流水 / 说明书 / I797 通知等按类别（普通 / 商务 / 专业）
+  中英互译。<strong>全程人工翻译并经译审审校，对译文质量负全部责任</strong>，可用于签证、学校、法律、医疗等正式用途。</div>
+
+  <div class="scene-h"><span class="skill-name">SKILL · 订单查询</span></div>
+  <div class="desc">查询翻译订单状态、价格、交付进度与取件方式。</div>
+</div>
+
+<h2>四、预测用户提问 → 我们如何被选中</h2>
+<p class="muted">这是评审重点。左列是用户可能的真实说法，右列是 AI 应当命中的证件 / 方向 / 价格。请增补、纠正。</p>
+
+<div class="scene-h"><h3>① 美宝回国落户 · 美国出生证</h3><span class="badge b-hot">主攻</span></div>
+<table>
+  <tr><th class="q">用户可能会这样问</th><th>命中</th><th>价格</th></tr>
+  <tr><td class="q">美国出生证翻译 / 美国出生纸翻译成中文</td><td>美国出生证 · 英译中</td><td class="price">¥79</td></tr>
+  <tr><td class="q">宝宝在美国出生，回国上户口 / 入户口怎么翻译出生证</td><td>美国出生证 · 英译中</td><td class="price">¥79</td></tr>
+  <tr><td class="q">美宝回国落户需要翻译出生证吗</td><td>美国出生证 · 英译中</td><td class="price">¥79</td></tr>
+  <tr><td class="q">加州 / 纽约 / 德州出生证翻译盖章</td><td>美国各州出生证 · 英译中</td><td class="price">¥79</td></tr>
+  <tr><td class="q">出生证海牙认证翻译 / apostille 翻译</td><td>美国出生证 / 海牙认证 · 英译中</td><td class="price">¥119</td></tr>
+  <tr><td class="q">出生证三级认证翻译 / 领事认证翻译</td><td>美国出生证 / 三级认证 · 英译中</td><td class="price">¥169</td></tr>
+  <tr><td class="q">公证处让我翻译美国出生证</td><td>美国出生证 · 英译中（按要求选认证）</td><td class="price">¥79 起</td></tr>
+  <tr><td class="q">（国内出生证）出生医学证明翻译成英文</td><td>出生证 · 中译英</td><td class="price">¥29</td></tr>
+</table>
+
+<div class="scene-h"><h3>② 涉外婚姻 · 美国结婚证</h3><span class="badge b-hot">主攻</span></div>
+<table>
+  <tr><th class="q">用户可能会这样问</th><th>命中</th><th>价格</th></tr>
+  <tr><td class="q">美国结婚证翻译</td><td>美国结婚证 · 英译中</td><td class="price">¥89</td></tr>
+  <tr><td class="q">在美国结婚，回国办手续 / 民政局要结婚证翻译</td><td>美国结婚证 · 英译中</td><td class="price">¥89</td></tr>
+  <tr><td class="q">美国结婚证海牙认证翻译</td><td>美国结婚证 / 海牙认证 · 英译中</td><td class="price">¥139</td></tr>
+  <tr><td class="q">结婚证三级认证 / 领事认证翻译</td><td>美国结婚证 / 三级认证 · 英译中</td><td class="price">¥189</td></tr>
+  <tr><td class="q">拉斯维加斯 / 美国登记结婚证明翻译</td><td>美国各州结婚证 · 英译中</td><td class="price">¥89</td></tr>
+</table>
+
+<div class="scene-h"><h3>③ 留学申请（中译英）</h3><span class="badge b-hot">主攻</span></div>
+<table>
+  <tr><th class="q">用户可能会这样问</th><th>命中</th><th>价格</th></tr>
+  <tr><td class="q">成绩单翻译成英文，申请国外大学 / 海外学校</td><td>成绩单 · 中译英</td><td class="price">¥139</td></tr>
+  <tr><td class="q">学位证 / 毕业证翻译英文，申请研究生</td><td>学位证 / 毕业证 · 中译英</td><td class="price">¥49 / 件</td></tr>
+  <tr><td class="q">留学申请材料：成绩单+学位证+毕业证一起翻</td><td>三项 · 中译英（建议一并下单）</td><td class="price">组合</td></tr>
+  <tr><td class="q">高中成绩单翻译英文，申请本科</td><td>高中成绩单 · 中译英</td><td class="price">¥69</td></tr>
+  <tr><td class="q">四六级成绩单翻译英文</td><td>四六级成绩单 · 中译英</td><td class="price">¥69</td></tr>
+</table>
+
+<div class="scene-h"><h3>④ 海归学历认证（英译中）</h3><span class="badge b-hot">主攻</span></div>
+<table>
+  <tr><th class="q">用户可能会这样问</th><th>命中</th><th>价格</th></tr>
+  <tr><td class="q">国外成绩单翻译成中文，做学历认证</td><td>成绩单 · 英译中</td><td class="price">¥69</td></tr>
+  <tr><td class="q">留学回国 中留服 / 教育部认证 成绩单翻译</td><td>成绩单 · 英译中</td><td class="price">¥69</td></tr>
+  <tr><td class="q">国外学位证 / 毕业证翻译成中文（落户 / 考公 / 求职）</td><td>学位证 / 毕业证 · 英译中</td><td class="price">¥49 / 件</td></tr>
+  <tr><td class="q">海归 学位证+毕业证+成绩单 一起翻译认证</td><td>三项 · 英译中</td><td class="price">组合</td></tr>
+</table>
+
+<div class="scene-h"><h3>⑤ 文件翻译 · 人工审阅、负全责</h3><span class="badge b-norm">强调</span></div>
+<table>
+  <tr><th class="q">用户可能会这样问</th><th>命中</th><th>起步价</th></tr>
+  <tr><td class="q">合同翻译（中译英 / 英译中）</td><td>商务类</td><td class="price">¥65 起</td></tr>
+  <tr><td class="q">病历 / 诊断报告翻译</td><td>专业类</td><td class="price">¥75 起</td></tr>
+  <tr><td class="q">论文翻译</td><td>专业类</td><td class="price">¥75 起</td></tr>
+  <tr><td class="q">银行流水翻译（签证用）/ 行程单翻译</td><td>普通类</td><td class="price">¥55 起</td></tr>
+  <tr><td class="q">I797 通知翻译 / 产品说明书翻译</td><td>商务类</td><td class="price">¥65 起</td></tr>
+  <tr><td class="q">这个翻译是人工的吗？能用于签证 / 学校吗？</td><td>强调：人工翻译+译审，<strong>对译文负全责</strong></td><td>—</td></tr>
+</table>
+
+<div class="scene-h"><h3>⑥ 其他常见证件</h3><span class="badge b-norm">常规</span></div>
+<table>
+  <tr><th class="q">用户可能会这样问</th><th>命中</th><th>价格</th></tr>
+  <tr><td class="q">户口簿翻译英文</td><td>户口簿 · 中译英（按姓名页计）</td><td class="price">¥29 起</td></tr>
+  <tr><td class="q">身份证 / 护照翻译</td><td>身份证 中译英 / 护照 英译中</td><td class="price">¥25 / ¥39</td></tr>
+  <tr><td class="q">营业执照 / 房产证翻译英文</td><td>营业执照 / 房产证 · 中译英</td><td class="price">¥59 / ¥129</td></tr>
+  <tr><td class="q">入籍证明翻译</td><td>入籍证明 · 英译中</td><td class="price">¥59</td></tr>
+  <tr><td class="q"><span class="tag">淡化</span> 驾驶证翻译 / 租车用</td><td>驾驶证 · 英译中（保留，不主推）</td><td class="price">¥59</td></tr>
+</table>
+
+<h2>五、待确认 / 缺口</h2>
+<div class="card">
+  <ul>
+    <li><strong>认证版本</strong>：海牙认证 / 三级认证的适用国家与受理机构差异，描述里只做了简要提示——是否需要让 AI 更主动地引导用户向受理单位确认？</li>
+    <li><strong>租车场景（驾驶证中译英）</strong>：目前只有"驾驶证英译中"。按策略淡化，不补"中译英"档；若以后想接，可走文件翻译普通类。请确认。</li>
+    <li><strong>说法补充</strong>：各位接待时还听过哪些高频说法 / 地区俗称（如"出生纸""绿卡翻译""I-20""WES 认证"），请补到对应表格。</li>
+    <li><strong>价格核对</strong>：本页价格取自小程序现行报价，如有调整请同步。</li>
+  </ul>
+</div>
+
+<h2>六、上线与测试</h2>
+<div class="card">
+  <p class="muted">技术侧已生成开发模式脚手架（能力描述 + 下单接口），单独维护在 AI 版本，不并入正式发布版本。
+  用微信开发者工具（Nightly）的 AI 调试面板，逐条输入上面"预测提问"，验证是否命中正确的证件 / 方向 / 认证。</p>
+</div>
+
+<footer>
+  广州市贯日翻译服务有限公司 · 微信AI 接入方案（内部评审用）· 内容可随评审持续更新
+</footer>
+
+</div>
+</body>
+</html>
