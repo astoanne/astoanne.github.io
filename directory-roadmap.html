@@ -11,12 +11,13 @@
     --line:#e5e8f0; --accent:#2f54eb; --accent-soft:#eef2ff;
     --p0:#d4380d; --p0-bg:#fff2e8; --p1:#d48806; --p1-bg:#fffbe6; --p2:#389e0d; --p2-bg:#f6ffed;
     --done:#531dab; --done-bg:#f9f0ff;
+    --tc:#1d39c4; --tc-bg:#f0f5ff; --ts:#c41d7f; --ts-bg:#fff0f6; --jp:#08979c; --jp-bg:#e6fffb;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
     line-height:1.65}
-  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 64px}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 20px 64px}
   header{margin-bottom:28px}
   h1{font-size:26px;margin:0 0 8px}
   .sub{color:var(--muted);font-size:14px}
@@ -29,6 +30,8 @@
   .b-p0{color:var(--p0);background:var(--p0-bg)} .b-p1{color:var(--p1);background:var(--p1-bg)}
   .b-p2{color:var(--p2);background:var(--p2-bg)} .b-done{color:var(--done);background:var(--done-bg)}
   .b-scale{color:var(--accent);background:var(--accent-soft)}
+  .d-tc{color:var(--tc);background:var(--tc-bg)} .d-ts{color:var(--ts);background:var(--ts-bg)}
+  .d-jp{color:var(--jp);background:var(--jp-bg)}
   .card p{margin:6px 0;font-size:14px}
   .kv{color:var(--muted)}
   .kv b{color:var(--ink);font-weight:600}
@@ -43,6 +46,7 @@
   .seq ol{margin:10px 0 0;padding-left:22px;font-size:14px}
   .seq li{margin:8px 0}
   .stars{color:#f59e0b;letter-spacing:1px}
+  .dom{display:inline-block;font-weight:600;font-size:12px;padding:1px 8px;border-radius:6px}
   footer{margin-top:48px;color:var(--muted);font-size:12px;text-align:center}
   @media(max-width:620px){
     .wrap{padding:20px 12px 48px}
@@ -57,98 +61,164 @@
 
 <header>
   <h1>黄页名录扩展路线图</h1>
-  <div class="sub">在已有五个名录之外，下一批值得做的方向 · 2026-06</div>
+  <div class="sub">在已有五个名录之外，下一批值得做的方向 · 含域名分工建议 · 2026-06</div>
 </header>
 
 <div class="model">
   <b>打法回顾：</b>每个名录 = 大量真实实体（机构/企业/学校）的独立页面 → 吃「实体名 + 相关服务」的长尾搜索
   → 页面内植入对应的翻译服务入口。公证处、机场、机械制造、中国大学名录都是这个模型。
   近年的业务重心已明显偏向<b>证件与个人文件翻译</b>（签证、留学、涉外事务），所以新名录优先选
-  「访客本来就要办涉外手续」的高意图场景。
+  「访客本来就要办涉外手续」的高意图场景。名录分散到三个域名上，也降低单域名的 SEO 风险。
 </div>
+
+<h2>域名分工</h2>
+<p class="h2note">三个域名各有定位，按「目标人群在哪里搜、从哪里访问」来分</p>
+<table>
+  <tr><th>域名</th><th>定位</th><th>适合放什么</th></tr>
+  <tr>
+    <td><span class="dom d-tc">translationchina</span></td>
+    <td>主品牌 · 国内服务器 · 百度+谷歌双收录 · 国内访问最快</td>
+    <td>面向<b>国内用户</b>的主力名录：政务网点、B2B 企业垂直、海外大学（中国学生查）。变现主阵地，高客单垂直优先放这里。</td>
+  </tr>
+  <tr>
+    <td><span class="dom d-ts">tongshengfanyi</span></td>
+    <td>同声翻译品牌 · 已承载相亲名录（188K 页）</td>
+    <td><b>口译/会议场景</b>（展会、会展场馆——与"同声翻译"品牌天然契合）＋与相亲名录联动的<b>涉外婚恋线</b>＋不宜放主域名的进攻型聚合站。</td>
+  </tr>
+  <tr>
+    <td><span class="dom d-jp">日本节点域名</span></td>
+    <td>海外服务器 · 境外访问快 · 谷歌为主 · 已承载中国大学名录（英文）</td>
+    <td>面向<b>境外用户</b>的英文名录：来华留学、外籍人士在华生活、海外华人办事。谷歌流量入口。</td>
+  </tr>
+</table>
 
 <h2>已覆盖</h2>
 <p class="h2note">现有五个名录，架构与生成器可直接复用</p>
 <table>
-  <tr><th>名录</th><th>规模</th><th>翻译角度</th></tr>
-  <tr><td>公证处 / 公证员</td><td>3,030 页</td><td>公证材料翻译</td></tr>
-  <tr><td>相亲交友</td><td>188,266 页</td><td>涉外婚恋文件</td></tr>
-  <tr><td>全球机场</td><td>49,452 页</td><td>旅行证件翻译</td></tr>
-  <tr><td>机械制造企业</td><td>25,000+ 页</td><td>说明书 / 技术文档翻译</td></tr>
-  <tr><td>中国大学（留学生版）</td><td>1,365 页</td><td>招生简章 / 入学材料</td></tr>
+  <tr><th>名录</th><th>规模</th><th>翻译角度</th><th>域名</th></tr>
+  <tr><td>公证处 / 公证员</td><td>3,030 页</td><td>公证材料翻译</td><td><span class="dom d-tc">translationchina</span></td></tr>
+  <tr><td>相亲交友</td><td>188,266 页</td><td>涉外婚恋文件</td><td><span class="dom d-ts">tongshengfanyi</span></td></tr>
+  <tr><td>全球机场</td><td>49,452 页</td><td>旅行证件翻译</td><td><span class="dom d-tc">translationchina</span></td></tr>
+  <tr><td>机械制造企业</td><td>25,000+ 页</td><td>说明书 / 技术文档翻译</td><td><span class="dom d-tc">translationchina</span></td></tr>
+  <tr><td>中国大学（留学生版）</td><td>1,365 页</td><td>招生简章 / 入学材料</td><td><span class="dom d-jp">日本节点</span></td></tr>
 </table>
 
 <h2>A 组 · 证件翻译直连</h2>
 <p class="h2note">访客本来就在办涉外手续，页面到下单只差一步 —— 与证件翻译线上商城直接共振</p>
 
 <div class="card">
-  <h3>驻华使领馆 &amp; 签证中心名录 <span class="badge b-p0">P0 强烈推荐</span><span class="badge b-scale">约 600–800 页</span></h3>
+  <h3>驻华使领馆 &amp; 签证中心名录 <span class="badge b-p0">P0 强烈推荐</span><span class="badge b-scale">约 600–800 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">搜索词：<b>「XX国驻华大使馆」「XX国签证中心 地址」「XX国签证 材料 翻译」</b></p>
-  <p class="kv">转化：签证申请材料翻译（户口本、存款证明、在职证明、无犯罪……）。规模最小、意图最强、最快上线。</p>
-  <p class="kv">数据：各国使领馆及签证受理中心的公开信息。</p>
+  <p class="kv">转化：签证申请材料翻译（户口本、存款证明、在职证明、无犯罪……）。规模最小、意图最强、最快上线。国内用户查，放主域名。</p>
 </div>
 
 <div class="card">
-  <h3>海外大学名录 <span class="badge b-p0">P0 强烈推荐</span><span class="badge b-scale">约 20,000+ 页</span></h3>
+  <h3>中国驻外使领馆名录 <span class="badge b-p0">P0 强烈推荐</span><span class="badge b-scale">约 280 页</span><span class="badge d-jp">日本节点</span></h3>
+  <p class="kv">搜索词：<b>「中国驻XX大使馆 认证」「领事认证 / 海牙认证 翻译」「Chinese embassy XX」</b></p>
+  <p class="kv">转化：海外华人回国办事的文件认证翻译＋外国人来华签证材料翻译。访客都在境外，放日本节点访问最快、谷歌收录顺。与「驻华使领馆」互为镜像，一套模板出两个名录。</p>
+</div>
+
+<div class="card">
+  <h3>海外大学名录 <span class="badge b-p0">P0 强烈推荐</span><span class="badge b-scale">约 20,000+ 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">搜索词：<b>「XX大学 成绩单翻译」「XX大学 学位认证」「留服认证 翻译」</b></p>
-  <p class="kv">转化：留学申请材料、归国学历学位认证翻译。与「中国大学名录」互为镜像：一个服务来华，一个服务出海。留学相关是近年最稳定的单量来源之一。</p>
-  <p class="kv">数据：国际高校公开名录（如 WHED 类开放数据）＋教育部涉外监管网认可院校名单。</p>
+  <p class="kv">转化：留学申请材料、归国学历学位认证翻译。查的人是国内学生和家长（百度为主），放主域名。与日本节点的「中国大学名录」互为镜像：一个服务出海，一个服务来华。</p>
 </div>
 
 <div class="card">
-  <h3>出入境管理局 / 办证大厅名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 3,000 页</span></h3>
+  <h3>出入境管理局 / 办证大厅名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 3,000 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">搜索词：<b>「XX市出入境管理局 电话/地址/上班时间」</b>（本地高频刚需词）</p>
   <p class="kv">转化：护照签证事务伴生的证明文件翻译。政务查询流量大且稳定。</p>
-  <p class="kv">数据：各地公安出入境部门公开的办事网点信息。</p>
 </div>
 
 <div class="card">
-  <h3>车管所名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 3,000 页</span></h3>
+  <h3>车管所名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 3,000 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">搜索词：<b>「XX市车管所」「国外驾照 换 中国驾照」「驾照翻译 认证」</b></p>
-  <p class="kv">转化：境外驾照换证翻译——证件翻译里的经典高频品类，全年稳定。</p>
-  <p class="kv">数据：各地交管部门公开网点信息。</p>
+  <p class="kv">转化：境外驾照换证翻译——证件翻译里的经典高频品类，全年稳定。可配一个英文版放日本节点（外籍人士在华换驾照）。</p>
 </div>
 
 <div class="card">
-  <h3>涉外婚姻登记处名录 <span class="badge b-p2">P2</span><span class="badge b-scale">约 3,000 页</span></h3>
+  <h3>出国体检 · 国际旅行卫生保健中心名录 <span class="badge b-p1">P1 小而快</span><span class="badge b-scale">约 120–300 页</span><span class="badge d-tc">translationchina</span></h3>
+  <p class="kv">搜索词：<b>「XX市 出国体检 在哪」「国际旅行卫生保健中心 预约」「体检报告 翻译」</b></p>
+  <p class="kv">转化：签证/移民/留学体检报告与疫苗接种证明（小黄本）翻译。页面极少、一周能上线，人群 100% 是要出国的人。</p>
+</div>
+
+<div class="card">
+  <h3>涉外婚姻登记处名录 <span class="badge b-p2">P2</span><span class="badge b-scale">约 3,000 页</span><span class="badge d-ts">tongshengfanyi</span></h3>
   <p class="kv">搜索词：<b>「XX市婚姻登记处」「涉外婚姻 登记 材料」「单身证明 翻译」</b></p>
-  <p class="kv">转化：涉外婚姻材料翻译。与相亲名录天然内链联动，形成「找对象 → 涉外登记」闭环。</p>
-  <p class="kv">数据：民政部门公开的登记机关列表。</p>
+  <p class="kv">转化：涉外婚姻材料翻译。相亲名录就在 tongshengfanyi 上，放同域名内链联动，形成「找对象 → 涉外登记」闭环。</p>
+</div>
+
+<div class="card">
+  <h3>雅思 / 托福等考点名录 <span class="badge b-p2">P2</span><span class="badge b-scale">约 500 页</span><span class="badge d-tc">translationchina</span></h3>
+  <p class="kv">搜索词：<b>「XX市雅思考点」「托福考位」</b> —— 留学人群的必经查询。</p>
+  <p class="kv">转化：留学申请材料翻译的前置入口，与海外大学名录内链互导。</p>
 </div>
 
 <h2>B 组 · B2B 垂直</h2>
 <p class="h2note">企业文档翻译，客单高、可复购 —— 延续机械制造名录的打法</p>
 
 <div class="card">
-  <h3>律师事务所名录 <span class="badge b-p0">P0 强烈推荐</span><span class="badge b-scale">约 39,000 页</span></h3>
+  <h3>律师事务所名录 <span class="badge b-p0">P0 强烈推荐</span><span class="badge b-scale">约 39,000 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">搜索词：<b>「XX市律师事务所」「法律文件翻译」「翻译 盖章 海牙认证」</b></p>
   <p class="kv">转化：法律文书翻译＋盖章＋公证认证。律所是近年持续复购的机构客户类型，案例最硬；页面池大、长尾好铺。</p>
-  <p class="kv">数据：司法行政机关的律所公示信息（公开）。</p>
 </div>
 
 <div class="card">
-  <h3>医院名录（三甲优先） <span class="badge b-p1">P1</span><span class="badge b-scale">三甲约 1,700，全量 30,000+ 页</span></h3>
+  <h3>知识产权 / 专利代理机构名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 5,000 页</span><span class="badge d-tc">translationchina</span></h3>
+  <p class="kv">搜索词：<b>「XX市专利代理」「专利翻译」「PCT 申请 翻译」</b></p>
+  <p class="kv">转化：专利文献翻译——翻译行业里客单价最高的品类之一，且必须人工精译，AI 替代难。与律所名录同一套模板。</p>
+</div>
+
+<div class="card">
+  <h3>会计师事务所名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 10,000 页</span><span class="badge d-tc">translationchina</span></h3>
+  <p class="kv">搜索词：<b>「XX市会计师事务所」「审计报告翻译」「财报 翻译」</b></p>
+  <p class="kv">转化：审计报告/财报翻译——近期有真实成交的品类（企业出海、跨境合规都要）。与律所、专利代理组成「专业服务三件套」。</p>
+</div>
+
+<div class="card">
+  <h3>留学中介机构名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 6,000–10,000 页</span><span class="badge d-tc">translationchina</span></h3>
+  <p class="kv">搜索词：<b>「XX留学中介 怎么样」「XX市留学机构」</b>（决策期高频搜索）</p>
+  <p class="kv">转化：双重价值——学生看到我们（材料翻译直客），中介看到我们（成为渠道，参考留学机构近年贡献的稳定单量）。</p>
+</div>
+
+<div class="card">
+  <h3>医院名录（三甲优先） <span class="badge b-p1">P1</span><span class="badge b-scale">三甲约 1,700，全量 30,000+ 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">搜索词：<b>「XX医院 病历」「病历翻译 出国就医」「体检报告 翻译」</b></p>
-  <p class="kv">转化：出国就医、保险理赔、移民体检的病历/报告翻译，客单价高。先做三甲小批量验证。</p>
-  <p class="kv">数据：卫健部门公开的医院等级名单。</p>
+  <p class="kv">转化：出国就医、保险理赔、移民体检的病历/报告翻译，客单价高。先做三甲小批量验证；可加英文版放日本节点吃「medical tourism China」流量。</p>
 </div>
 
 <div class="card">
-  <h3>生物医药 &amp; 医疗器械企业名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 8,000–30,000 页</span></h3>
+  <h3>生物医药 &amp; 医疗器械企业名录 <span class="badge b-p1">P1</span><span class="badge b-scale">约 8,000–30,000 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">搜索词：<b>「XX药业」「药品注册资料翻译」「器械说明书 IFU 翻译」</b></p>
-  <p class="kv">转化：注册申报、临床、说明书翻译——强监管行业，翻译预算高。是机械制造名录之后最顺的 B2B 延伸之一。</p>
-  <p class="kv">数据：药监部门公开的生产企业许可信息。</p>
+  <p class="kv">转化：注册申报、临床、说明书翻译——强监管行业，翻译预算高。机械制造名录之后最顺的 B2B 延伸之一。</p>
 </div>
 
 <div class="card">
-  <h3>展会名录 <span class="badge b-p2">P2</span><span class="badge b-scale">每年 3,000+ 场</span></h3>
-  <p class="kv">搜索词：<b>「XX展会 时间 地点」「展会翻译 陪同口译」</b></p>
-  <p class="kv">转化：展会口译、陪同翻译、资料本地化。注意：展会有时效性，页面需要按届次更新，维护成本比静态实体高。</p>
-  <p class="kv">数据：会展行业公开排期。</p>
+  <h3>展会 &amp; 会展场馆名录 <span class="badge b-p2">P2</span><span class="badge b-scale">每年 3,000+ 场 + 场馆约 500 页</span><span class="badge d-ts">tongshengfanyi</span></h3>
+  <p class="kv">搜索词：<b>「XX展会 时间 地点」「展会翻译 陪同口译」「XX会展中心」</b></p>
+  <p class="kv">转化：展会口译、同传、陪同翻译——和「同声翻译」品牌天然契合，放 tongshengfanyi 最合理。场馆页是静态的，展会页有时效性、需按届次更新。</p>
 </div>
 
 <div class="card">
-  <h3>制造业兄弟目录：电子 / 化工新材料 <span class="badge b-done">既定计划</span><span class="badge b-scale">各 20,000+ 页</span></h3>
+  <h3>全球港口名录 <span class="badge b-p2">P2</span><span class="badge b-scale">约 4,000 页</span><span class="badge d-tc">translationchina</span></h3>
+  <p class="kv">搜索词：<b>「XX港 代码」「提单翻译」「海运单证 翻译」</b></p>
+  <p class="kv">转化：外贸/货代人群的海运单证翻译。机场名录的姊妹篇，开放数据现成，同一套流水线换数据源就能跑。</p>
+</div>
+
+<div class="card">
+  <h3>游戏公司名录 <span class="badge b-p2">P2</span><span class="badge b-scale">约 2,000–5,000 页</span><span class="badge d-tc">translationchina</span></h3>
+  <p class="kv">搜索词：<b>「XX游戏公司」「游戏本地化 翻译」</b></p>
+  <p class="kv">转化：游戏出海本地化——增长快的翻译品类，客单高、复购强。竞争者少，值得占位。</p>
+</div>
+
+<div class="card">
+  <h3>国际学校名录 <span class="badge b-p2">P2</span><span class="badge b-scale">约 1,000–1,300 页</span><span class="badge d-jp">日本节点</span></h3>
+  <p class="kv">搜索词：<b>「international school Shanghai/Beijing」「XX国际学校 学费」</b></p>
+  <p class="kv">转化：外籍家庭在华择校（英文查询为主）——成绩单、推荐信、公证材料翻译。放日本节点做英文版，可配中文版放主域名。</p>
+</div>
+
+<div class="card">
+  <h3>制造业兄弟目录：电子 / 化工新材料 <span class="badge b-done">既定计划</span><span class="badge b-scale">各 20,000+ 页</span><span class="badge d-tc">translationchina</span></h3>
   <p class="kv">机械制造名录的既定扩展，同一套采集与生成流水线换类目直接跑。技术文档翻译角度不变。</p>
 </div>
 
@@ -156,35 +226,46 @@
 <p class="h2note">直接吃商业词，收益大、争议也大</p>
 
 <div class="card">
-  <h3>全国翻译公司名录 <span class="badge b-p2">P2 需讨论</span><span class="badge b-scale">约 10,000+ 页</span></h3>
+  <h3>全国翻译公司名录 <span class="badge b-p2">P2 需讨论</span><span class="badge b-scale">约 10,000+ 页</span><span class="badge d-ts">tongshengfanyi</span></h3>
   <p class="kv">搜索词：<b>「XX市翻译公司」「XX市 翻译 盖章」</b> —— 直接承接行业核心商业词。</p>
-  <p class="kv">逻辑：聚合同行做成「查翻译公司」的入口站，我方服务作为置顶推荐。经典聚合玩法，但等于给同行导流，做不做、怎么排序需要先想清楚。</p>
+  <p class="kv">逻辑：聚合同行做成「查翻译公司」的入口站，我方服务作为置顶推荐。经典聚合玩法，但等于给同行导流。<b>若做，放 tongshengfanyi 而不是主域名</b>——既隔离风险，也避免主品牌「既当裁判又当运动员」的观感。</p>
 </div>
 
 <h2>优先级总览</h2>
 <table>
-  <tr><th>名录</th><th>规模</th><th>搜索意图</th><th>数据难度</th><th>业务契合</th><th>优先级</th></tr>
-  <tr><td>使领馆 &amp; 签证中心</td><td>~800</td><td><span class="stars">★★★★★</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td>P0</td></tr>
-  <tr><td>海外大学</td><td>~20,000</td><td><span class="stars">★★★★★</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td>P0</td></tr>
-  <tr><td>律师事务所</td><td>~39,000</td><td><span class="stars">★★★★☆</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td>P0</td></tr>
-  <tr><td>出入境办证大厅</td><td>~3,000</td><td><span class="stars">★★★★☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td>P1</td></tr>
-  <tr><td>车管所</td><td>~3,000</td><td><span class="stars">★★★★☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td>P1</td></tr>
-  <tr><td>医院（三甲起步）</td><td>1,700→30,000</td><td><span class="stars">★★★☆☆</span></td><td>低</td><td><span class="stars">★★★★☆</span></td><td>P1</td></tr>
-  <tr><td>生物医药企业</td><td>8,000+</td><td><span class="stars">★★★☆☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td>P1</td></tr>
-  <tr><td>婚姻登记处</td><td>~3,000</td><td><span class="stars">★★★☆☆</span></td><td>中</td><td><span class="stars">★★★☆☆</span></td><td>P2</td></tr>
-  <tr><td>展会</td><td>3,000+/年</td><td><span class="stars">★★★☆☆</span></td><td>中（需持续更新）</td><td><span class="stars">★★★☆☆</span></td><td>P2</td></tr>
-  <tr><td>翻译公司聚合</td><td>10,000+</td><td><span class="stars">★★★★★</span></td><td>低</td><td>需讨论</td><td>P2</td></tr>
+  <tr><th>名录</th><th>规模</th><th>搜索意图</th><th>数据难度</th><th>业务契合</th><th>域名</th><th>优先级</th></tr>
+  <tr><td>驻华使领馆 &amp; 签证中心</td><td>~800</td><td><span class="stars">★★★★★</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td><span class="dom d-tc">TC</span></td><td>P0</td></tr>
+  <tr><td>中国驻外使领馆</td><td>~280</td><td><span class="stars">★★★★★</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td><span class="dom d-jp">JP</span></td><td>P0</td></tr>
+  <tr><td>海外大学</td><td>~20,000</td><td><span class="stars">★★★★★</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td><span class="dom d-tc">TC</span></td><td>P0</td></tr>
+  <tr><td>律师事务所</td><td>~39,000</td><td><span class="stars">★★★★☆</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td><span class="dom d-tc">TC</span></td><td>P0</td></tr>
+  <tr><td>出国体检保健中心</td><td>~300</td><td><span class="stars">★★★★★</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>出入境办证大厅</td><td>~3,000</td><td><span class="stars">★★★★☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>车管所</td><td>~3,000</td><td><span class="stars">★★★★☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>专利代理机构</td><td>~5,000</td><td><span class="stars">★★★★☆</span></td><td>低</td><td><span class="stars">★★★★★</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>会计师事务所</td><td>~10,000</td><td><span class="stars">★★★★☆</span></td><td>低</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>留学中介机构</td><td>~8,000</td><td><span class="stars">★★★★☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>医院（三甲起步）</td><td>1,700→30,000</td><td><span class="stars">★★★☆☆</span></td><td>低</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>生物医药企业</td><td>8,000+</td><td><span class="stars">★★★☆☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P1</td></tr>
+  <tr><td>婚姻登记处</td><td>~3,000</td><td><span class="stars">★★★☆☆</span></td><td>中</td><td><span class="stars">★★★☆☆</span></td><td><span class="dom d-ts">TS</span></td><td>P2</td></tr>
+  <tr><td>展会 &amp; 会展场馆</td><td>3,000+/年</td><td><span class="stars">★★★☆☆</span></td><td>中（需持续更新）</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-ts">TS</span></td><td>P2</td></tr>
+  <tr><td>全球港口</td><td>~4,000</td><td><span class="stars">★★★☆☆</span></td><td>低</td><td><span class="stars">★★★☆☆</span></td><td><span class="dom d-tc">TC</span></td><td>P2</td></tr>
+  <tr><td>游戏公司</td><td>~3,000</td><td><span class="stars">★★★☆☆</span></td><td>中</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P2</td></tr>
+  <tr><td>国际学校</td><td>~1,300</td><td><span class="stars">★★★★☆</span></td><td>低</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-jp">JP</span></td><td>P2</td></tr>
+  <tr><td>雅思/托福考点</td><td>~500</td><td><span class="stars">★★★☆☆</span></td><td>低</td><td><span class="stars">★★★★☆</span></td><td><span class="dom d-tc">TC</span></td><td>P2</td></tr>
+  <tr><td>翻译公司聚合</td><td>10,000+</td><td><span class="stars">★★★★★</span></td><td>低</td><td>需讨论</td><td><span class="dom d-ts">TS</span></td><td>P2</td></tr>
 </table>
+<p class="h2note" style="padding-left:0;margin-top:8px">TC = translationchina（主域名）· TS = tongshengfanyi · JP = 日本节点域名（海外访问快，谷歌为主）</p>
 
 <h2>建议落地顺序</h2>
 <div class="seq">
   <ol>
-    <li><b>使领馆 &amp; 签证中心</b> —— 几百页，一周内可上线，验证「政务/涉外场景」新打法。</li>
-    <li><b>海外大学</b> —— 与中国大学名录共用一套页面骨架，留学证件翻译直连，池子两万起。</li>
-    <li><b>律师事务所</b> —— B2B 主力，接住法律翻译与盖章认证的长尾。</li>
-    <li><b>出入境 / 车管所</b> —— 两个政务网点名录同一套模板，一次开发两个上线。</li>
-    <li><b>电子 / 化工制造</b> —— 按既定计划跑机械流水线的兄弟类目。</li>
-    <li>医院、生物医药、婚姻登记、展会按资源逐步排入；翻译公司聚合单独讨论后再定。</li>
+    <li><b>使领馆双镜像</b> —— 驻华使领馆&amp;签证中心（TC）＋中国驻外使领馆（JP），一套模板出两个名录，合计约一千页，两周内可全部上线。</li>
+    <li><b>出国体检保健中心</b>（TC）—— 三百页顺手做掉，意图极强的小池子。</li>
+    <li><b>海外大学</b>（TC）—— 与日本节点的中国大学名录共用页面骨架，留学证件翻译直连，池子两万起。</li>
+    <li><b>律师事务所</b>（TC）—— B2B 主力；随后用同一模板扩<b>专利代理、会计师事务所</b>，凑齐「专业服务三件套」。</li>
+    <li><b>出入境 / 车管所</b>（TC）—— 两个政务网点名录同一套模板，一次开发两个上线。</li>
+    <li><b>电子 / 化工制造</b>（TC）—— 按既定计划跑机械流水线的兄弟类目。</li>
+    <li>留学中介、医院、生物医药、国际学校（JP）、展会（TS）、港口、游戏公司按资源逐步排入；翻译公司聚合（TS）单独讨论后再定。</li>
   </ol>
 </div>
 
