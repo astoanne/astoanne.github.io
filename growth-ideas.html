@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>翻译业务获客扩展思路 · 内部讨论稿</title>
+<style>
+  :root {
+    --ink: #1f2937; --muted: #6b7280; --line: #e5e7eb;
+    --accent: #b91c1c; --accent-weak: #fef2f2;
+    --blue: #1d4ed8; --blue-weak: #eff6ff;
+    --green: #166534; --green-weak: #f0fdf4;
+    --amber: #92400e; --amber-weak: #fffbeb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); background: #f8fafc;
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+    line-height: 1.75; font-size: 15.5px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 40px 22px 80px; }
+  header.doc { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 26px; }
+  .kicker { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: .12em; }
+  h1 { font-size: 26px; margin: 6px 0 4px; }
+  .meta { color: var(--muted); font-size: 13px; }
+  h2 { font-size: 20px; margin: 40px 0 10px; padding-left: 10px; border-left: 4px solid var(--accent); }
+  h3 { font-size: 16.5px; margin: 24px 0 6px; }
+  p { margin: 8px 0; }
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; margin: 14px 0;
+  }
+  .idea { border-left: 4px solid var(--blue); }
+  .idea h3 { margin-top: 0; }
+  .tags { margin: 4px 0 8px; }
+  .tag {
+    display: inline-block; font-size: 12px; font-weight: 600; border-radius: 999px;
+    padding: 1px 10px; margin-right: 6px;
+  }
+  .t-intent-high { background: var(--green-weak); color: var(--green); }
+  .t-intent-mid  { background: var(--blue-weak); color: var(--blue); }
+  .t-cost-low  { background: var(--green-weak); color: var(--green); }
+  .t-cost-mid  { background: var(--amber-weak); color: var(--amber); }
+  .t-cost-high { background: var(--accent-weak); color: var(--accent); }
+  .hook { background: var(--accent-weak); border-radius: 8px; padding: 8px 12px; font-size: 14px; margin-top: 8px; }
+  .hook b { color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; background: #fff; font-size: 14px; margin: 12px 0; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f1f5f9; }
+  .num { text-align: center; white-space: nowrap; }
+  ul { margin: 6px 0; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .q { background: #fff; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 12px 16px; margin: 10px 0; }
+  .q b { color: var(--blue); }
+  .small { font-size: 13px; color: var(--muted); }
+  footer { margin-top: 50px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 14px; }
+  @media print { body { background: #fff; } .card, table { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <div class="kicker">内部讨论稿 · 请勿外传</div>
+  <h1>翻译业务获客扩展思路</h1>
+  <div class="meta">基于现有目录矩阵的发散 · 2026-07-05 · 供两人讨论圈选</div>
+</header>
+
+<h2>〇、现在手里有什么(讨论的地基)</h2>
+<div class="card">
+  <ul>
+    <li><b>五个引流目录已上线</b>:机场(4.9万页)、公证处(3千页)、婚介(18.8万页)、中国机械制造商(2.5万页)、中国大学留学(1365页)——每页都带「联系我们」广告,点击/到达可按目录统计。</li>
+    <li><b>数据基础已就绪</b>:每个广告带来源标记;流量分析后台能看到「哪个目录带来几次咨询点击」;四个站的日志与 GSC 都进了同一个看板。</li>
+    <li><b>多语言在铺</b>:公证/机械/机场已有简繁中文静态页,更多语言的流水线在跑;大学站 15 语言翻译预热中。</li>
+    <li><b>AI 检索(GEO)已布局</b>:llms.txt、答疑中心、FAQ,已观察到 AI 爬虫抓取。</li>
+    <li><b>客户结构参考</b>:历史客户约七成是个人散客(证件类小单、高频),企业客户数千家(技术文档类大单)。</li>
+  </ul>
+  <p class="small">核心方法论已被验证:「高意图人群会搜的名录/工具页」→ 免费提供信息 → 顺手解决他们必然伴随的翻译需求。以下都是这个杠杆的延伸。</p>
+</div>
+
+<h2>一、路线 A:复制目录打法,换更高意图的垂直</h2>
+<p class="small">同一套流水线(采集→静态页→SEO→广告位→统计),边际成本低。按「翻译需求是否刚性」排序。</p>
+
+<div class="card idea">
+  <h3>A1. 各国驻华使领馆 + 签证中心名录</h3>
+  <div class="tags"><span class="tag t-intent-high">意图:极高</span><span class="tag t-cost-low">成本:低(数据公开、量小)</span></div>
+  <p>搜使领馆/签证中心的人,九成是要办签证、认证、公证双认证——材料翻译是<b>硬性前置步骤</b>。页面内容:地址、领区、办理事项、材料清单。</p>
+  <div class="hook"><b>翻译钩子:</b>签证材料清单里直接标注「哪些材料需要认证翻译」+ 一键咨询。这是所有想法里意图最强的一个。</div>
+</div>
+
+<div class="card idea">
+  <h3>A2. 海外大学名录(chinaedu 的反向版)</h3>
+  <div class="tags"><span class="tag t-intent-high">意图:高</span><span class="tag t-cost-mid">成本:中(数据好拿,量大)</span></div>
+  <p>现在的大学站是「外国人来华留学」;反向做「中国学生申请国外大学」:美/英/澳/加/日各校中文页(排名、专业、申请材料、语言要求)。中国学生出国的市场体量远大于来华。</p>
+  <div class="hook"><b>翻译钩子:</b>成绩单、学位证、推荐信、存款证明的认证翻译——和现有证书翻译在线下单直接打通。</div>
+</div>
+
+<div class="card idea">
+  <h3>A3. 医院国际部 / 海外就医名录</h3>
+  <div class="tags"><span class="tag t-intent-high">意图:高</span><span class="tag t-cost-mid">成本:中</span></div>
+  <p>两个方向:国内三甲医院国际部(外国人在华就医);海外知名医院中文页(国人出国就医)。病历、检验报告、诊断书翻译单价高、时效要求强。</p>
+  <div class="hook"><b>翻译钩子:</b>「出国就医病历翻译需要哪些材料」清单页 + 加急咨询入口。</div>
+</div>
+
+<div class="card idea">
+  <h3>A4. 制造业垂直扩列(电子、化工、医疗器械、汽配…)</h3>
+  <div class="tags"><span class="tag t-intent-mid">意图:中</span><span class="tag t-cost-low">成本:低(机械版流水线直接复用)</span></div>
+  <p>机械厂名录的兄弟版本,按历史企业客户最集中的行业挑 2-3 个先做。B2B 技术文档单值高。</p>
+  <div class="hook"><b>翻译钩子:</b>说明书/规格书/认证文件多语言翻译,广告文案按行业定制(已有模板)。</div>
+</div>
+
+<div class="card idea">
+  <h3>A5. 展会日历 + 参展商指南(广交会等)</h3>
+  <div class="tags"><span class="tag t-intent-mid">意图:中高(有季节波峰)</span><span class="tag t-cost-low">成本:低</span></div>
+  <p>按展会做页面:日程、场馆、参展攻略。搜展会的外商需要口译陪同,参展的中国厂商需要资料翻译——双向都是客户。</p>
+  <div class="hook"><b>翻译钩子:</b>「展会口译/陪同预约」入口,同传设备租赁也能带上(同声翻译站的老业务)。</div>
+</div>
+
+<div class="card idea">
+  <h3>A6. 涉外婚姻登记指南(婚介目录的延伸)</h3>
+  <div class="tags"><span class="tag t-intent-high">意图:高</span><span class="tag t-cost-low">成本:低(几十页就够)</span></div>
+  <p>18.8 万页婚介目录已经在手,但「查婚介」离成交远;「办涉外结婚登记」的人已经到了要翻译单身证明、出生证的那一步。按国家做「和 X 国人结婚需要什么材料」指南页,从婚介目录内链导过去。</p>
+  <div class="hook"><b>翻译钩子:</b>单身证明/出生证/无犯罪证明认证翻译,直连在线下单。</div>
+</div>
+
+<h2>二、路线 B:高意图工具页(比目录更接近成交)</h2>
+
+<div class="card idea">
+  <h3>B1. 证件翻译样本库</h3>
+  <div class="tags"><span class="tag t-intent-high">意图:极高</span><span class="tag t-cost-low">成本:低</span></div>
+  <p>每种证件一页:出生证、结婚证、成绩单、驾照、户口本…「XX 翻译成英文什么样」配脱敏样图 + 用途说明(签证/入学/公证)+ 价格区间 + 下单按钮。搜「出生证明翻译模板」的人今天就要下单。</p>
+</div>
+
+<div class="card idea">
+  <h3>B2. 各国签证材料清单页(一国一页)</h3>
+  <div class="tags"><span class="tag t-intent-high">意图:极高</span><span class="tag t-cost-low">成本:低</span></div>
+  <p>「美国 B1/B2 签证材料清单」「德国留学签证材料」…长尾词量大、竞争小,清单里天然嵌着哪些材料要翻译。和 A1 使领馆名录互为内链。</p>
+</div>
+
+<div class="card idea">
+  <h3>B3. 在线报价计算器</h3>
+  <div class="tags"><span class="tag t-intent-mid">意图:高</span><span class="tag t-cost-mid">成本:中(要定价规则)</span></div>
+  <p>选证件类型/语种/加急 → 出价格区间 → 直接下单或咨询。把「问价」这个最大的咨询摩擦自动化,也能过滤比价客户。</p>
+</div>
+
+<div class="card idea">
+  <h3>B4. 答疑中心扩容 + 多平台分发</h3>
+  <div class="tags"><span class="tag t-intent-mid">意图:中高</span><span class="tag t-cost-low">成本:低(内容流水线已就绪)</span></div>
+  <p>答疑中心已上线;把高频问题(「翻译件需要盖章吗」「公证和认证的区别」)持续扩充,并用现成的内容流水线一键生成知乎/Quora/Reddit/小红书版本分发,回链到站内。AI 搜索(ChatGPT 等)引用这些页面的趋势已经出现,值得持续喂料。</p>
+</div>
+
+<h2>三、路线 C:把现有流量的转化率提上来(不用等新流量)</h2>
+<div class="card">
+  <ul>
+    <li><b>C1. 首屏 CTA 推广到所有目录</b>——大学站已验证的「首屏一句话 + 咨询链接」样式,复制到机场/公证/机械/婚介 26 万页(重生成即可)。</li>
+    <li><b>C2. 即时通讯按钮分受众</b>——面向外国人的页面挂 WhatsApp,面向国内的挂微信/企业微信,降低「填表单」的门槛。</li>
+    <li><b>C3. 广告直连在线下单页</b>——证件类需求(公证/婚介/大学站的受众)直接链到证书翻译在线下单,跳过「联系→报价」两步。</li>
+    <li><b>C4. 用数据说话</b>——广告点击统计已经通了,跑 2-4 周,看每个目录的点击率和到达率,把预算和改版精力集中到转化最高的 1-2 个目录。</li>
+  </ul>
+</div>
+
+<h2>四、路线 D:站外渠道(花小钱或借力)</h2>
+<div class="card">
+  <ul>
+    <li><b>D1. 搜索广告小预算试点</b>——广告埋点(Google/Bing 转化追踪)已经埋好未启用;对「certified translation for visa」这类超高意图词投小预算,和自然流量对照。</li>
+    <li><b>D2. 地图与本地目录</b>——Google 商家档案、百度地图、大众点评的「翻译公司/公证翻译」条目,吃本地搜索。</li>
+    <li><b>D3. 异业合作返佣</b>——留学中介、移民律师、涉外公证处、婚介机构:他们的客户 100% 需要翻译。给固定返点,签 3-5 家试水。</li>
+    <li><b>D4. 老客户唤醒</b>——数千家历史企业客户,按行业分批发「新增多语言技术文档服务」邮件;个人散客发「证件翻译在线下单」上线通知。</li>
+  </ul>
+</div>
+
+<h2>五、优先级建议(个人观点,供讨论)</h2>
+<table>
+  <tr><th class="num">#</th><th>先做什么</th><th>为什么</th><th>投入量级</th></tr>
+  <tr><td class="num">1</td><td><b>B1 证件样本库 + B2 签证材料清单</b></td><td>离下单最近、成本最低、和现有在线下单直接打通</td><td>几十页内容,1-2 周</td></tr>
+  <tr><td class="num">2</td><td><b>C1-C3 转化提效包</b></td><td>26 万页存量流量立即受益,不用等新内容被收录</td><td>生成器改版+重生成,几天</td></tr>
+  <tr><td class="num">3</td><td><b>A1 使领馆/签证中心名录</b></td><td>全场意图最强的垂直,数据量小好维护,和 B2 互链成体系</td><td>数百页,1-2 周</td></tr>
+  <tr><td class="num">4</td><td><b>A2 海外大学名录</b></td><td>市场大、数据公开、复用 chinaedu 全套模板</td><td>数千页,2-4 周</td></tr>
+  <tr><td class="num">5</td><td><b>D1 搜索广告试点</b></td><td>埋点已就绪,小预算即可验证付费流量 ROI</td><td>预算另议</td></tr>
+</table>
+<p class="small">A3/A4/A5/A6、D2-D4 作为第二梯队,视第一梯队数据再排。</p>
+
+<h2>六、需要当面拍板的问题</h2>
+<div class="q"><b>Q1.</b> 五条优先级是否认可?先圈 2-3 个启动,还是全部第一梯队一起上?</div>
+<div class="q"><b>Q2.</b> 新垂直放哪个域名?继续用现有站的子目录,还是像大学站一样启用独立域名?</div>
+<div class="q"><b>Q3.</b> 报价计算器(B3)需要定价规则表——证件类按份数/语种的价格区间能否给一版?</div>
+<div class="q"><b>Q4.</b> 搜索广告(D1)是否批一个月度小预算试点(金额面议)?</div>
+<div class="q"><b>Q5.</b> 返佣合作(D3)的返点比例和合规边界,需要定个框架。</div>
+<div class="q"><b>Q6.</b> WhatsApp/微信咨询入口(C2)由谁值守?响应时效定多少?</div>
+
+<footer>
+  内部讨论稿 · 2026-07-05 生成 · 页面设置了 noindex,不会被搜索引擎收录 · 数据口径以流量分析后台为准
+</footer>
+
+</div>
+</body>
+</html>
