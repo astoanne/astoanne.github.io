@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEO 增长思路 — 让 AI 把客户带到贯日翻译</title>
+<style>
+  :root{
+    --ink:#1e293b; --muted:#64748b; --line:#e2e8f0; --bg:#f8fafc;
+    --blue:#2563eb; --green:#059669; --amber:#d97706; --red:#dc2626; --violet:#7c3aed;
+  }
+  *{box-sizing:border-box}
+  body{font-family:system-ui,"Microsoft YaHei","PingFang SC",sans-serif;margin:0;background:var(--bg);color:var(--ink);line-height:1.75}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 60px}
+  header h1{font-size:26px;margin:0 0 6px}
+  header p.sub{color:var(--muted);margin:0 0 4px;font-size:14.5px}
+  .statbar{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 8px}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;flex:1;min-width:150px;text-align:center}
+  .stat b{display:block;font-size:20px;color:var(--blue)}
+  .stat span{font-size:12.5px;color:var(--muted)}
+  h2{font-size:19px;margin:38px 0 4px;padding-left:10px;border-left:4px solid var(--blue)}
+  h2 .tag{font-size:12px;color:var(--muted);font-weight:normal;margin-left:8px}
+  p.lead{color:var(--muted);font-size:14px;margin:4px 0 14px;padding-left:14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}
+  .card h3{font-size:15.5px;margin:0 0 4px}
+  .card p{margin:4px 0;font-size:14px}
+  .card .how{font-size:13px;color:var(--muted)}
+  .badges{margin-top:6px}
+  .b{display:inline-block;font-size:11.5px;border-radius:20px;padding:1px 10px;margin-right:6px;border:1px solid}
+  .cost-l{color:var(--green);border-color:#a7f3d0;background:#ecfdf5}
+  .cost-m{color:var(--amber);border-color:#fde68a;background:#fffbeb}
+  .cost-h{color:var(--red);border-color:#fecaca;background:#fef2f2}
+  .fast{color:var(--blue);border-color:#bfdbfe;background:#eff6ff}
+  .slow{color:var(--violet);border-color:#ddd6fe;background:#f5f3ff}
+  table{border-collapse:collapse;width:100%;background:#fff;border-radius:10px;overflow:hidden;font-size:13.5px;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:#f1f5f9;font-size:13px}
+  .tier{border-radius:12px;padding:16px 18px;margin:12px 0}
+  .t1{background:#ecfdf5;border:1px solid #a7f3d0}
+  .t2{background:#eff6ff;border:1px solid #bfdbfe}
+  .t3{background:#fffbeb;border:1px solid #fde68a}
+  .tier h3{margin:0 0 8px;font-size:15.5px}
+  .tier ul{margin:0;padding-left:20px;font-size:14px}
+  .tier li{margin:4px 0}
+  .loop{background:#fff;border:1px dashed #94a3b8;border-radius:12px;padding:14px 18px;font-size:14px}
+  .loop b{color:var(--blue)}
+  footer{margin-top:44px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+  @media (max-width:560px){ .statbar{flex-direction:column} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>GEO 增长思路</h1>
+  <p class="sub">目标：当有人问 AI「出生证明翻译哪家好」「certified translation for China visa」这类问题时，答案里出现贯日翻译，并把人引到咨询页。</p>
+  <p class="sub">2026-07-05 · 供内部评审讨论，标了成本和见效速度，方便挑着做</p>
+</header>
+
+<div class="statbar">
+  <div class="stat"><b>62</b><span>问答页已上线 /answers/</span></div>
+  <div class="stat"><b>~78,000</b><span>目录页已嵌 FAQ 问答块</span></div>
+  <div class="stat"><b>14 次/30天</b><span>AI 爬虫拉取 llms.txt</span></div>
+  <div class="stat"><b>0 / 18</b><span>AI 回答提及率（钱词基线）</span></div>
+</div>
+
+<h2>现状：地基已经打好，缺口很明确<span class="tag">已完成部分</span></h2>
+<p class="lead">7 月初已上线：问答中心 62 页、四个目录 FAQ 块、公司事实页、llms.txt、每月自动 AI 可见度监测、后台流量归因全接通。基线监测结果：直接问「贯日翻译是谁」各家 AI 都答得出来（品牌已被认识），但问「翻译公司推荐」「证件翻译多少钱」这类<b>带生意的问题时 18 题里 0 次提到我们</b>。下面所有思路都是为了补这个缺口。</p>
+
+<h2>方向一：内容纵深 — 把「值得被引用的答案」做多做深<span class="tag">自有域名</span></h2>
+<p class="lead">AI 引用的是「把问题答得最好的那一页」。我们已有 62 页，天花板远不止于此。</p>
+
+<div class="card">
+  <h3>1. 问答中心扩到 100–300 页</h3>
+  <p class="how">生成器已支持，改配置即可。优先补：合同/审计报告/专利/标书等 B2B 文档，驾照换证、涉外公证、学历认证详细流程，小语种证件（西语/阿语/法语出生证明翻译）等。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b fast">1-2 天可上线</span></div>
+</div>
+<div class="card">
+  <h3>2. 每月「补缺口」节奏</h3>
+  <p class="how">每月可见度监测跑完 → 看哪些问题 AI 还没提我们 → 就写哪几页。内容永远追着测量走，不凭感觉写。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b fast">每月固定动作</span></div>
+</div>
+<div class="card">
+  <h3>3. 把真实客户问题变成页面</h3>
+  <p class="how">客服/电话里客户最常问的 20 个问题（怎么收费、多久出稿、盖什么章、外事办认不认…）就是最真实的 AI 提问方式。收集一批交给我生成页面，比任何词表都准。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b fast">只需要一份问题清单</span></div>
+</div>
+<div class="card">
+  <h3>4. 「流程指南 + 对比」两种高引用页型</h3>
+  <p class="how">AI 特别爱引用分步指南（「国外学历认证五步流程」）和对比页（「公证处翻译 vs 翻译公司盖章翻译的区别」「认证翻译 vs 普通翻译」）。各写一批，配 HowTo/FAQ 结构化数据。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b slow">收录后逐月见效</span></div>
+</div>
+
+<h2>方向二：站外播种 — 到 AI 真正读的地方去<span class="tag">最大的增量在这里</span></h2>
+<p class="lead">国产 AI 各有各的「粮仓」，内容放对地方才会被对的模型读到。这是自有站之外最大的可见度杠杆。</p>
+
+<table>
+  <tr><th>渠道</th><th>主要喂给哪家 AI</th><th>做法</th></tr>
+  <tr><td>知乎（回答+专栏）</td><td>几乎所有国产模型都重点引用</td><td>用已核实的问答内容改写成知乎回答，署名公司账号，文内留官网链接</td></tr>
+  <tr><td>微信公众号</td><td>腾讯元宝几乎只吃公众号生态</td><td>把 /answers/ 精华每月发 2–4 篇公众号文章</td></tr>
+  <tr><td>百家号 / 百度知道</td><td>文心一言、百度AI搜索</td><td>同一批内容分发；百度知道挑高频问题认真答</td></tr>
+  <tr><td>头条号</td><td>豆包（字节系）</td><td>同内容分发，标题改口语化提问式</td></tr>
+  <tr><td>Reddit / Quora</td><td>ChatGPT、Perplexity、Gemini</td><td>英文版：r/chinavisa、r/immigration、Quora 上答 certified translation 问题</td></tr>
+  <tr><td>百度百科 词条</td><td>所有国产模型的实体地基</td><td>公司词条（有 ICP 备案 + 官网佐证，可以尝试创建/完善）</td></tr>
+</table>
+<div class="card">
+  <h3>5. 「一稿五发」内容分发流水线</h3>
+  <p class="how">每月从问答中心挑 2–4 篇 → 我改写成各平台风格（知乎体/公众号体/英文 Reddit 体）→ 人工过一遍后发布。内容都是已核实的，边际成本很低。</p>
+  <div class="badges"><span class="b cost-l">成本低（时间为主）</span><span class="b slow">2-3 个月看提及率变化</span></div>
+</div>
+<div class="card">
+  <h3>6. 付费新闻源小额测试（可选）</h3>
+  <p class="how">市面上有标注「AI收录好」的新闻媒体投放渠道，¥9–116/篇。挑 2–3 个钱词（出生证明翻译、证件翻译公司）各投几篇，下月用监测脚本直接验证有没有被 AI 引用——花几百块买个确定性答案。</p>
+  <div class="badges"><span class="b cost-m">成本中（几百元试水）</span><span class="b fast">一个月出结论</span></div>
+</div>
+
+<h2>方向三：实体一致性 — 让 AI「认准」我们是谁<span class="tag">技术活，做一次管长期</span></h2>
+<div class="card">
+  <h3>7. 补齐剩余域名的实体档案</h3>
+  <p class="how">en-ch.com 加 llms.txt（已备好未部署）；全部域名的 Organization 结构化数据互相 sameAs 指认；名称/电话/地址三处信息全网一致。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b fast">半天</span></div>
+</div>
+<div class="card">
+  <h3>8. Bing / 各站长平台提交</h3>
+  <p class="how">ChatGPT 检索走 Bing——把主站和 /answers/ 的 sitemap 提交 Bing Webmaster 直接影响英文 AI 可见度。国内 360/搜狗站长平台同理喂纳米AI、搜狗系。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b fast">半天，长期有效</span></div>
+</div>
+<div class="card">
+  <h3>9. 地图收录（本地意图）</h3>
+  <p class="how">「广州翻译公司哪家好」这类本地问题，AI 常直接引用地图数据。确认百度地图/高德的公司标注信息完整（名称、电话、网址、营业时间），Google Business Profile 覆盖英文侧。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b slow">审核周期不可控</span></div>
+</div>
+
+<h2>方向四：接住流量 — AI 把人送来之后<span class="tag">转化端</span></h2>
+<div class="card">
+  <h3>10. 咨询页按来路「接话」</h3>
+  <p class="how">从问答页/AI 来的访客带着具体问题（如出生证明翻译），咨询页可按 utm 参数显示对应的一句话（「出生证明翻译：XXX 元/份起，当天可出」）+ 微信二维码 + WhatsApp（接英文客户）。已有的归因数据能告诉我们哪类来路转化差，就先修哪。</p>
+  <div class="badges"><span class="b cost-m">成本中</span><span class="b fast">改一页见效</span></div>
+</div>
+<div class="card">
+  <h3>11. 响应速度承诺 + 信任信号</h3>
+  <p class="how">咨询页明示「工作时间 30 分钟内回复」；把质控流程、备案号、价格表链接（事实页）放在表单旁——AI 送来的客户是比价心态，信任信号直接影响提交率。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b fast">文案级改动</span></div>
+</div>
+
+<h2>方向五：测量闭环 — 每月知道有没有用<span class="tag">已建好，坚持跑</span></h2>
+<div class="loop">
+  <b>每月 4 号自动</b>：可见度监测（20 问 × 6 模型）→ 哪些问题提到我们了？→ 没提到的写内容/发站外 →
+  <b>后台看</b>：llms.txt 被 AI 拉取次数 ↗、AI 引流访客 ↗、问答页/FAQ 点击到咨询页 ↗、GSC 里 /answers/ 收录 ↗ →
+  <b>下月对比</b>。四个数字都在涨 = 方向对；提及率不动 = 换渠道。
+</div>
+<div class="card">
+  <h3>12. 监测问题集扩容 + 后台趋势卡</h3>
+  <p class="how">监测问题从 20 扩到 50（加进真实客户问题）；把每月监测结果送到服务器，后台加一张「AI 可见度」趋势卡，和流量数据放在一起看。</p>
+  <div class="badges"><span class="b cost-l">成本低</span><span class="b fast">1 天</span></div>
+</div>
+
+<h2>建议的先后顺序</h2>
+<div class="tier t1">
+  <h3>现在就做（成本低、确定性高）</h3>
+  <ul>
+    <li>收集客服高频问题 → 问答中心扩容（#1 #3）</li>
+    <li>Bing/站长平台提交 + en-ch.com llms.txt + sameAs（#7 #8）</li>
+    <li>咨询页信任信号 + 响应承诺（#11）</li>
+    <li>监测问题集扩容 + 后台趋势卡（#12）</li>
+  </ul>
+</div>
+<div class="tier t2">
+  <h3>本季度铺开（决定提及率的主力）</h3>
+  <ul>
+    <li>一稿五发：知乎 + 公众号 + 百家号 + 头条 + Reddit/Quora，每月 2–4 篇（#5）</li>
+    <li>流程指南 + 对比页两批内容（#4）</li>
+    <li>咨询页按来路接话（#10）</li>
+    <li>地图收录核对（#9）</li>
+  </ul>
+</div>
+<div class="tier t3">
+  <h3>小钱验证 / 视结果加码</h3>
+  <ul>
+    <li>付费新闻源试投几百元，下月监测验证（#6）</li>
+    <li>百度百科词条（审核不可控，值得试一次）</li>
+    <li>英文内容再扩语种（西语/阿语市场，看英文侧效果后决定）</li>
+  </ul>
+</div>
+
+<footer>
+  基线数据：2026-07-04 首次 AI 可见度监测（20 问 × 6 模型）。已上线基建：/answers/ 问答中心、目录 FAQ、
+  公司事实页、llms.txt、月度自动监测（每月 4 号）、后台流量归因。所有对外内容均只使用已核实的公开信息。
+</footer>
+
+</div>
+</body>
+</html>
