@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MISO-TS-FFS · Course II — From Your Edge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5efe3; --card:#fbf7ee; --ink:#211c14; --faded:#6b5f4d;
+  --verm:#c34a1d; --teal:#1c6b5e; --ochre:#a5702a; --plum:#6d3a63;
+  --good:#2e7d4f; --bad:#b3382c; --line:#d8cdb8;
+  --disp:'Fraunces',serif; --body:'Newsreader',serif; --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--body); font-size:19px; line-height:1.55;
+  background-image:radial-gradient(rgba(33,28,20,.045) 1px,transparent 1px); background-size:22px 22px;}
+.wrap{max-width:780px; margin:0 auto; padding:0 22px 120px}
+#scorebar{position:sticky; top:0; z-index:50; background:var(--ink); color:var(--paper); font-family:var(--mono); font-size:13px;
+  padding:8px 18px; display:flex; align-items:center; gap:14px;}
+#scorebar .track{flex:1; height:6px; background:rgba(245,239,227,.18); border-radius:3px; overflow:hidden}
+#scorebar .fill{height:100%; width:0%; background:var(--verm); transition:width .4s}
+#scorebar button{font-family:var(--mono); font-size:11px; background:none; color:var(--paper); border:1px solid rgba(245,239,227,.4);
+  border-radius:3px; padding:2px 8px; cursor:pointer;}
+#scorebar button:hover{border-color:var(--verm); color:var(--verm)}
+.masthead{padding:64px 0 28px; border-bottom:3px solid var(--ink)}
+.kicker{font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--teal)}
+h1{font-family:var(--disp); font-weight:900; font-size:clamp(38px,6.5vw,60px); line-height:1.03; margin:.25em 0 .2em}
+.sub{font-size:21px; color:var(--faded); font-style:italic; margin:0 0 18px}
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{font-family:var(--mono); font-size:11.5px; border:1px solid var(--ink); border-radius:999px; padding:3px 11px; background:var(--card)}
+section.part{margin-top:84px; opacity:0; transform:translateY(18px); transition:opacity .7s,transform .7s}
+section.part.seen{opacity:1; transform:none}
+.pnum{font-family:var(--disp); font-weight:900; font-size:88px; line-height:1; color:transparent; -webkit-text-stroke:1.6px var(--teal); display:block}
+.part h2{font-family:var(--disp); font-weight:600; font-size:34px; margin:2px 0 6px}
+.lede{font-style:italic; color:var(--faded); margin:0 0 22px; font-size:20px}
+.note{background:var(--card); border-left:4px solid var(--teal); padding:14px 20px; margin:18px 0; border-radius:0 6px 6px 0}
+.note.warn{border-left-color:var(--verm)}
+.note p{margin:.4em 0}
+.note ul{margin:.4em 0; padding-left:22px}
+.note li{margin:.25em 0}
+h3.step{font-family:var(--mono); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--teal); margin:30px 0 8px}
+.ref{font-family:var(--mono); font-size:10.5px; background:var(--ink); color:var(--paper); border-radius:3px; padding:2px 7px; white-space:nowrap; vertical-align:middle}
+.hl{background:linear-gradient(transparent 55%, #ecd9a0 55%); padding:0 2px}
+.term{font-weight:600; color:var(--verm)}
+.you{font-family:var(--mono); font-size:12px; background:#f8e8e0; border:1px solid var(--verm); color:var(--verm); border-radius:3px; padding:1px 8px}
+.eq{font-family:var(--body); font-style:italic; font-size:21px; text-align:center; background:var(--card);
+  border:1px dashed var(--line); border-radius:6px; padding:14px 12px; margin:16px 0; overflow-x:auto;}
+.eq .tag{float:right; font-family:var(--mono); font-style:normal; font-size:10.5px; color:var(--faded)}
+.frac{display:inline-flex; flex-direction:column; text-align:center; vertical-align:middle; font-size:.82em; line-height:1.25}
+.frac .top{border-bottom:1.3px solid currentColor; padding:0 .3em}
+.frac .bot{padding:0 .3em}
+sub,sup{font-size:.66em}
+/* report card */
+table.card{width:100%; border-collapse:collapse; font-size:16px; margin:18px 0}
+.card th{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; text-align:left; color:var(--faded);
+  border-bottom:2px solid var(--ink); padding:6px 8px}
+.card td{border-bottom:1px solid var(--line); padding:7px 8px; vertical-align:top}
+.card .ok{color:var(--good); font-weight:600}
+.card .fix{color:var(--verm); font-weight:600}
+.card .main{color:var(--plum); font-weight:600}
+/* miss cards */
+.miss{background:#fffdf6; border:1.5px solid var(--bad); border-radius:6px; margin:22px 0; padding:16px 22px 12px;
+  box-shadow:5px 5px 0 rgba(179,56,44,.15)}
+.miss .mq{font-weight:600; margin:0 0 6px}
+.miss .mq .mid{font-family:var(--mono); font-size:11.5px; color:var(--bad); margin-right:8px}
+.miss .picked{font-size:16px; color:var(--bad); margin:.3em 0}
+.miss .truth{font-size:16px; color:var(--good); margin:.3em 0}
+.miss .why{font-size:16.5px; font-style:italic; color:var(--faded); border-top:1px dashed var(--line); margin-top:10px; padding-top:8px}
+/* demos */
+.demo{background:var(--card); border:1.5px solid var(--ink); border-radius:6px; margin:24px 0; box-shadow:5px 5px 0 rgba(33,28,20,.12); overflow:hidden}
+.demo .head{font-family:var(--mono); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; background:var(--ink); color:var(--paper); padding:6px 14px; display:flex; justify-content:space-between}
+.demo .head .fig{color:var(--verm)}
+.demo svg{display:block; width:100%; height:auto}
+.demo .controls{display:flex; flex-wrap:wrap; gap:14px 26px; align-items:center; padding:12px 16px; border-top:1px dashed var(--line); font-family:var(--mono); font-size:12.5px}
+.demo .controls label{display:flex; align-items:center; gap:8px}
+.demo input[type=range]{accent-color:var(--verm); width:150px}
+.demo .readout{font-weight:600; color:var(--teal); min-width:64px}
+.demo .cap{font-size:15.5px; font-style:italic; color:var(--faded); padding:10px 16px 12px; margin:0; border-top:1px dashed var(--line)}
+.bars{display:flex; gap:14px; flex:1; min-width:200px}
+.bars .b{flex:1}
+.bars .blab{font-size:11px; margin-bottom:3px}
+.bars .btrack{height:10px; background:var(--paper); border:1px solid var(--line); border-radius:5px; overflow:hidden}
+.bars .bfill{height:100%; width:50%; transition:width .15s}
+.bars .b1 .bfill{background:var(--teal)} .bars .b2 .bfill{background:var(--ochre)}
+.stat{font-family:var(--mono); font-size:13px; font-weight:600}
+.stat.good{color:var(--good)} .stat.bad{color:var(--bad)}
+/* quiz (feedback ON) */
+.quiz{position:relative; background:#fffdf6; border:1.5px solid var(--ink); border-radius:6px; margin:34px 0; padding:22px 26px 16px; box-shadow:6px 6px 0 rgba(195,74,29,.25)}
+.quiz::before{content:'CHECKPOINT'; position:absolute; top:-13px; left:18px; font-family:var(--mono); font-size:11px; letter-spacing:.2em;
+  background:var(--verm); color:#fffdf6; padding:3px 12px; border-radius:3px;}
+.q{padding:14px 0 6px; border-bottom:1px dashed var(--line)}
+.q:last-child{border-bottom:none}
+.q .qq{font-weight:600; margin:0 0 8px}
+.q ul{list-style:none; margin:0; padding:0}
+.q li{font-size:17px; border:1px solid var(--line); border-radius:5px; background:var(--card); padding:7px 12px; margin:6px 0;
+  cursor:pointer; transition:transform .12s,border-color .12s; display:flex; gap:9px; align-items:baseline;}
+.q li::before{content:'○'; font-family:var(--mono); font-size:12px; color:var(--faded)}
+.q li:hover{transform:translateX(4px); border-color:var(--ink)}
+.q.done li{cursor:default; opacity:.75}
+.q.done li:hover{transform:none}
+.q li.right{border-color:var(--good); background:#e8f2ea; opacity:1 !important}
+.q li.right::before{content:'✓'; color:var(--good); font-weight:600}
+.q li.wrong{border-color:var(--bad); background:#f6e4e1; opacity:1 !important}
+.q li.wrong::before{content:'✗'; color:var(--bad); font-weight:600}
+.q .expl{display:none; font-size:16px; font-style:italic; color:var(--faded); margin:8px 2px 6px; padding-left:12px; border-left:3px solid var(--good)}
+.q.done .expl{display:block}
+footer{margin-top:90px; border-top:3px solid var(--ink); padding-top:18px; font-family:var(--mono); font-size:12.5px; color:var(--faded)}
+@media (max-width:640px){ body{font-size:17px} .pnum{font-size:64px} }
+</style>
+</head>
+<body>
+
+<div id="scorebar">
+  <span id="scoretxt">CHECKPOINTS 0/0</span>
+  <div class="track"><div class="fill" id="scorefill"></div></div>
+  <button id="resetbtn" title="clear saved answers">RESET</button>
+</div>
+
+<div class="wrap">
+
+<header class="masthead">
+  <span class="kicker">Course II · built from your diagnostic</span>
+  <h1>From your edge,<br>not from zero</h1>
+  <p class="sub">You scored 29/34. This course skips what you own, dissects the five you missed, and rebuilds the one block you guessed through: the eigen engine.</p>
+  <div class="chips">
+    <span class="chip">~75 min</span>
+    <span class="chip">12 new checkpoint questions</span>
+    <span class="chip">6 interactive figures</span>
+    <span class="chip">J &amp; F certified — not covered</span>
+  </div>
+</header>
+
+<!-- ================= VERDICT ================= -->
+<section class="part" id="p0">
+  <span class="pnum">00</span>
+  <h2>The verdict</h2>
+  <p class="lede">What your diagnostic actually said.</p>
+
+  <table class="card">
+    <tr><th>block</th><th>result</th><th>verdict</th></tr>
+    <tr><td>A · L² basics</td><td>1/2</td><td class="fix">one precision fix (miss №1)</td></tr>
+    <tr><td>B · FPCA</td><td>4/4, all unsure</td><td class="fix">content is in — confidence isn't → §4</td></tr>
+    <tr><td>C · FoF regression</td><td>2/3</td><td class="fix">one real gap: ill-posedness → §2</td></tr>
+    <tr><td>D · Fuzzy &amp; TS</td><td>2/3</td><td class="fix">product-veto + extrapolation → §3</td></tr>
+    <tr><td>E · The model</td><td>3/4</td><td class="fix">GFM precision (miss №4) → §3</td></tr>
+    <tr><td>F · Clustering</td><td>3/3</td><td class="ok">certified — skipped</td></tr>
+    <tr><td>G · Eigen core</td><td>6/6, all unsure, self: blank</td><td class="main">the main course → §1</td></tr>
+    <tr><td>H · Penalties</td><td>2/2, all unsure</td><td class="fix">folded into §2</td></tr>
+    <tr><td>I · rPCO &amp; shrinkage</td><td>3/4</td><td class="fix">one patch (miss №5); your FT5 was excellent</td></tr>
+    <tr><td>J · Methodology</td><td>3/3, zero unsure</td><td class="ok">certified — skipped. FT6 was reviewer-grade.</td></tr>
+  </table>
+
+  <div class="note">
+    <p><b>Two things worth saying out loud.</b> First: your written answer on rPCO-frees-shrinkage (FT5) and your overfitting answer (FT6) are already at the level you need for a referee response. Second: block G — six correct picks, six unsure flags, self-rating <i>blank</i> — is the signature of <span class="hl">good test-taking, not knowledge</span>. Your own FT3 said it best. So G gets the full rebuild, from 2×2 matrices up.</p>
+  </div>
+</section>
+
+<!-- ================= MISSES ================= -->
+<section class="part" id="pm">
+  <span class="pnum">&nbsp;</span>
+  <h2>Your five misses, dissected</h2>
+  <p class="lede">Each one: what you picked, why it tempts, and the fix.</p>
+
+  <div class="miss">
+    <p class="mq"><span class="mid">MISS №1 · A2</span>‖x − c‖² = ∫(x−c)² ds is best read as…</p>
+    <p class="picked">✗ you picked: "the unsigned area between the curves"</p>
+    <p class="truth">✓ the SQUARED gap, accumulated over the domain</p>
+    <p class="why">Unsigned area is ∫|x−c| ds — the L¹ distance. Squaring is different in a way that matters here: <b>big local gaps count disproportionately</b>. A curve that deviates hugely in one small region is "farther" in L² than one with the same total area of small deviations. Since the GFM feeds this squared distance into an exponential, one region of bad mismatch kills a rule's membership fast — that's a design property, not an accident.</p>
+  </div>
+
+  <div class="miss">
+    <p class="mq"><span class="mid">MISS №2 · C2</span>Estimating β(s,t) without any penalty is…</p>
+    <p class="picked">✗ you picked: "fine — least squares is unbiased"</p>
+    <p class="truth">✓ ill-posed: infinitely many unknowns, finite data</p>
+    <p class="why">The unbiasedness instinct is from finite-dimensional regression with more samples than parameters. A slope <i>surface</i> has infinitely many degrees of freedom, so infinitely many β's fit the training curves <b>exactly</b> — and they behave wildly between data points. §2 lets you watch this happen with a slider.</p>
+  </div>
+
+  <div class="miss">
+    <p class="mq"><span class="mid">MISS №3 · D2</span>If ONE input's membership ≈ 0, the rule…</p>
+    <p class="picked">✗ you picked: "still fires if the other memberships are high"</p>
+    <p class="truth">✓ barely fires, no matter the others</p>
+    <p class="why">Firing uses a <b>product</b> across the N inputs: 0.95 × 0.95 × 0.02 ≈ 0.018. Any single input can veto the whole rule — that's what makes the product an AND. If the paper had used, say, the average, one matching input could carry a rule whose other inputs look nothing like the prototype. §3 has the two-slider demo.</p>
+  </div>
+
+  <div class="miss">
+    <p class="mq"><span class="mid">MISS №4 · E1</span>A GFM is fully specified by…</p>
+    <p class="picked">✗ you picked: "a centre curve and a radius curve" — and you did NOT mark unsure</p>
+    <p class="truth">✓ a centre curve c(s) and a SCALAR radius ν</p>
+    <p class="why">This is the most valuable miss of your test precisely because you were confident. The radius ν<sub>k,n</sub> is one number per (rule, input) — the cluster's standard deviation, eq (3.1.3). So the antecedent side of the whole model is K×N centre <i>curves</i> plus K×N <i>numbers</i>. A radius <i>curve</i> would mean position-dependent tolerance — a richer model the paper deliberately doesn't use, because a scalar keeps the membership a simple Gaussian in one distance.</p>
+  </div>
+
+  <div class="miss">
+    <p class="mq"><span class="mid">MISS №5 · I4</span>Pool weights w_k = |C_k| / Σ|C_j| mean…</p>
+    <p class="picked">✗ you picked: "all rules pull equally"</p>
+    <p class="truth">✓ bigger clusters pull the pool toward themselves</p>
+    <p class="why">The pooled slope β̄ is a <b>cluster-size-weighted</b> average. Elegant consequence: small clusters barely influence the pool, but are pulled hardest toward it — and small clusters are exactly the ones with high-variance slopes that need stabilising. The weighting sends the correction where the variance is.</p>
+  </div>
+</section>
+
+<!-- ================= §1 EIGEN ENGINE ================= -->
+<section class="part" id="p1">
+  <span class="pnum">01</span>
+  <h2>The eigen engine</h2>
+  <p class="lede">Block G, rebuilt from the ground. After this, Theorem 3.2.3 → eq (3.2.42) should read like a recipe, not a wall.</p>
+
+  <h3 class="step">1.1 · What an eigenvector is, honestly</h3>
+  <div class="note">
+    <p>A symmetric matrix A acts on directions: feed it a unit vector ξ, and the number ξᵀAξ tells you <span class="hl">how much A "rewards" that direction</span>.</p>
+    <p>For a covariance matrix, the reward is concrete: <b>ξᵀΣξ = the variance of the data projected onto direction ξ</b>. Eigenvectors are the directions where the reward peaks (and troughs); eigenvalues are the reward values there.</p>
+  </div>
+
+  <h3 class="step">1.2 · The Rayleigh quotient, live</h3>
+  <div class="note">
+    <p>The <span class="term">Rayleigh quotient</span> R(ξ) = ξᵀΣξ / ξᵀξ is just "reward per unit length" — so it depends only on the direction. Rotate ξ through 180° and watch:</p>
+  </div>
+
+  <div class="demo">
+    <div class="head"><span class="fig">FIG 1</span><span>rotate ξ, read the quotient</span></div>
+    <svg id="g1" viewBox="0 0 640 330"></svg>
+    <div class="controls">
+      <label>direction θ <input type="range" id="g1t" min="0" max="180" step="0.5" value="90"><span class="readout" id="g1tv">90°</span></label>
+      <span>R(ξ) = <b id="g1r" style="color:var(--verm)">—</b></span>
+    </div>
+    <p class="cap">Left: a data cloud and your direction ξ (vermillion arrow). Right: R(θ) — the projected variance. The peak sits exactly at the leading eigenvector (dashed): λ₁ = 3.92 at θ ≈ 27°. No search needed — the maximiser of a Rayleigh quotient IS the top eigenvector. That fact is the entire engine of §III-B.</p>
+  </div>
+
+  <h3 class="step">1.3 · Why a SEQUENCE Φ₁, Φ₂, … <span class="ref">your FT3</span></h3>
+  <div class="note warn">
+    <p><span class="you">your diagnostic said</span> <i>"it captures more of the input. They differ."</i> Here is the version to own:</p>
+    <p>One direction produces ONE score per sample — a single number. But the response S(t) is a whole curve; one number cannot carry it. So we extract directions <em>one at a time</em>:</p>
+    <ul>
+      <li><b>Φ₁</b> = the direction whose scores explain the response best (top of the quotient).</li>
+      <li><b>Φ₂</b> = the best direction <span class="hl">among those whose scores are uncorrelated with z₁</span> — that is the orthogonality constraint's whole job. It forces Φ₂ to explain something <em>new</em>.</li>
+      <li>…continue until L = 10 directions. Same logic as PC1, PC2, PC3 in ordinary PCA.</li>
+    </ul>
+    <p>So Φ₂ differs from Φ₁ not just numerically — it is the answer to a <em>different, constrained</em> question: "best remaining direction."</p>
+  </div>
+
+  <div class="demo">
+    <div class="head"><span class="fig">FIG 2</span><span>successive directions, PCA-style</span></div>
+    <svg id="g2" viewBox="0 0 640 250"></svg>
+    <p class="cap">Vermillion: the best direction (Φ₁). Teal: the best direction uncorrelated with it (Φ₂). In 2-D the constraint pins Φ₂ to the perpendicular; in the paper's high-dimensional coefficient space, a whole subspace remains each round.</p>
+  </div>
+
+  <h3 class="step">1.4 · The generalised quotient and the Cholesky trick <span class="ref">eq (3.2.40)–(3.2.42)</span></h3>
+  <div class="note">
+    <p>The paper's quotient has Ψ, not I, in the denominator:</p>
+  </div>
+  <div class="eq">max<sub>ξ</sub> <span class="frac"><span class="top">ξᵀ Σ ξ</span><span class="bot">ξᵀ Ψ ξ</span></span> &nbsp;&nbsp;where&nbsp; Σ = covariance with the response, &nbsp;Ψ = input variance + penalties</div>
+  <div class="note">
+    <p>Read it as: <span class="hl">signal per unit of penalised cost</span>. A direction that correlates with y but is wiggly or huge pays for it in the denominator.</p>
+    <p>To solve it, factor Ψ = CᵀC (Cholesky — possible because λ &gt; 0 makes Ψ positive definite) and substitute u = Cξ:</p>
+  </div>
+  <div class="eq">ξᵀΨξ = ξᵀCᵀCξ = (Cξ)ᵀ(Cξ) = uᵀu &nbsp;&nbsp;⇒&nbsp;&nbsp; max<sub>u</sub> <span class="frac"><span class="top">uᵀ A u</span><span class="bot">uᵀ u</span></span>, &nbsp; A = (Cᵀ)⁻¹Σ C⁻¹</div>
+  <div class="note">
+    <p>The denominator became the plain length of u — we are back to Fig 1's standard quotient, whose maximiser is a plain eigenvector. This is called <span class="term">whitening</span>: C stretches the coordinate system so the "cost ellipse" Ψ becomes a circle. Solve for u, map back with ξ = C⁻¹u. With the affine orthogonality constraints kept along, this is the <span class="term">ACRQ</span> problem, solved by eigenvectors of a projected matrix 𝒫A𝒫.</p>
+  </div>
+
+  <h3 class="step">1.5 · Why closed-form beats an iterative optimiser <span class="ref">your FT4</span></h3>
+  <div class="note warn">
+    <p><span class="you">your diagnostic said</span> <i>"…gradient descent could trap in some local optimum and eigen solution won't"</i> — that instinct is <b>correct</b>, keep it. The full list you can now give a reviewer:</p>
+    <ul>
+      <li><b>Exact global optimum</b> — eigendecomposition doesn't get trapped; your point.</li>
+      <li><b>Deterministic &amp; reproducible</b> — no random initialisation, no seeds; rerunning gives bit-identical consequents.</li>
+      <li><b>No tuning of the optimiser itself</b> — no learning rate, no convergence threshold, no early stopping to justify in review.</li>
+      <li><b>Constraints hold exactly</b> — orthogonality is built into the solver, not approximated by a penalty.</li>
+      <li><b>Known cost</b> — 𝒪((HNK)³), small here; and it is why the identification has a clean complexity claim in §III-E.</li>
+    </ul>
+  </div>
+
+  <h3 class="step">1.6 · The full pipeline, mapped to the paper</h3>
+  <div class="note">
+    <ul>
+      <li>Response expansion: S(t) = Σ zᵢwᵢ(t) — KL, best L-term truncation <span class="ref">(3.2.3)</span></li>
+      <li>Scores are input functionals: zᵢ = ⟨𝒳, Φᵢ⟩ with θₖ inside the operator <span class="ref">(3.2.6)–(3.2.8)</span></li>
+      <li>Basis-expand φ = δᵀe(s) → everything becomes matrices Σ, Ψ, Λ in ξ <span class="ref">(3.2.32)–(3.2.39)</span></li>
+      <li>Maximise the generalised quotient → Cholesky whiten → eigenvectors <span class="ref">(3.2.40)–(3.2.42)</span></li>
+      <li>Recover response shapes wᵢ(t) by penalised least squares (η) <span class="ref">(3.2.44)–(3.2.45)</span></li>
+      <li>Assemble β<sub>k,n</sub>(s,t) = Σᵢ φ<sub>k,n,i</sub>(s) wᵢ(t) <span class="ref">(3.2.11)</span></li>
+    </ul>
+    <p>Six lines. Everything in §III-B is one of these six moves plus a proof that the move is legitimate.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><p class="qq">In the paper's quotient ξᵀΣξ / ξᵀΨξ, the numerator and denominator measure, respectively…</p>
+      <ul>
+        <li>input variance / response variance</li>
+        <li data-ok>covariance with the response (signal) / penalised input variance (cost)</li>
+        <li>bias / variance</li>
+        <li>train MSE / test MSE</li>
+      </ul>
+      <p class="expl">Signal per unit cost. Directions that predict y win; directions that are large or wiggly pay in the denominator.</p>
+    </div>
+    <div class="q"><p class="qq">Φ₂ is defined as…</p>
+      <ul>
+        <li>the second-best unconstrained direction</li>
+        <li>Φ₁ rotated by 90°</li>
+        <li data-ok>the quotient's maximiser among directions whose scores are uncorrelated with z₁</li>
+        <li>the direction minimising the quotient</li>
+      </ul>
+      <p class="expl">The orthogonality constraint changes the question: "best of what remains." That is why the sequence keeps adding new information — your FT3, now answered.</p>
+    </div>
+    <div class="q"><p class="qq">The substitution u = Cξ (with Ψ = CᵀC) works because…</p>
+      <ul>
+        <li>it diagonalises Σ directly</li>
+        <li data-ok>ξᵀΨξ = uᵀu, so the messy denominator becomes plain length — a standard eigenproblem</li>
+        <li>it removes the constraints</li>
+        <li>C is orthogonal</li>
+      </ul>
+      <p class="expl">Whitening: stretch coordinates until the cost ellipse is a circle. λ &gt; 0 guarantees the Cholesky factor exists and inverts.</p>
+    </div>
+    <div class="q"><p class="qq">Which is NOT one of the closed-form solution's advantages?</p>
+      <ul>
+        <li>deterministic, reproducible output</li>
+        <li>exact global optimum</li>
+        <li>constraints satisfied exactly</li>
+        <li data-ok>it scales better than gradient methods to millions of parameters</li>
+      </ul>
+      <p class="expl">Cubic cost (HNK)³ would NOT scale to millions — it wins here because the dimension is small. Knowing the limits of your own method is referee-proofing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= §2 ILL-POSEDNESS ================= -->
+<section class="part" id="p2">
+  <span class="pnum">02</span>
+  <h2>Ill-posedness &amp; the three penalties</h2>
+  <p class="lede">Fixing miss №2 and turning your H-block guesses into ownership.</p>
+
+  <div class="note">
+    <p>In classical regression (n samples ≫ p parameters), least squares is safe. Functional regression breaks the premise: a slope surface β(s,t) has <span class="hl">infinitely many degrees of freedom</span>, your data is always finite.</p>
+    <p>Consequence: infinitely many β's reproduce the training curves <em>exactly</em>. They agree on the data and disagree wildly everywhere else. The data alone cannot pick one — that is what <span class="term">ill-posed</span> means.</p>
+  </div>
+
+  <div class="demo">
+    <div class="head"><span class="fig">FIG 3</span><span>watch least squares fall apart — then save it</span></div>
+    <svg id="g3" viewBox="0 0 640 320"></svg>
+    <div class="controls">
+      <label>basis size H <input type="range" id="g3h" min="4" max="24" step="1" value="6"><span class="readout" id="g3hv">6</span></label>
+      <label>log₁₀ λ <input type="range" id="g3l" min="-8" max="0" step="0.1" value="-8"><span class="readout" id="g3lv">-8.0</span></label>
+      <span class="stat">train <b id="g3tr">—</b></span>
+      <span class="stat" id="g3tewrap">true <b id="g3te">—</b></span>
+    </div>
+    <p class="cap">Dashed ink: the true function. Dots: 12 noisy observations. Vermillion: the penalised least-squares fit. Push H to 24 with λ at −8: train error collapses, true error explodes — the interpolating monster. Now raise λ and watch it calm down. THIS is why C2's "least squares is fine" fails, and why every functional method carries penalties.</p>
+  </div>
+
+  <div class="note">
+    <p>The paper's three knobs, now with owned meanings:</p>
+    <ul>
+      <li><b>λ</b> — ridge on the weight functions φ. Statistical job: tame size. Algebraic job: make Ψ positive definite so Cholesky exists (you now know both jobs).</li>
+      <li><b>τ</b> — penalises ‖φ″‖²: curvature of the <em>input</em> weights. Straight lines cost nothing — the penalty targets wiggles specifically, not slopes.</li>
+      <li><b>η</b> — penalises ‖w″‖²: curvature of the <em>response</em> shapes.</li>
+    </ul>
+    <p>Too small → Fig 3's monster. Too large → oversmoothed, underfit (train AND test both bad). The paper sets all three in [10⁻⁴, 10⁻²] and shows &lt;10% sensitivity — which you already understood (J3, confident and correct).</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><p class="qq">With 12 data points and 24 basis functions at λ ≈ 0, the fit has train error ≈ 0. Its error against the TRUTH is…</p>
+      <ul>
+        <li>also ≈ 0 — it found the truth</li>
+        <li data-ok>large — infinitely many interpolants exist and they oscillate wildly between data points</li>
+        <li>exactly the noise variance</li>
+        <li>undefined</li>
+      </ul>
+      <p class="expl">Zero train error just means the fit memorised the noise. Between the dots, nothing constrains it — you watched it in Fig 3.</p>
+    </div>
+    <div class="q"><p class="qq">The second-derivative penalty ‖φ″‖² leaves which functions completely unpenalised?</p>
+      <ul>
+        <li>constants only</li>
+        <li data-ok>all straight lines a + bs</li>
+        <li>all polynomials</li>
+        <li>sinusoids</li>
+      </ul>
+      <p class="expl">φ″ = 0 exactly for linear functions — the penalty's null space. It fights curvature, not trend. That's why it is the standard smoothness penalty in functional data analysis.</p>
+    </div>
+    <div class="q"><p class="qq">Underfitting (τ, η far too large) shows up as…</p>
+      <ul>
+        <li>train ≈ 0, test large</li>
+        <li data-ok>train AND test both high — the model is too stiff to follow even the training data</li>
+        <li>train large, test ≈ 0</li>
+        <li>identical to overfitting</li>
+      </ul>
+      <p class="expl">Overfit = gap between train and test (your FT6 answer, which was exactly right). Underfit = both bad, no gap. Two different diseases, two different symptoms.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= §3 FUZZY MECHANICS ================= -->
+<section class="part" id="p3">
+  <span class="pnum">03</span>
+  <h2>Fuzzy mechanics you half-know</h2>
+  <p class="lede">The product veto (miss №3), what happens far from all rules (your FT2), and GFM precision (miss №4).</p>
+
+  <h3 class="step">3.1 · The product is an AND with veto power</h3>
+  <div class="demo">
+    <div class="head"><span class="fig">FIG 4</span><span>product vs min — two t-norms</span></div>
+    <div class="controls" style="border-top:none">
+      <label>μ (input 1) <input type="range" id="g4a" min="0" max="1" step="0.01" value="0.95"><span class="readout" id="g4av">0.95</span></label>
+      <label>μ (input 2) <input type="range" id="g4b" min="0" max="1" step="0.01" value="0.05"><span class="readout" id="g4bv">0.05</span></label>
+    </div>
+    <div class="controls" style="border-top:none">
+      <div class="bars">
+        <div class="b b1"><div class="blab">product (used in the paper) <span id="g4p">0.05</span></div><div class="btrack"><div class="bfill" id="g4pb"></div></div></div>
+        <div class="b b2"><div class="blab">min (the softer alternative) <span id="g4m">0.05</span></div><div class="btrack"><div class="bfill" id="g4mb"></div></div></div>
+      </div>
+    </div>
+    <p class="cap">Set 0.95 and 0.05: the product gives 0.0475 — one bad input vetoes the rule even though the other matches beautifully. A rule should only claim an input point when ALL its input curves resemble its prototypes; the product enforces exactly that.</p>
+  </div>
+
+  <h3 class="step">3.2 · Far from every rule centre <span class="ref">your FT2</span></h3>
+  <div class="note warn">
+    <p><span class="you">your diagnostic said</span> <i>"membership will be low, so predicts something close to 0, and I shouldn't trust it."</i> Half right — and the wrong half is a classic viva trap.</p>
+    <p>You correctly answered D3 that <em>without</em> normalisation, output collapses toward 0 far away. But MISO-TS-FFS <b>normalises</b>: the θ<sub>k</sub> always sum to 1, even when every raw membership is 10⁻⁵. So far from all centres, <span class="hl">the nearest rule quietly takes θ ≈ 1 and its local model extrapolates at full strength</span> — the prediction is NOT small, and nothing in the output warns you.</p>
+  </div>
+
+  <div class="demo">
+    <div class="head"><span class="fig">FIG 5</span><span>extrapolation: confident output, vanishing evidence</span></div>
+    <svg id="g5" viewBox="0 0 640 380"></svg>
+    <div class="controls">
+      <label>input x <input type="range" id="g5x" min="-4" max="14" step="0.05" value="12"><span class="readout" id="g5xv">12.0</span></label>
+      <div class="bars">
+        <div class="b b1"><div class="blab">θ₁ <span id="g5t1">—</span></div><div class="btrack"><div class="bfill" id="g5b1"></div></div></div>
+        <div class="b b2"><div class="blab">θ₂ <span id="g5t2">—</span></div><div class="btrack"><div class="bfill" id="g5b2"></div></div></div>
+      </div>
+      <span>evidence: max μ = <b id="g5mu" style="color:var(--verm)">—</b></span>
+    </div>
+    <p class="cap">Rule centres at x = 3 and x = 7. Drag to x = 12: both memberships are astronomically small, yet θ₂ ≈ 1 and the vermillion prediction marches on along rule 2's line. The honest confidence signal is the RAW max membership (the "evidence" readout) — not θ. Answer to keep: far away, the model extrapolates the nearest rule's regression; trust should follow max μ, which is ≈ 0.</p>
+  </div>
+
+  <h3 class="step">3.3 · GFM precision, once and for all <span class="ref">miss №4</span></h3>
+  <div class="note">
+    <p>Per (rule k, input n): <b>one centre CURVE</b> c<sub>k,n</sub>(s) — the cluster's mean — and <b>one SCALAR radius</b> ν<sub>k,n</sub> — the cluster's standard deviation, a single number summarising spread in L² distance.</p>
+    <p>Inventory for the whole antecedent side, K rules × N inputs: <span class="hl">K·N curves + K·N numbers</span>. Nothing else. If someone asks "how many antecedent parameters does your model have?", that is the answer.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><p class="qq">Memberships (0.9, 0.9, 0.01) across three inputs. The rule's raw firing is about…</p>
+      <ul>
+        <li>0.60 — the average</li>
+        <li>0.9 — the majority wins</li>
+        <li data-ok>0.008 — the product; the third input vetoes</li>
+        <li>0.01 — the minimum</li>
+      </ul>
+      <p class="expl">0.9 × 0.9 × 0.01 = 0.0081. Every input must match; one stranger kills the rule. (Min would give 0.01 — close here, but min ignores HOW MANY inputs are mediocre; the product compounds them.)</p>
+    </div>
+    <div class="q"><p class="qq">A test input lands far from ALL rule centres. The normalised TS system outputs…</p>
+      <ul>
+        <li>approximately zero</li>
+        <li>the average of all rules' outputs</li>
+        <li data-ok>essentially the nearest rule's local model, extrapolated at full weight</li>
+        <li>an error flag</li>
+      </ul>
+      <p class="expl">Normalisation forces Σθ = 1 regardless of how weak the evidence is. Silent extrapolation — check max raw membership if you need a trust signal. (Unnormalised collapse-to-zero was D3, which you had right.)</p>
+    </div>
+    <div class="q"><p class="qq">The antecedent parameters of a K-rule, N-input MISO-TS-FFS are exactly…</p>
+      <ul>
+        <li>K·N centre curves + K·N radius curves</li>
+        <li data-ok>K·N centre curves + K·N scalar radii</li>
+        <li>one centre curve + one scalar per rule</li>
+        <li>K·N·L scalars</li>
+      </ul>
+      <p class="expl">Redemption for E1: the radius is one number per (rule, input) — eq (3.1.3) is a standard deviation, and standard deviations are scalars.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= §4 FPCA CONFIDENCE ================= -->
+<section class="part" id="p4">
+  <span class="pnum">04</span>
+  <h2>FPCA: from correct to confident</h2>
+  <p class="lede">You went 4/4 on block B and flagged every answer unsure. The knowledge is in; let's make it yours.</p>
+
+  <div class="note">
+    <p>The picture to hold: FPCA finds <span class="term">modes of variation</span> — the recurring <em>shapes of deviation from the mean</em> across your sample of curves.</p>
+    <ul>
+      <li>The covariance operator is the curve-world covariance matrix: it records how the value at s co-varies with the value at s′ across the sample.</li>
+      <li>Its eigenfunctions ψ<sub>p</sub>(s) are the deviation shapes; eigenvalues λ<sub>p</sub> say how much of the sample's variation each shape carries (you got B4: λ₁/Σλ = "80% explained").</li>
+      <li>Each curve's score a<sub>m,p</sub> = ⟨x<sub>m</sub> − mean, ψ<sub>p</sub>⟩ says how much of shape p THIS curve contains (you got B2).</li>
+    </ul>
+  </div>
+
+  <div class="demo">
+    <div class="head"><span class="fig">FIG 6</span><span>a stylised NO₂ day, rebuilt from two modes</span></div>
+    <svg id="g6" viewBox="0 0 640 300"></svg>
+    <div class="controls">
+      <label>a₁ · pollution level <input type="range" id="g6a" min="-1.5" max="1.5" step="0.02" value="0.8"><span class="readout" id="g6av">0.80</span></label>
+      <label>a₂ · morning ⇄ evening <input type="range" id="g6b" min="-1.5" max="1.5" step="0.02" value="0"><span class="readout" id="g6bv">0.00</span></label>
+    </div>
+    <p class="cap">Dashed ink: the mean day (two rush-hour humps). Vermillion: mean + a₁ψ₁ + a₂ψ₂. Mode ψ₁ lifts or lowers the whole day; mode ψ₂ trades morning against evening.</p>
+  </div>
+
+  <div class="note warn">
+    <p><span class="you">your FT1 said</span> <i>"the component that explains the data the most, a feature/tendency"</i> — right direction, too vague to defend. The upgraded sentence:</p>
+    <p><b>"PC1 is a curve ψ₁(s) — the dominant shape by which individual days deviate from the mean day; for NO₂ it is typically an overall-level mode separating polluted days from clean ones, and each day's score a₁ measures how much of that shape it carries."</b></p>
+    <p>One sentence, three owned facts: it IS a curve, it is a deviation-from-mean shape, scores quantify per-sample content.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><p class="qq">For daily NO₂ curves, the first FPCA component is most plausibly…</p>
+      <ul>
+        <li>the mean daily curve itself</li>
+        <li data-ok>an overall-level mode: polluted days vs clean days</li>
+        <li>measurement noise</li>
+        <li>the time axis</li>
+      </ul>
+      <p class="expl">Level shifts usually dominate variation in environmental series, so the "how polluted overall" shape carries the largest eigenvalue. (Dataset-dependent in general — but this is the right default expectation, and the right thing to SAY when asked.)</p>
+    </div>
+    <div class="q"><p class="qq">Day m has a large NEGATIVE score a<sub>m,1</sub> on the level mode ψ₁. Day m was…</p>
+      <ul>
+        <li>an average day</li>
+        <li>a day with strong morning rush only</li>
+        <li data-ok>a markedly cleaner-than-average day — it carries ψ₁'s shape in the negative direction</li>
+        <li>a day with missing data</li>
+      </ul>
+      <p class="expl">Scores are signed coordinates: +a₁ pushes the day up along ψ₁, −a₁ pushes it down. You just read Fig 6's slider in reverse.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CLOSING ================= -->
+<section class="part" id="p9">
+  <span class="pnum">✓</span>
+  <h2>Where you stand now</h2>
+  <p class="lede">The updated map, if the checkpoints above went well.</p>
+
+  <div class="note">
+    <p><b>Certified before this course:</b> methodology (J — including a reviewer-grade answer on overfitting gaps), clustering (F), the rPCO/shrinkage story (I — your FT5 was the honest-story paragraph of §V in your own words).</p>
+    <p><b>Closed by this course, if the checkpoints agreed with you:</b></p>
+    <ul>
+      <li>L² squaring vs absolute area — and why GFM inherits it (miss №1)</li>
+      <li>Ill-posedness → the real reason λ, τ, η exist (miss №2 + block H)</li>
+      <li>Product-as-veto (miss №3), silent extrapolation (FT2), GFM = curve + scalar (miss №4)</li>
+      <li>Pool weights follow cluster size (miss №5)</li>
+      <li>The eigen engine — quotient, sequence, whitening, and why closed-form (block G, FT3, FT4)</li>
+    </ul>
+    <p><b>The one-line test of the whole course:</b> explain to Prof Ge, in one breath, why eq (3.2.40) is solved by eigenvectors and why that is a selling point of the paper. If that sentence comes out easily, you are ready to defend §III-B.</p>
+  </div>
+</section>
+
+<footer>
+  <p id="finaltally">—</p>
+  <p>Course II · built from your placement diagnostic · companion to miso-ts-ffs.html (Course I) and diagnostic.html.</p>
+</footer>
+
+</div><!-- /wrap -->
+
+<script>
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function pathD(pts){return pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');}
+function curve(f,x0,x1,n,mx,my){const pts=[];for(let i=0;i<=n;i++){const s=x0+(x1-x0)*i/n;pts.push([mx(s),my(f(s))]);}return pts;}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const INK='#211c14',FADE='#8b8070',VERM='#c34a1d',TEAL='#1c6b5e',OCHRE='#a5702a';
+function label(svg,x,y,txt,fill,anchor){el('text',{x,y,fill:fill||'#6b5f4d','font-family':'IBM Plex Mono,monospace','font-size':'11.5px','text-anchor':anchor||'start'},svg).textContent=txt;}
+function axis(svg,x0,x1,y0,y1){el('line',{x1:x0,y1:y1,x2:x1,y2:y1,stroke:INK,'stroke-width':1,opacity:.45},svg);el('line',{x1:x0,y1:y0,x2:x0,y2:y1,stroke:INK,'stroke-width':1,opacity:.45},svg);}
+function gaussn(rnd){let u=0,v=0;while(u===0)u=rnd();while(v===0)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+/* ---- FIG 1: Rayleigh quotient live ---- */
+(function(){
+  const svg=$('#g1');if(!svg)return;
+  const R=t=>{const c=Math.cos(t),s=Math.sin(t);return 3.2*c*c+2.8*c*s+1.2*s*s;};
+  const CX=160,CY=170,SC=22;
+  label(svg,50,24,'data cloud (covariance Σ)');
+  const rnd=mulberry32(99);
+  for(let i=0;i<130;i++){const z1=gaussn(rnd),z2=gaussn(rnd);
+    const x=1.789*z1, y=0.7826*z1+0.7661*z2;
+    el('circle',{cx:CX+SC*x,cy:CY-SC*y,r:2.6,fill:FADE,opacity:.5},svg);}
+  const arrow=el('line',{stroke:VERM,'stroke-width':3,'stroke-linecap':'round'},svg);
+  const TX=t=>340+(t/180)*280, TY=r=>300-((r-0.3)/3.9)*250;
+  label(svg,400,24,'R(θ) = projected variance');
+  axis(svg,340,620,40,300);
+  const pts=[];for(let d=0;d<=180;d++)pts.push([TX(d),TY(R(d*Math.PI/180))]);
+  el('path',{d:pathD(pts),fill:'none',stroke:INK,'stroke-width':2},svg);
+  const tstar=27.2;
+  el('line',{x1:TX(tstar),y1:40,x2:TX(tstar),y2:300,stroke:TEAL,'stroke-width':1.4,'stroke-dasharray':'5 4'},svg);
+  label(svg,TX(tstar)+6,58,'eigenvector: λ₁=3.92',TEAL);
+  el('line',{x1:TX(117.2),y1:TY(0.48)-14,x2:TX(117.2),y2:TY(0.48),stroke:FADE,'stroke-width':1.2},svg);
+  label(svg,TX(117.2)+5,TY(0.48)-16,'λ₂=0.48');
+  label(svg,470,322,'θ (direction)','#6b5f4d','middle');
+  const dot=el('circle',{r:6,fill:VERM,stroke:'#fbf7ee','stroke-width':1.5},svg);
+  function up(){
+    const th=+$('#g1t').value, rad=th*Math.PI/180, r=R(rad);
+    $('#g1tv').textContent=th.toFixed(0)+'°'; $('#g1r').textContent=r.toFixed(2);
+    const dx=Math.cos(rad)*85, dy=Math.sin(rad)*85;
+    arrow.setAttribute('x1',CX-dx);arrow.setAttribute('y1',CY+dy);
+    arrow.setAttribute('x2',CX+dx);arrow.setAttribute('y2',CY-dy);
+    dot.setAttribute('cx',TX(th)); dot.setAttribute('cy',TY(r));
+  }
+  $('#g1t').addEventListener('input',up); up();
+})();
+
+/* ---- FIG 2: successive directions ---- */
+(function(){
+  const svg=$('#g2');if(!svg)return;
+  const CX=320,CY=125,SC=19;
+  const rnd=mulberry32(55);
+  for(let i=0;i<150;i++){const z1=gaussn(rnd),z2=gaussn(rnd);
+    const x=1.789*z1,y=0.7826*z1+0.7661*z2;
+    el('circle',{cx:CX+SC*x,cy:CY-SC*y,r:2.4,fill:FADE,opacity:.5},svg);}
+  const a1=27.2*Math.PI/180, a2=a1+Math.PI/2;
+  [[a1,110,VERM,'Φ₁ — best direction'],[a2,60,TEAL,'Φ₂ — best among ⊥ to Φ₁']].forEach(([a,len,col,txt])=>{
+    el('line',{x1:CX-Math.cos(a)*len,y1:CY+Math.sin(a)*len,x2:CX+Math.cos(a)*len,y2:CY-Math.sin(a)*len,stroke:col,'stroke-width':3.4,'stroke-linecap':'round'},svg);
+    label(svg,CX+Math.cos(a)*len+10,CY-Math.sin(a)*len-6,txt,col);
+  });
+})();
+
+/* ---- FIG 3: overfitting / penalties ---- */
+(function(){
+  const svg=$('#g3');if(!svg)return;
+  const mx=s=>46+s*570, my=v=>160-v*85;
+  axis(svg,46,616,20,296);label(svg,600,314,'s');
+  const f=s=>0.8*Math.sin(2*Math.PI*s)+0.3*Math.sin(4*Math.PI*s);
+  const rnd=mulberry32(21);
+  const S=[],Y=[];
+  for(let i=0;i<12;i++){const s=(i+0.5)/12;S.push(s);Y.push(f(s)+0.15*gaussn(rnd));}
+  el('path',{d:pathD(curve(f,0,1,150,mx,my)),fill:'none',stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'},svg);
+  S.forEach((s,i)=>el('circle',{cx:mx(s),cy:my(Y[i]),r:4.5,fill:INK},svg));
+  const fit=el('path',{fill:'none',stroke:VERM,'stroke-width':2.8},svg);
+  function solve(A,b){
+    const n=b.length,M=A.map((r,i)=>r.concat([b[i]]));
+    for(let c=0;c<n;c++){
+      let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;
+      [M[c],M[p]]=[M[p],M[c]];
+      if(Math.abs(M[c][c])<1e-12)M[c][c]=1e-12;
+      for(let r=c+1;r<n;r++){const k=M[r][c]/M[c][c];for(let j=c;j<=n;j++)M[r][j]-=k*M[c][j];}
+    }
+    const x=new Array(n).fill(0);
+    for(let r=n-1;r>=0;r--){let s=M[r][n];for(let j=r+1;j<n;j++)s-=M[r][j]*x[j];x[r]=s/M[r][r];}
+    return x;
+  }
+  function up(){
+    const H=+$('#g3h').value, lg=+$('#g3l').value, lam=Math.pow(10,lg);
+    $('#g3hv').textContent=H; $('#g3lv').textContent=lg.toFixed(1);
+    const w=Math.max(0.08,0.9/H), cs=[];
+    for(let j=0;j<H;j++)cs.push(H===1?0.5:j/(H-1));
+    const G=S.map(s=>cs.map(c=>Math.exp(-((s-c)**2)/(2*w*w))));
+    const A=[];for(let a=0;a<H;a++){A.push(new Array(H).fill(0));
+      for(let b=0;b<H;b++){let v=0;for(let i=0;i<12;i++)v+=G[i][a]*G[i][b];A[a][b]=v+(a===b?lam:0);}}
+    const rhs=new Array(H).fill(0);
+    for(let a=0;a<H;a++)for(let i=0;i<12;i++)rhs[a]+=G[i][a]*Y[i];
+    const coef=solve(A,rhs);
+    const fh=s=>cs.reduce((acc,c,j)=>acc+coef[j]*Math.exp(-((s-c)**2)/(2*w*w)),0);
+    let tr=0;for(let i=0;i<12;i++)tr+=(fh(S[i])-Y[i])**2/12;
+    let te=0;for(let i=0;i<=150;i++){const s=i/150;te+=(fh(s)-f(s))**2/151;}
+    const pts=[];for(let i=0;i<=150;i++){const s=i/150;pts.push([mx(s),Math.max(6,Math.min(314,my(fh(s))))]);}
+    fit.setAttribute('d',pathD(pts));
+    $('#g3tr').textContent=tr.toPrecision(2);
+    $('#g3te').textContent=te.toPrecision(2);
+    $('#g3tewrap').className='stat '+(te>0.15?'bad':'good');
+  }
+  $('#g3h').addEventListener('input',up); $('#g3l').addEventListener('input',up); up();
+})();
+
+/* ---- FIG 4: t-norms ---- */
+(function(){
+  if(!$('#g4a'))return;
+  function up(){
+    const a=+$('#g4a').value,b=+$('#g4b').value;
+    $('#g4av').textContent=a.toFixed(2); $('#g4bv').textContent=b.toFixed(2);
+    const p=a*b,m=Math.min(a,b);
+    $('#g4p').textContent=p.toFixed(3); $('#g4m').textContent=m.toFixed(3);
+    $('#g4pb').style.width=(p*100)+'%'; $('#g4mb').style.width=(m*100)+'%';
+  }
+  $('#g4a').addEventListener('input',up); $('#g4b').addEventListener('input',up); up();
+})();
+
+/* ---- FIG 5: extrapolation ---- */
+(function(){
+  const svg=$('#g5');if(!svg)return;
+  const X=x=>50+(x+4)*(560/18), Ym=u=>125-u*80, Yv=v=>350-(v+3)*(200/18);
+  const c1=3,c2=7,sig=1.3;
+  const mu1=x=>Math.exp(-((x-c1)**2)/(2*sig*sig)), mu2=x=>Math.exp(-((x-c2)**2)/(2*sig*sig));
+  const y1=x=>1+0.9*x, y2=x=>11-0.8*x;
+  const blend=x=>{const m1=mu1(x),m2=mu2(x),t1=m1/(m1+m2);return t1*y1(x)+(1-t1)*y2(x);};
+  el('line',{x1:50,y1:125,x2:610,y2:125,stroke:INK,'stroke-width':1,opacity:.45},svg);
+  el('path',{d:pathD(curve(mu1,-4,14,200,X,Ym)),fill:'none',stroke:TEAL,'stroke-width':2},svg);
+  el('path',{d:pathD(curve(mu2,-4,14,200,X,Ym)),fill:'none',stroke:OCHRE,'stroke-width':2},svg);
+  label(svg,X(c1),22,'centre 1',TEAL,'middle'); label(svg,X(c2),22,'centre 2',OCHRE,'middle');
+  el('rect',{x:X(9.6),y:140,width:X(14)-X(9.6),height:220,fill:VERM,opacity:.06},svg);
+  label(svg,X(11.8),160,'no-evidence zone',VERM,'middle');
+  axis(svg,50,610,150,355);label(svg,600,373,'x');
+  el('path',{d:pathD(curve(y1,-4,14,10,X,Yv)),fill:'none',stroke:TEAL,'stroke-width':1.6,'stroke-dasharray':'6 5'},svg);
+  el('path',{d:pathD(curve(y2,-4,14,10,X,Yv)),fill:'none',stroke:OCHRE,'stroke-width':1.6,'stroke-dasharray':'6 5'},svg);
+  el('path',{d:pathD(curve(blend,-4,14,240,X,Yv)),fill:'none',stroke:VERM,'stroke-width':3},svg);
+  const guide=el('line',{y1:150,y2:355,stroke:INK,'stroke-width':1,'stroke-dasharray':'3 4',opacity:.5},svg);
+  const dot=el('circle',{r:5.5,fill:VERM,stroke:'#fbf7ee','stroke-width':1.5},svg);
+  function fmt(v){return v<0.001?v.toExponential(1):v.toFixed(3);}
+  function up(){
+    const x=+$('#g5x').value; $('#g5xv').textContent=x.toFixed(1);
+    const m1=mu1(x),m2=mu2(x),t1=m1/(m1+m2),t2=1-t1;
+    guide.setAttribute('x1',X(x)); guide.setAttribute('x2',X(x));
+    dot.setAttribute('cx',X(x)); dot.setAttribute('cy',Yv(blend(x)));
+    $('#g5t1').textContent=t1.toFixed(2); $('#g5t2').textContent=t2.toFixed(2);
+    $('#g5b1').style.width=(t1*100)+'%'; $('#g5b2').style.width=(t2*100)+'%';
+    $('#g5mu').textContent=fmt(Math.max(m1,m2));
+  }
+  $('#g5x').addEventListener('input',up); up();
+})();
+
+/* ---- FIG 6: FPCA modes of a NO₂ day ---- */
+(function(){
+  const svg=$('#g6');if(!svg)return;
+  const mx=u=>46+u*570, my=v=>280-((v+0.3)/3.5)*250;
+  axis(svg,46,616,20,280);
+  label(svg,mx(0),296,'0h','#6b5f4d','middle'); label(svg,mx(0.5),296,'12h','#6b5f4d','middle'); label(svg,mx(1),296,'24h','#6b5f4d','middle');
+  const m=u=>0.55+0.5*Math.exp(-((u-0.33)**2)/0.01)+0.65*Math.exp(-((u-0.79)**2)/0.012);
+  const p1=u=>0.35+0.3*Math.exp(-((u-0.33)**2)/0.01)+0.4*Math.exp(-((u-0.79)**2)/0.012);
+  const p2=u=>0.45*(Math.exp(-((u-0.33)**2)/0.01)-Math.exp(-((u-0.79)**2)/0.012));
+  el('path',{d:pathD(curve(m,0,1,150,mx,my)),fill:'none',stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'},svg);
+  label(svg,54,34,'dashed = mean day · humps = rush hours');
+  const rec=el('path',{fill:'none',stroke:VERM,'stroke-width':2.8},svg);
+  function up(){
+    const a=+$('#g6a').value,b=+$('#g6b').value;
+    $('#g6av').textContent=a.toFixed(2); $('#g6bv').textContent=b.toFixed(2);
+    rec.setAttribute('d',pathD(curve(u=>m(u)+a*p1(u)+b*p2(u),0,1,150,mx,my)));
+  }
+  $('#g6a').addEventListener('input',up); $('#g6b').addEventListener('input',up); up();
+})();
+
+/* ---- quiz engine (feedback ON) ---- */
+(function(){
+  const KEY='miso-course2-v1';
+  const qs=[...document.querySelectorAll('.q')];
+  const total=qs.length;
+  let store={};
+  try{store=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){store={};}
+  function apply(q,idx){
+    const lis=[...q.querySelectorAll('li')];
+    const ok=lis[idx].hasAttribute('data-ok');
+    q.classList.add('done');
+    lis[idx].classList.add(ok?'right':'wrong');
+    if(!ok)lis.find(l=>l.hasAttribute('data-ok')).classList.add('right');
+    return ok;
+  }
+  function refresh(){
+    const answered=Object.keys(store).length;
+    const correct=Object.values(store).filter(v=>v.ok).length;
+    $('#scoretxt').textContent=`CHECKPOINTS ${answered}/${total} · ${correct} ✓`;
+    $('#scorefill').style.width=(total?correct/total*100:0)+'%';
+    $('#finaltally').textContent=answered===0?'No checkpoints answered yet.':
+      `Course II score: ${correct} correct of ${answered} answered (${total} total).`+(answered===total?(correct===total?' Clean sweep — block G is yours now.':' Done — reset and retry any misses.'):'');
+  }
+  qs.forEach((q,i)=>{
+    if(store[i]!==undefined)apply(q,store[i].pick);
+    q.querySelectorAll('li').forEach((li,idx)=>{
+      li.addEventListener('click',()=>{
+        if(q.classList.contains('done'))return;
+        const ok=apply(q,idx);
+        store[i]={pick:idx,ok:ok?1:0};
+        localStorage.setItem(KEY,JSON.stringify(store));
+        refresh();
+      });
+    });
+  });
+  $('#resetbtn').addEventListener('click',()=>{localStorage.removeItem(KEY);location.reload();});
+  refresh();
+})();
+
+/* ---- reveal ---- */
+(function(){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target);}}),{threshold:0.05});
+  document.querySelectorAll('section.part').forEach(s=>io.observe(s));
+})();
+</script>
+</body>
+</html>
