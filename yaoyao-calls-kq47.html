@@ -42,7 +42,10 @@ ol.ask li::before{content:"☐";position:absolute;left:2px;top:4px;font-size:16p
 ol.ask li b{color:var(--red)}
 .known{font-size:12px;color:var(--ink2);background:rgba(255,255,255,.4);border-left:3px solid var(--rule2);padding:5px 10px;margin-top:8px}
 .rec{margin-top:10px;font-size:12px;color:var(--faint)}
-.recline{border-bottom:1px solid var(--rule2);height:26px}
+textarea.recbox{display:block;width:100%;min-height:80px;background:repeating-linear-gradient(180deg,transparent 0 25px,var(--rule2) 25px 26px);border:none;font:13px/26px var(--sans);color:var(--ink);resize:vertical;outline:none;padding:0 2px;margin-top:4px}
+ol.ask li{cursor:pointer}
+ol.ask li.done{opacity:.55}
+ol.ask li.done::before{content:"☑";color:var(--green)}
 .tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:3px;margin-left:6px;white-space:nowrap;vertical-align:3px}
 .tg{background:rgba(30,77,56,.12);color:var(--green)}
 .trd{background:rgba(164,49,34,.12);color:var(--red)}
@@ -62,7 +65,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <span><a href="yaoyao-dse-map-kq47.html">◀ DSE 全景表</a>　<a href="yaoyao-2026-kq47.html">总卷宗</a></span>
   </div>
   <h1>电话行动卡<span class="thin"> · 六通电话拿齐所有报价</span></h1>
-  <div class="sub">每张卡：拨号 → 念开场白 → 按 ☐ 逐条问 → 记在横线上。已知信息别浪费时间问。</div>
+  <div class="sub">每张卡：拨号 → 念开场白 → <b>点 ☐ 即打勾</b> → 横线区<b>直接打字</b>（内容自动保存在本机浏览器）。已知信息别浪费时间问。</div>
 </header>
 
 <h2>〇 · 通用素材（每通电话都用）</h2>
@@ -88,7 +91,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <li><b>Deadline：</b>插班报名最晚哪天？优才奖是不是 8/30 前申请？<b>我们 7/21 前要答复另一所——能否明天前给书面报价？</b></li>
   </ol>
   <div class="known">已知不用问：学费两校区价、杂费明细（代办 1 万含考试报名/研学）、与考学校身份、2024 首届 30% 三大线／2025 届三大超 50% 的宣传口径、龙洞无高中。</div>
-  <div class="rec">记录：<div class="recline"></div><div class="recline"></div><div class="recline"></div></div>
+  <div class="rec">记录：<textarea class="recbox" rows="3" placeholder="在这里直接打字记录（自动保存）…"></textarea></div>
 </div>
 
 <h2>② 中黄<span class="tag tg">半额已锁定，只差书面</span></h2>
@@ -105,7 +108,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <li><b>Deadline 与学位：</b>高一 DSE 还剩几个位？最晚何时答复？<b>能否明天前给书面确认？</b>（我们 7/21 要回另一所）</li>
   </ol>
   <div class="known">已知不用问：学费 21.8 万、奖学金档位条件（官网已公示）、2023 年开办、IB 底色。</div>
-  <div class="rec">记录：<div class="recline"></div><div class="recline"></div><div class="recline"></div></div>
+  <div class="rec">记录：<textarea class="recbox" rows="3" placeholder="在这里直接打字记录（自动保存）…"></textarea></div>
 </div>
 
 <h2>③ 省实越秀国际部<span class="tag ty">10 万奖待核</span></h2>
@@ -123,7 +126,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <li>报名截止与学位余量？<b>明天能否给书面答复？</b></li>
   </ol>
   <div class="known">已知不用问：学费 16.8 万（含书杂、不含宿伙）。⚠️ 第 4 条是生死题：无寄宿则整个选项作废。</div>
-  <div class="rec">记录：<div class="recline"></div><div class="recline"></div><div class="recline"></div></div>
+  <div class="rec">记录：<textarea class="recbox" rows="3" placeholder="在这里直接打字记录（自动保存）…"></textarea></div>
 </div>
 
 <h2>④ 广外外籍<span class="tag tg">离家最近 28km</span><span class="tag ty">奖学金后评制</span></h2>
@@ -141,7 +144,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <li>报名截止、学位余量、9 月奖学金测试的具体日期？</li>
   </ol>
   <div class="known">已知不用问：一费制 17.6 万（含食宿校服校车教材）、博雅奖档位（特等全额/一等 6 万/二等 3 万）、地址、IB＋DSE 双轨。⚠️ 记住：这家的奖学金<b>入学前锁不住</b>，报价再好也要按「全价 17.6 万＋可能的后补奖」来比。</div>
-  <div class="rec">记录：<div class="recline"></div><div class="recline"></div><div class="recline"></div></div>
+  <div class="rec">记录：<textarea class="recbox" rows="3" placeholder="在这里直接打字记录（自动保存）…"></textarea></div>
 </div>
 
 <h2>⑤ 民心（3 分钟短卡）<span class="tag trd">期望放低</span></h2>
@@ -151,7 +154,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <li>716 一梯度港籍生，除了官网荣誉奖学金（需雅思 7.5）之外，<b>有没有任何弹性或其他奖项？</b>（答「没有」就结束）</li>
     <li>顺带问：2026 届 DSE 三大/八大各录了多少人？（拿数据用）</li>
   </ol>
-  <div class="rec">记录：<div class="recline"></div></div>
+  <div class="rec">记录：<textarea class="recbox" rows="2" placeholder="在这里直接打字记录（自动保存）…"></textarea></div>
 </div>
 
 <h2>⑥ 培侨信义（3 分钟短卡）<span class="tag trd">窗口已过</span></h2>
@@ -161,7 +164,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <li>香港课程插班窗口（4/29–5/28）已过——<b>高一还有没有补录/候补名额？</b>（答「没有」就结束）</li>
     <li>若有：考试安排？716 一梯度对应什么奖学金？住宿与假期跨城安排？</li>
   </ol>
-  <div class="rec">记录：<div class="recline"></div></div>
+  <div class="rec">记录：<textarea class="recbox" rows="2" placeholder="在这里直接打字记录（自动保存）…"></textarea></div>
 </div>
 
 <h2>⑦ 新亚（跟进卡，不是新电话）<span class="tag tg">Offer 在手 · 7/21 截止</span></h2>
@@ -174,7 +177,7 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
     <li>住宿 8,000 是几人间（五天）？周末留校可以吗？餐 55 元/天是套餐还是刷卡？</li>
     <li>（试探）「我们在等另一所与考学校的奖学金答复——<b>报名能否宽限到 7/22 或 7/23？</b>」</li>
   </ol>
-  <div class="rec">记录：<div class="recline"></div><div class="recline"></div></div>
+  <div class="rec">记录：<textarea class="recbox" rows="2" placeholder="在这里直接打字记录（自动保存）…"></textarea></div>
 </div>
 
 <h2>打完之后</h2>
@@ -188,5 +191,9 @@ footer{margin-top:50px;border-top:3px double var(--rule2);padding-top:14px;font-
 </footer>
 
 </div>
+<script>
+document.querySelectorAll("ol.ask li").forEach(function(li,i){var k="yycall-li-"+i;if(localStorage.getItem(k))li.classList.add("done");li.addEventListener("click",function(e){if(e.target.tagName==="A")return;li.classList.toggle("done");localStorage.setItem(k,li.classList.contains("done")?"1":"");});});
+document.querySelectorAll("textarea.recbox").forEach(function(t,i){var k="yycall-rec-"+i;t.value=localStorage.getItem(k)||"";t.addEventListener("input",function(){localStorage.setItem(k,t.value);});});
+</script>
 </body>
 </html>
