@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>网站显示检查</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f6f8; color: #222; line-height: 1.5;
+    max-width: 720px; margin: 0 auto; padding: 16px 12px 60px;
+  }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #888; margin-bottom: 14px; }
+  .bar {
+    position: sticky; top: 0; z-index: 5;
+    background: #f5f6f8; padding: 8px 0 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  #prog { font-size: 13px; color: #666; flex: 1; }
+  button.export {
+    background: #1a73e8; color: #fff; border: 0; border-radius: 8px;
+    padding: 9px 18px; font-size: 15px; cursor: pointer;
+  }
+  button.export:active { background: #155ab6; }
+  .reset { font-size: 12px; color: #bbb; cursor: pointer; text-decoration: underline; }
+  h2 { font-size: 14px; color: #666; margin: 18px 0 8px; font-weight: 600; }
+  h2 small { font-weight: 400; color: #aaa; }
+  .card {
+    background: #fff; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  }
+  .row1 { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+  .row1 a { font-size: 15px; font-weight: 600; color: #1a73e8; text-decoration: none; word-break: break-all; }
+  .row1 a:visited { color: #7b3fb8; }
+  .checks { display: flex; gap: 12px; margin-left: auto; }
+  .checks label { font-size: 13px; color: #555; display: flex; align-items: center; gap: 3px; cursor: pointer; user-select: none; }
+  .checks input { width: 17px; height: 17px; accent-color: #1a73e8; }
+  textarea {
+    width: 100%; margin-top: 7px; border: 1px solid #e3e5e8; border-radius: 6px;
+    padding: 6px 8px; font-size: 14px; font-family: inherit; resize: vertical;
+    min-height: 30px; background: #fafbfc;
+  }
+  textarea:focus { outline: none; border-color: #1a73e8; background: #fff; }
+  textarea.hasbug { border-color: #e8a11a; background: #fffbf2; }
+  .note { font-size: 12px; color: #aaa; margin-top: 14px; }
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #333; color: #fff; padding: 10px 20px; border-radius: 8px;
+    font-size: 14px; opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 20;
+  }
+  #fallback {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 15; padding: 20px;
+  }
+  #fallback .box { background: #fff; border-radius: 10px; padding: 14px; max-width: 640px; margin: 40px auto; }
+  #fallback textarea { min-height: 260px; }
+  #fallback button { margin-top: 8px; padding: 8px 16px; border: 0; border-radius: 6px; background: #eee; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<h1>网站显示检查</h1>
+<div class="sub">点开链接看一遍，电脑手机各一次，看完打勾。有显示问题写在框里，最后点导出。</div>
+
+<div class="bar">
+  <span id="prog"></span>
+  <span class="reset" onclick="resetAll()">清空本轮</span>
+  <button class="export" onclick="doExport()">导出问题</button>
+</div>
+
+<div id="list"></div>
+
+<div class="note">旧牌子（丰满 / Won Translation）不算 bug；chinaedu 跳转到联系页是故意的。填的内容自动保存在本机浏览器里。</div>
+
+<div id="toast"></div>
+<div id="fallback"><div class="box">
+  <div style="font-size:14px;margin-bottom:6px">自动复制失败，长按全选复制：</div>
+  <textarea id="fbtext" readonly></textarea>
+  <button onclick="document.getElementById('fallback').style.display='none'">关闭</button>
+</div></div>
+
+<script>
+const SITES = [
+  ["必查", ""],
+  ["中文主站", "https://www.en-ch.com/"],
+  ["手机站", "https://www.translationchina.com/m/"],
+  ["在线下单", "https://www.translationchina.com/m/certificate"],
+  ["英文主页", "https://www.translationchina.com/"],
+  ["抽查", ""],
+  ["博客", "https://www.translationchina.com/blog/"],
+  ["广交会口译页", "https://www.translationchina.com/blog/canton-fair-interpreter-directory.html"],
+  ["加拿大移民文章", "https://www.en-ch.com/certificate/canada_immigration.html"],
+  ["留学翻译文章", "https://www.en-ch.com/certificate/study_abroad_translation.html"],
+  ["价格表", "https://www.en-ch.com/chprtrans.htm"],
+  ["FAQ", "https://www.translationchina.com/answers/"],
+  ["目录站", "随机点 3~5 个详情页"],
+  ["机场目录", "https://www.translationchina.com/airports/"],
+  ["公证处目录", "https://www.translationchina.com/notary/"],
+  ["机械厂商目录", "https://www.translationchina.com/manufacturers/machinery/"],
+  ["婚介目录", "https://www.tongshengfanyi.com/dating/"],
+  ["就医指南", "https://www.bosch-cn.com/medical/"]
+];
+const KEY = "siteqa-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) {}
+
+const list = document.getElementById("list");
+let html = "";
+SITES.forEach(([name, url], i) => {
+  if (!url.startsWith("http")) {
+    html += `<h2>${name}${url ? ` <small>（${url}）</small>` : ""}</h2>`;
+    return;
+  }
+  const s = state[url] || {};
+  html += `<div class="card">
+    <div class="row1">
+      <a href="${url}" target="_blank" rel="noopener">${name}</a>
+      <div class="checks">
+        <label><input type="checkbox" data-url="${url}" data-k="pc" ${s.pc ? "checked" : ""}>电脑</label>
+        <label><input type="checkbox" data-url="${url}" data-k="mo" ${s.mo ? "checked" : ""}>手机</label>
+      </div>
+    </div>
+    <textarea rows="1" data-url="${url}" data-k="bug" placeholder="有显示 bug 写这里，没有留空">${s.bug || ""}</textarea>
+  </div>`;
+});
+list.innerHTML = html;
+
+function save(url, k, v) {
+  state[url] = state[url] || {};
+  state[url][k] = v;
+  localStorage.setItem(KEY, JSON.stringify(state));
+  prog();
+}
+list.addEventListener("change", e => {
+  if (e.target.type === "checkbox") save(e.target.dataset.url, e.target.dataset.k, e.target.checked);
+});
+list.addEventListener("input", e => {
+  if (e.target.tagName === "TEXTAREA") {
+    save(e.target.dataset.url, "bug", e.target.value.trim());
+    e.target.classList.toggle("hasbug", !!e.target.value.trim());
+  }
+});
+document.querySelectorAll("textarea[data-url]").forEach(t => t.classList.toggle("hasbug", !!t.value.trim()));
+
+function prog() {
+  const urls = SITES.filter(s => s[1].startsWith("http")).map(s => s[1]);
+  const done = urls.filter(u => state[u] && state[u].pc && state[u].mo).length;
+  const bugs = urls.filter(u => state[u] && state[u].bug).length;
+  document.getElementById("prog").textContent = `已查 ${done}/${urls.length} · 问题 ${bugs}`;
+}
+prog();
+
+function doExport() {
+  const d = new Date().toISOString().slice(0, 10);
+  let out = `网站QA问题导出 ${d}\n以下是人工肉眼检查发现的显示问题，请逐条修复：\n`;
+  let n = 0;
+  SITES.forEach(([name, url]) => {
+    if (!url.startsWith("http")) return;
+    const s = state[url] || {};
+    if (!s.bug) return;
+    n++;
+    const dev = [s.pc ? "电脑已查" : "", s.mo ? "手机已查" : ""].filter(Boolean).join("，") || "未标注设备";
+    out += `\n${n}. ${name}（${dev}）\n${url}\n问题：${s.bug}\n`;
+  });
+  if (!n) { toast("还没有填任何问题"); return; }
+  navigator.clipboard.writeText(out).then(
+    () => toast(`已复制 ${n} 条问题，直接粘贴给 AI`),
+    () => { document.getElementById("fbtext").value = out; document.getElementById("fallback").style.display = "block"; }
+  );
+}
+
+function resetAll() {
+  if (!confirm("清空所有勾选和已填内容？")) return;
+  state = {};
+  localStorage.removeItem(KEY);
+  location.reload();
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.opacity = 1;
+  setTimeout(() => t.style.opacity = 0, 2200);
+}
+</script>
+</body>
+</html>
