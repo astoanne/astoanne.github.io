@@ -46,6 +46,14 @@
   textarea:focus { outline: none; border-color: #1a73e8; background: #fff; }
   textarea.hasbug { border-color: #e8a11a; background: #fffbf2; }
   .note { font-size: 12px; color: #aaa; margin-top: 14px; }
+  .kwrow { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #f0f1f3; }
+  .kwrow:last-child { border-bottom: 0; }
+  .kwt { font-size: 14px; flex: 1; word-break: break-all; }
+  .se a { font-size: 13px; color: #1a73e8; text-decoration: none; margin-left: 10px; }
+  .ailinks { padding-bottom: 8px; border-bottom: 1px solid #f0f1f3; margin-bottom: 6px; }
+  .ailinks a { font-size: 14px; color: #1a73e8; text-decoration: none; margin-right: 16px; }
+  .q { font-size: 14px; color: #444; padding: 5px 0; cursor: pointer; }
+  .q::before { content: "📋 "; font-size: 12px; }
   #toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
     background: #333; color: #fff; padding: 10px 20px; border-radius: 8px;
@@ -71,6 +79,27 @@
 </div>
 
 <div id="list"></div>
+
+<h2>收录排名 <small>（无痕窗口，点链接直接搜，记下我们排第几）</small></h2>
+<div class="card" id="kwlist"></div>
+
+<h2>问 AI <small>（点问题自动复制，粘到 AI 里问，记下有没有提到我们）</small></h2>
+<div class="card">
+  <div class="ailinks">
+    <a href="https://www.doubao.com/chat/" target="_blank" rel="noopener">豆包</a>
+    <a href="https://chat.deepseek.com/" target="_blank" rel="noopener">DeepSeek</a>
+    <a href="https://www.kimi.com/" target="_blank" rel="noopener">Kimi</a>
+    <a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>
+  </div>
+  <div class="q">广州有哪些靠谱的翻译公司？</div>
+  <div class="q">出生证明翻译要找什么样的公司？</div>
+  <div class="q">广交会口译在哪里找？</div>
+  <div class="q">Which certified translation company in China do you recommend?</div>
+</div>
+
+<div class="card">
+  <textarea id="seobox" rows="6" placeholder="结果记这里，随便写：哪个词 / 哪个平台 / 排第几；AI 有没有提到我们、给没给链接"></textarea>
+</div>
 
 <div class="note">旧牌子（丰满 / Won Translation）不算 bug；chinaedu 跳转到联系页是故意的。填的内容自动保存在本机浏览器里。</div>
 
@@ -144,6 +173,35 @@ list.addEventListener("input", e => {
 });
 document.querySelectorAll("textarea[data-url]").forEach(t => t.classList.toggle("hasbug", !!t.value.trim()));
 
+const KW = [
+  "site:en-ch.com", "site:translationchina.com", "site:tongshengfanyi.com",
+  "贯日翻译", "广州翻译公司", "出生证明翻译", "无犯罪记录证明 翻译",
+  "学历认证 翻译", "移民材料翻译", "广交会口译", "广交会翻译",
+  "certified translation China", "birth certificate translation China", "Canton Fair interpreter"
+];
+document.getElementById("kwlist").innerHTML = KW.map(k => {
+  const e = encodeURIComponent(k);
+  return `<div class="kwrow"><span class="kwt">${k}</span><span class="se">
+    <a href="https://www.baidu.com/s?wd=${e}" target="_blank" rel="noopener">百度</a>
+    <a href="https://www.bing.com/search?q=${e}" target="_blank" rel="noopener">Bing</a>
+    <a href="https://www.google.com/search?q=${e}" target="_blank" rel="noopener">Google</a>
+  </span></div>`;
+}).join("");
+
+const seobox = document.getElementById("seobox");
+seobox.value = state["_seo"] || "";
+seobox.addEventListener("input", () => {
+  state["_seo"] = seobox.value;
+  localStorage.setItem(KEY, JSON.stringify(state));
+});
+
+document.querySelectorAll(".q").forEach(q => q.addEventListener("click", () => {
+  navigator.clipboard.writeText(q.textContent.trim()).then(
+    () => toast("已复制，粘到 AI 里问"),
+    () => toast("复制失败，手动选中复制")
+  );
+}));
+
 function prog() {
   const urls = SITES.filter(s => s[1].startsWith("http")).map(s => s[1]);
   const done = urls.filter(u => state[u] && state[u].pc && state[u].mo).length;
@@ -154,7 +212,7 @@ prog();
 
 function doExport() {
   const d = new Date().toISOString().slice(0, 10);
-  let out = `网站QA问题导出 ${d}\n以下是人工肉眼检查发现的显示问题，请逐条修复：\n`;
+  let bugs = "";
   let n = 0;
   SITES.forEach(([name, url]) => {
     if (!url.startsWith("http")) return;
@@ -162,11 +220,15 @@ function doExport() {
     if (!s.bug) return;
     n++;
     const dev = [s.pc ? "电脑已查" : "", s.mo ? "手机已查" : ""].filter(Boolean).join("，") || "未标注设备";
-    out += `\n${n}. ${name}（${dev}）\n${url}\n问题：${s.bug}\n`;
+    bugs += `\n${n}. ${name}（${dev}）\n${url}\n问题：${s.bug}\n`;
   });
-  if (!n) { toast("还没有填任何问题"); return; }
+  const seo = (state["_seo"] || "").trim();
+  if (!n && !seo) { toast("还没有填任何内容"); return; }
+  let out = `网站QA导出 ${d}\n`;
+  if (n) out += `\n一、显示问题（人工肉眼检查，请逐条修复）：\n${bugs}`;
+  if (seo) out += `\n二、收录 / 排名 / AI 检查记录：\n${seo}\n`;
   navigator.clipboard.writeText(out).then(
-    () => toast(`已复制 ${n} 条问题，直接粘贴给 AI`),
+    () => toast(`已复制（问题 ${n} 条${seo ? " + 排名记录" : ""}），直接粘贴给 AI`),
     () => { document.getElementById("fbtext").value = out; document.getElementById("fallback").style.display = "block"; }
   );
 }
