@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>美宝服务机构 · 渠道合作洽谈表</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --line:#e3e6ea; --ink:#1a1d21; --dim:#6b7280;
+  --accent:#1f6feb; --warn:#b45309; --bad:#b91c1c; --good:#047857;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  line-height:1.65;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:24px;margin:0 0 6px;letter-spacing:-.3px}
+.sub{color:var(--dim);font-size:14px;margin-bottom:24px}
+h2{font-size:19px;margin:36px 0 12px;padding-top:14px;border-top:2px solid var(--line)}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.note{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:14px}
+.note b{color:var(--warn)}
+.key{background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:14px}
+.key b{color:var(--good)}
+small{color:var(--dim)}
+
+/* 合作方案 */
+.opt{border-left:4px solid var(--line);padding-left:14px;margin-bottom:20px}
+.opt.rec{border-left-color:var(--good)}
+.opt.no{border-left-color:#d1d5db;opacity:.85}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;vertical-align:2px;margin-left:6px;font-weight:600}
+.tag.rec{background:#d1fae5;color:#065f46}
+.tag.ice{background:#dbeafe;color:#1e40af}
+.tag.weak{background:#f3f4f6;color:#6b7280}
+.opt ul{margin:6px 0 0;padding-left:20px;font-size:14px}
+.opt li{margin-bottom:4px}
+.opt .who{font-size:13px;color:var(--dim);margin-top:8px}
+
+/* 目标卡片 */
+.tier{font-size:13px;font-weight:700;color:var(--dim);margin:22px 0 10px;letter-spacing:.5px}
+.t{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.t.p1{border-left:4px solid var(--good)}
+.t.p2{border-left:4px solid var(--accent)}
+.t.p3{border-left:4px solid #9ca3af}
+.t.p4{border-left:4px solid #d1d5db}
+.thead{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px}
+.tname{font-weight:700;font-size:16px}
+.tname a{color:var(--ink);text-decoration:none;border-bottom:1px dotted #9ca3af}
+.tname a:hover{color:var(--accent)}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;background:#eef2ff;color:#3730a3;font-weight:600}
+.badge.gz{background:#dcfce7;color:#166534}
+.badge.risk{background:#fef3c7;color:#92400e}
+.meta{font-size:13.5px;margin-top:8px}
+.meta div{margin-bottom:3px}
+.meta .lbl{color:var(--dim);display:inline-block;min-width:52px}
+.contact{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;
+  background:#f9fafb;border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-top:8px;word-break:break-all}
+.contact a{color:var(--accent);text-decoration:none}
+
+/* 记录区 */
+.rec-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+select,textarea,input{font-family:inherit;font-size:14px;border:1px solid var(--line);
+  border-radius:6px;padding:7px 9px;background:#fff;color:var(--ink)}
+select{min-width:120px}
+textarea{width:100%;min-height:54px;resize:vertical;margin-top:8px}
+input[type=text]{flex:1;min-width:130px}
+textarea:focus,select:focus,input:focus{outline:2px solid #bfdbfe;border-color:var(--accent)}
+
+/* 导出条 */
+.bar{position:sticky;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);
+  padding:12px 16px;margin:28px -16px -80px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  backdrop-filter:blur(8px)}
+button{font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:7px;
+  padding:9px 16px;cursor:pointer;background:var(--accent);color:#fff}
+button.ghost{background:#eef1f5;color:var(--ink)}
+button:active{transform:translateY(1px)}
+#stat{font-size:13px;color:var(--dim)}
+.ask{counter-reset:q;padding-left:0;list-style:none}
+.ask li{counter-increment:q;margin-bottom:9px;font-size:14.5px;padding-left:28px;position:relative}
+.ask li::before{content:counter(q);position:absolute;left:0;top:1px;width:20px;height:20px;
+  background:var(--accent);color:#fff;border-radius:50%;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+.ask li b{color:var(--accent)}
+.excl{font-size:14px}
+.excl li{margin-bottom:5px}
+@media(max-width:640px){
+  .wrap{padding:18px 12px 80px}
+  h1{font-size:20px}
+  .bar{margin:28px -12px -80px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>美宝服务机构 · 渠道合作洽谈表</h1>
+<div class="sub">贯日翻译 to-B 试点 · 2026-08-25 整理 · 12 家目标全部当天实测在线</div>
+
+<div class="key">
+<b>为什么值得打这些电话：</b>下面 12 家全部在卖「美宝换证 / 上户口 / 三级认证」，但<b>没有一家把「翻译」作为自己的服务列出来</b>——12 家官网内「翻译」出现 0 次。他们有客户、有流程，唯独缺这一环，客户目前多半是被打发去自己找翻译公司。这就是缺口。
+</div>
+
+<div class="note">
+<b>先明确目标：这一轮不是去签约，是去问清楚三件事</b> —— ① 他们客户的出生证翻译现在到底谁在做；② 有没有出过「翻译件不被接受、落户办不下来」的事；③ 他们更想自己卖还是转介绍。<br>
+问到了就算成功，谈不谈得成不重要。
+</div>
+
+<h2>一、四种合作模式</h2>
+<p style="font-size:14px;color:var(--dim)">按「对方接受难度」从低到高排，建议先用方案一破冰，再谈方案二或三。</p>
+
+<div class="opt rec">
+<h3>方案一 · 内容合作，不谈钱<span class="tag ice">破冰首选</span></h3>
+<p style="font-size:14px;margin-bottom:6px">我们免费提供一份《各城市美宝落户翻译要求对照表》给对方用，可以联名或署他们的名发。</p>
+<ul>
+<li><b>对方为什么会答应：</b>零成本、零风险、不用做决定，而且这份表他们自己做不出来——需要大量真实落户案例才能积累。</li>
+<li><b>戳中的痛点：</b>他们最怕的是客户回国落户失败反过来投诉他们。这张表直接降低他们的售后风险。</li>
+<li><b>我们得到：</b>建立信任、拿到对接人、后面谈生意就顺了；顺带外链和曝光。</li>
+</ul>
+<div class="who">适合：全部 12 家，作为第一次接触的由头</div>
+</div>
+
+<div class="opt rec">
+<h3>方案二 · 白牌渠道价<span class="tag rec">主推</span></h3>
+<p style="font-size:14px;margin-bottom:6px">我们给一个渠道价，对方自己定价卖给客户，差价归他们；翻译件可以只出现他们的品牌。</p>
+<ul>
+<li><b>对方为什么会答应：</b>凭空多一个利润项，客户关系完全留在他们手里，不用担心客户被我们截走。</li>
+<li><b>我们得到：</b>稳定批量单，且获客成本为零。</li>
+<li><b>要准备好的：</b>渠道价、起订量、交付时效（现在是 0.5–1 个工作日 + 顺丰）。<b>具体价格由 Sara 定</b>，电话里先别报数。</li>
+</ul>
+<div class="who">适合：有品牌、在意客户归属的机构 —— 小绿妈、美福嘉儿、家有美宝、美成达</div>
+</div>
+
+<div class="opt">
+<h3>方案三 · 打包嵌入，按成本价<span class="tag ice">换量</span></h3>
+<p style="font-size:14px;margin-bottom:6px">近乎成本价供货，让对方把「含盖章翻译件」直接写进换证套餐里当卖点。</p>
+<ul>
+<li><b>对方为什么会答应：</b>套餐显得更完整，可以拿去打同行，采购成本几乎为零。</li>
+<li><b>我们图的不是这一单的钱：</b>是进了他们的标准流程之后，后续的结婚证、护照、I-797、公证认证都会顺着过来。</li>
+</ul>
+<div class="who">适合：同质化严重、急需差异化卖点的中型机构</div>
+</div>
+
+<div class="opt no">
+<h3>方案四 · 转介绍返佣<span class="tag weak">不建议主推</span></h3>
+<p style="font-size:14px;margin-bottom:6px">对方把客户丢给我们，我们按成交返一笔。</p>
+<ul>
+<li><b>问题在于金额太小：</b>一份证件翻译本身就是小额，返佣的绝对值低到对方懒得记。对一家有几百万流水的机构来说，这点钱推动不了任何人。</li>
+<li><b>唯一的优点是摩擦最小：</b>对方什么都不用干。</li>
+</ul>
+<div class="who">只对个人 IP 型的号用（周老师、许老师、胖爸爸）——他们决策快、单干、蚊子肉也是肉</div>
+</div>
+
+<h2>二、电话里问什么</h2>
+<div class="card">
+<ol class="ask">
+<li>你们客户回国上户口，<b>出生证明的翻译现在是怎么解决的</b>？是你们自己找人做，还是让客户自己去找翻译公司？</li>
+<li>有没有遇到过<b>客户拿着翻译件去派出所办不下来</b>的情况？</li>
+<li>你们的客户主要落户在<b>哪些城市</b>？（各地要求差别很大，这是我们最有把握的地方）</li>
+<li>一个月大概有<b>多少个美宝</b>要办上户口这类手续？</li>
+<li>如果有一家能盖章、还能针对不同城市要求给判断的翻译公司，你们更想<b>自己卖，还是直接转介绍</b>？</li>
+<li>这事<b>你能定，还是要找别人</b>？（一定要问，不然白聊）</li>
+</ol>
+</div>
+
+<h2>三、目标名单（12 家）</h2>
+
+<div class="tier">■ 第一梯队 · 广州本地，可以直接约见面</div>
+
+<div class="t p1" data-id="mcd">
+<div class="thead"><span class="tname"><a href="https://www.mcdvisa.com/" target="_blank" rel="noopener">美成达移民</a></span><span class="badge gz">广州 · 可面谈</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://www.mcdvisa.com/" target="_blank" rel="noopener">mcdvisa.com</a></div>
+<div><span class="lbl">地址</span>广州天河北路 233 号中信广场 65 楼 6502-03 室</div>
+<div><span class="lbl">在营</span>粤ICP备2021137038号 · 版权 1999~2026 · 有美宝回国上户口指引</div>
+<div><span class="lbl">缺口</span>全站「翻译」0 次；只把「出生证明中文翻译」写成<b>客户须自备材料</b> —— 等于明说了这活他们不干</div>
+</div>
+<div class="contact">400-873-5099　|　139-2248-0557　|　<a href="mailto:service@mcdvisa.com">service@mcdvisa.com</a></div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录：他们现在翻译谁做的？出过问题吗？客户落哪些城市？月均几单？谁能拍板？"></textarea>
+</div>
+
+<div class="t p1" data-id="jymb">
+<div class="thead"><span class="tname"><a href="https://www.meibaola.com/" target="_blank" rel="noopener">家有美宝</a></span><span class="badge gz">广州有点 · 最活跃</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://www.meibaola.com/" target="_blank" rel="noopener">meibaola.com</a>　<a href="https://www.meibao5.com/" target="_blank" rel="noopener">meibao5.com</a></div>
+<div><span class="lbl">地址</span>广州天河华夏路 16 号富力盈凯广场（另有北京 / 上海 / 成都）</div>
+<div><span class="lbl">在营</span>沪ICP备16039678号-10 · 上海美物健康管理咨询 · <b>文章更新到 2026-08-25（就是今天）</b>，日更</div>
+<div><span class="lbl">缺口</span>设有「美宝换证」专栏和成长服务，「翻译」0 次</div>
+</div>
+<div class="contact">400-8786-221　|　微信 jymb916 / jymberic　|　QQ 3487365626　|　<a href="mailto:jymb@foxmail.com">jymb@foxmail.com</a>　|　美国 +1 626-662-0022</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="t p1" data-id="mfje">
+<div class="thead"><span class="tname"><a href="https://www.mifubaby.com/" target="_blank" rel="noopener">美福嘉儿</a></span><span class="badge gz">广州+深圳 · 可面谈</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://www.mifubaby.com/" target="_blank" rel="noopener">mifubaby.com</a>（mifujiaer.com / mifubaobao.com 是同一家的其他域名）</div>
+<div><span class="lbl">地址</span>广州林和西路 9 号耀中广场 · 天河猎德天盈广场东塔 · 深圳福田大中华 · 北京财富中心 A 座 · 上海虹桥路 777 号</div>
+<div><span class="lbl">在营</span>沪ICP备12033135号-2 等 · 2026 年文章（中美元首会晤 / 出生公民权诉讼）</div>
+<div><span class="lbl">缺口</span>主打「五证办理 + 美宝回国服务 + 上户口」，宣称服务到 18 周岁，「翻译」0 次</div>
+</div>
+<div class="contact">400-611-3391　|　131-2148-6651（电话即微信）</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="tier">■ 第二梯队 · 全国性品牌，量最大</div>
+
+<div class="t p2" data-id="xlm">
+<div class="thead"><span class="tname"><a href="https://www.meibao21.com/" target="_blank" rel="noopener">小绿妈</a></span><span class="badge">官网有「商务合作」入口</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://www.meibao21.com/" target="_blank" rel="noopener">meibao21.com</a>　<small>⚠️ 旧域名 xiaolvma.com 已停（502），别用</small></div>
+<div><span class="lbl">地址</span>北京朝阳区望京 SOHO T1-C-511 · 小绿妈国际咨询（北京）有限公司</div>
+<div><span class="lbl">在营</span>京ICP备14003459号-3 · 站点在线，但最新文章停在 2025-02，更新慢</div>
+<div><span class="lbl">缺口</span>定位「0–21 岁美宝服务」，换证 / 教育 / 家办 / 房产税务全都做，<b>唯独没有翻译</b>；网站自带商务合作页，最容易走正规渠道谈白牌</div>
+</div>
+<div class="contact">400-638-7868　|　<a href="mailto:xiaolvma@xiaolvma.com">xiaolvma@xiaolvma.com</a></div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="t p2" data-id="myb">
+<div class="thead"><span class="tname"><a href="http://www.meiyunbaby.cn/huiguo/" target="_blank" rel="noopener">美孕宝</a></span><span class="badge">整个栏目专讲回国</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="http://www.meiyunbaby.cn/huiguo/" target="_blank" rel="noopener">meiyunbaby.cn/huiguo/</a></div>
+<div><span class="lbl">在营</span>京ICP备2020045921号-3 · 2025 年政策文章 · 未公布实体地址</div>
+<div><span class="lbl">缺口</span>「回国」栏目整个在讲上户口和旅行证换证，「翻译」0 次</div>
+</div>
+<div class="contact">400-801-0932　|　微信公众号 myunbao</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="t p2" data-id="gb">
+<div class="thead"><span class="tname"><a href="http://www.global-baby.com/" target="_blank" rel="noopener">环球宝贝</a></span><span class="badge risk">HTTPS 证书过期，用 http</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="http://www.global-baby.com/" target="_blank" rel="noopener">global-baby.com</a>（globalbaby6/7/8.com 是同一家）</div>
+<div><span class="lbl">在营</span>沪ICP备17025093号-2 · 上海美睦健康管理咨询 · 文章更新到 2026-08-22 · 已转向加拿大 / 塞班线</div>
+<div><span class="lbl">备注</span>四个城市的地址和「家有美宝」几乎一样，<b>疑似同一集团</b> —— 两家都联系的话注意别撞车</div>
+</div>
+<div class="contact">177-2107-3529　|　微信 globalbaby6</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="tier">■ 第三梯队 · 个人 IP，决策快，适合先拿来试水</div>
+
+<div class="t p3" data-id="yaolue">
+<div class="thead"><span class="tname"><a href="https://www.yaolue.com/" target="_blank" rel="noopener">赴美生子要略网（周老师）</a></span><span class="badge">试点首选</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://www.yaolue.com/" target="_blank" rel="noopener">yaolue.com</a></div>
+<div><span class="lbl">在营</span>浙ICP备16028297号-4 · 最新文章 2025-12-24</div>
+<div><span class="lbl">缺口</span>栏目结构就是我们的客户画像：<b>上户口 111 篇、更换旅行证 156 篇、出生纸三级认证 37 篇</b>；「翻译」0 次。单人运营，微信直接能找到人，谈砸了也没损失</div>
+</div>
+<div class="contact">150-6715-3607（电话即微信）　|　微信 yaolue99</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="t p3" data-id="sunny">
+<div class="thead"><span class="tname"><a href="https://www.nysunnybb.com/" target="_blank" rel="noopener">纽约阳光美婴</a></span><span class="badge">美国端 · 更新到 2026-07</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://www.nysunnybb.com/" target="_blank" rel="noopener">nysunnybb.com</a>　·　纽约法拉盛三会馆</div>
+<div><span class="lbl">在营</span>闽ICP备2024062586号-1 · 最新动态 2026-07-25</div>
+<div><span class="lbl">缺口</span>做新生儿回国材料办理、美宝回国户口咨询，「翻译」0 次</div>
+</div>
+<div class="contact">微信 / 小红书 sunnybb9928　|　美国 +1 929-606-9928　|　国内 +86 184-5916-4670</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="t p3" data-id="pbb">
+<div class="thead"><span class="tname"><a href="https://www.lapangbaba.com/" target="_blank" rel="noopener">洛杉矶胖爸爸</a></span><span class="badge risk">内容已停更</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://www.lapangbaba.com/" target="_blank" rel="noopener">lapangbaba.com</a>　·　洛杉矶</div>
+<div><span class="lbl">在营</span>站点能开，但版权 ©2025、最新文章停在 2025-01 —— <b>先微信问，别指望电话</b></div>
+<div><span class="lbl">缺口</span>做三级认证 / 出生纸 / 社安卡 / 旅行证 + 回国上户口指导，「翻译」0 次</div>
+</div>
+<div class="contact">微信 Leo203060　|　+1 626-899-5057</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="t p3" data-id="xls">
+<div class="thead"><span class="tname"><a href="http://www.xulaoshi68.com/followupservices/121.html" target="_blank" rel="noopener">赴美生子许老师</a></span><span class="badge risk">时效弱</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="http://www.xulaoshi68.com/followupservices/121.html" target="_blank" rel="noopener">xulaoshi68.com</a></div>
+<div><span class="lbl">在营</span>页面能开，但 sitemap 最新只到 2024-11、版权 2014 —— <b>可能已半停业，排后面打</b></div>
+<div><span class="lbl">缺口</span>设「后续服务」和「美宝办证专题」，覆盖户口 / 旅行证 / 三级认证补办，「翻译」0 次</div>
+</div>
+<div class="contact">159-6710-5215　|　微信 xulaoshi702　|　公众号 fumeishengzi68</div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="tier">■ 第四梯队 · 加拿大线 / 低优先</div>
+
+<div class="t p4" data-id="fy">
+<div class="thead"><span class="tname"><a href="https://fycanadababy.com/zh/" target="_blank" rel="noopener">枫孕美加</a></span><span class="badge">加宝线</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="https://fycanadababy.com/zh/" target="_blank" rel="noopener">fycanadababy.com</a>　·　中加两地注册</div>
+<div><span class="lbl">为什么值得试</span>加拿大没有美国那种打击，这条线可能比美国线健康；<b>加拿大出生纸同样要认证 + 翻译才能上户口</b></div>
+<div><span class="lbl">在营</span>版权 2023，时效一般。「翻译」0 次</div>
+</div>
+<div class="contact">186-6112-9873　|　微信 393104712　|　加拿大 +1 778-991-0176（同 WhatsApp）　|　<a href="mailto:PANLPAUL2010@GMAIL.COM">PANLPAUL2010@GMAIL.COM</a></div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<div class="t p4" data-id="cbc">
+<div class="thead"><span class="tname"><a href="http://cbcbaby.com/contact/" target="_blank" rel="noopener">加中宝贝 CBC Baby</a></span><span class="badge risk">多半已废弃 · 排最后</span></div>
+<div class="meta">
+<div><span class="lbl">网站</span><a href="http://cbcbaby.com/contact/" target="_blank" rel="noopener">cbcbaby.com</a></div>
+<div><span class="lbl">地址</span>广州天河体育西路 101-103 号（另北京 / 上海 / 长春 / 多伦多）</div>
+<div><span class="lbl">风险</span>版权 2015、新闻停在 2015、文案里还写着「将于 2016 年 1 月投入使用」——<b>基本可以判定已废弃</b>，只是地址在广州所以留着，最后再打</div>
+</div>
+<div class="contact">647-727-3202　|　950-405-92671　|　微信 2216060795　|　<a href="mailto:info@yuezicanada.com">info@yuezicanada.com</a></div>
+<div class="rec-row">
+<select data-f="st"><option value="">未联系</option><option>已联系·待回</option><option>有意向</option><option>无意向</option><option>需再跟进</option></select>
+<input type="text" data-f="who" placeholder="对接人 / 职位">
+<input type="text" data-f="date" placeholder="联系日期">
+</div>
+<textarea data-f="note" placeholder="通话记录…"></textarea>
+</div>
+
+<h2>四、不要联系的（已核实是同行）</h2>
+<div class="card">
+<ul class="excl">
+<li><b>成和新生</b>（深圳福田金地中心 28 楼，400-626-6682）—— 内容更新到 2026-08，很活跃，<b>但官网明写「证件办理及翻译支持服务」，是直接竞争对手</b></li>
+<li><b>中签 chinaentryvisa.com</b> —— 美国本土代办，三级认证套餐里<b>已经打包了盖章中文翻译</b>，这是把我们这一环吃掉的那类玩家</li>
+<li><b>傲凡咨询 intrz.com</b>、<b>美域代办 americantranslationservice.com</b> —— 同样自营翻译</li>
+</ul>
+<p style="margin:12px 0 0;font-size:13.5px;color:var(--dim)"><b>已确认关停，不用查了：</b>xiaolvma.com（502，已搬到 meibao21.com）、meibaozhijia.com、bllib.com、51fumeishengzi.cn（ICP 号造假）、jiiaa.com、usbaby.cn（域名已变成汕头玩具公司）</p>
+</div>
+
+<div class="bar">
+<button onclick="exportAll()">一键导出记录</button>
+<button class="ghost" onclick="clearAll()">清空</button>
+<span id="stat"></span>
+</div>
+
+</div>
+
+<script>
+const KEY='meibao-channel-v1';
+function cards(){return document.querySelectorAll('.t[data-id]')}
+function load(){
+  let d={};
+  try{d=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){d={}}
+  cards().forEach(c=>{
+    const id=c.dataset.id, rec=d[id]||{};
+    c.querySelectorAll('[data-f]').forEach(el=>{ if(rec[el.dataset.f]) el.value=rec[el.dataset.f] });
+  });
+  stat();
+}
+function save(){
+  const d={};
+  cards().forEach(c=>{
+    const rec={};
+    c.querySelectorAll('[data-f]').forEach(el=>{ if(el.value.trim()) rec[el.dataset.f]=el.value.trim() });
+    if(Object.keys(rec).length) d[c.dataset.id]=rec;
+  });
+  localStorage.setItem(KEY,JSON.stringify(d));
+  stat();
+}
+function stat(){
+  let n=0;
+  cards().forEach(c=>{
+    const f=[...c.querySelectorAll('[data-f]')].some(el=>el.value.trim());
+    if(f) n++;
+  });
+  document.getElementById('stat').textContent = n?`已记录 ${n} / ${cards().length} 家`:'还没有记录';
+}
+document.addEventListener('input',e=>{ if(e.target.dataset.f) save() });
+document.addEventListener('change',e=>{ if(e.target.dataset.f) save() });
+
+function exportAll(){
+  const lines=['美宝服务机构 · 渠道洽谈记录','导出时间：'+new Date().toLocaleString('zh-CN'),''];
+  let n=0;
+  cards().forEach(c=>{
+    const name=c.querySelector('.tname').innerText.trim();
+    const g=f=>{const el=c.querySelector('[data-f="'+f+'"]');return el?el.value.trim():''};
+    const st=g('st'),who=g('who'),date=g('date'),note=g('note');
+    if(!(st||who||date||note)) return;
+    n++;
+    lines.push('【'+name+'】');
+    if(st)lines.push('  状态：'+st);
+    if(who)lines.push('  对接人：'+who);
+    if(date)lines.push('  联系日期：'+date);
+    if(note)lines.push('  记录：'+note.replace(/\n/g,'\n        '));
+    lines.push('');
+  });
+  if(!n){alert('还没有填任何记录');return}
+  const txt=lines.join('\n');
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='美宝渠道洽谈记录.txt';
+  a.click();
+  if(navigator.clipboard) navigator.clipboard.writeText(txt).catch(()=>{});
+}
+function clearAll(){
+  if(!confirm('清空所有已填记录？不可恢复。'))return;
+  localStorage.removeItem(KEY);
+  document.querySelectorAll('[data-f]').forEach(el=>el.value='');
+  stat();
+}
+load();
+</script>
+</body>
+</html>
