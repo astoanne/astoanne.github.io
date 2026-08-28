@@ -1,0 +1,969 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#d84a2f">
+  <meta property="og:title" content="外国展商获客内容作战手册">
+  <meta property="og:description" content="给实习生的可执行内容系统：选题、核验、改写、发布、复盘。">
+  <title>外国展商获客内容作战手册 · 贯日翻译</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fira+Sans+Condensed:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap');
+
+    :root {
+      --paper: #f4efe5;
+      --paper-2: #fffaf0;
+      --ink: #17211d;
+      --muted: #65716b;
+      --line: #d7d0c3;
+      --red: #d84a2f;
+      --red-dark: #9d2d1d;
+      --green: #143f35;
+      --green-soft: #dce8df;
+      --yellow: #f0b845;
+      --yellow-soft: #fff1c6;
+      --blue: #3566a8;
+      --shadow: 0 18px 50px rgba(46, 38, 26, .10);
+      --radius: 18px;
+      --display: "Fira Sans Condensed", "Noto Sans SC", sans-serif;
+      --body: "Noto Sans SC", sans-serif;
+      --mono: "DM Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 2%, rgba(216,74,47,.12), transparent 25rem),
+        linear-gradient(rgba(23,33,29,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23,33,29,.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 28px 28px, 28px 28px, auto;
+      font-family: var(--body);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-underline-offset: 3px; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .mono { font-family: var(--mono); }
+    .eyebrow {
+      font: 500 12px/1.2 var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--red-dark);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(23,33,29,.14);
+      background: rgba(244,239,229,.92);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; }
+    .brand-mark {
+      width: 30px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--red);
+      border-radius: 50% 50% 46% 54% / 58% 42% 58% 42%;
+      transform: rotate(-8deg);
+      font: 700 14px var(--display);
+    }
+    .topnav { display: flex; align-items: center; gap: 18px; font-size: 13px; }
+    .topnav a { text-decoration: none; color: var(--muted); }
+    .topnav a:hover { color: var(--red-dark); }
+    .top-cta {
+      padding: 8px 13px;
+      color: #fff !important;
+      background: var(--green);
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .hero { padding: 76px 0 58px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+      gap: 42px;
+      align-items: end;
+    }
+    h1, h2, h3, h4 { font-family: var(--display); line-height: 1.06; }
+    h1 {
+      max-width: 780px;
+      margin: 14px 0 18px;
+      font-size: clamp(48px, 7.8vw, 98px);
+      letter-spacing: -.045em;
+    }
+    h1 em { color: var(--red); font-style: normal; }
+    .lede { max-width: 720px; margin: 0; font-size: clamp(18px, 2vw, 24px); color: #3e4a44; }
+    .hero-rule {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      color: #fff;
+      background: var(--green);
+      border-radius: 30px 30px 30px 6px;
+      box-shadow: var(--shadow);
+    }
+    .hero-rule::after {
+      content: "90/10";
+      position: absolute;
+      right: -12px;
+      bottom: -30px;
+      color: rgba(255,255,255,.07);
+      font: 800 110px/1 var(--display);
+    }
+    .rule-number { color: var(--yellow); font: 500 12px var(--mono); }
+    .hero-rule h2 { max-width: 390px; margin: 10px 0 12px; font-size: 35px; }
+    .hero-rule p { position: relative; z-index: 1; margin: 0; color: #dfe9e4; }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      margin-top: 48px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--line);
+    }
+    .fact { padding: 20px; background: rgba(255,250,240,.82); }
+    .fact strong { display: block; font: 800 32px/1 var(--display); }
+    .fact span { color: var(--muted); font-size: 13px; }
+
+    .section { padding: 74px 0; border-top: 1px solid rgba(23,33,29,.12); }
+    .section-head {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+      gap: 26px;
+      align-items: start;
+      margin-bottom: 34px;
+    }
+    .section-head h2 { margin: 0; font-size: clamp(35px, 5vw, 58px); letter-spacing: -.025em; }
+    .section-head p { max-width: 680px; margin: 12px 0 0; color: var(--muted); font-size: 16px; }
+
+    .start-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .step-card {
+      position: relative;
+      min-height: 245px;
+      padding: 24px;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(46,38,26,.05);
+    }
+    .step-card .num { color: var(--red); font: 500 12px var(--mono); }
+    .step-card h3 { margin: 32px 0 10px; font-size: 28px; }
+    .step-card p { color: var(--muted); }
+    .step-card ul { margin: 14px 0 0; padding-left: 20px; }
+    .step-card li { margin: 6px 0; }
+
+    .north-star {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .metric-card { padding: 24px; border-radius: var(--radius); }
+    .metric-card.good { color: #fff; background: var(--green); }
+    .metric-card.bad { background: #e5dfd4; }
+    .metric-card h3 { margin: 0 0 12px; font-size: 25px; }
+    .metric-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .metric-pill { padding: 7px 11px; border: 1px solid currentColor; border-radius: 999px; font-size: 13px; }
+
+    .platform-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .platform {
+      display: flex;
+      flex-direction: column;
+      padding: 22px;
+      min-height: 360px;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .platform-code { color: var(--red); font: 500 12px var(--mono); }
+    .platform h3 { margin: 28px 0 4px; font-size: 31px; }
+    .platform .role { margin: 0 0 18px; font-weight: 700; }
+    .platform ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .platform li { margin: 8px 0; }
+    .platform .recipe { margin-top: auto; padding-top: 18px; color: var(--ink); font-size: 13px; }
+    .platform .recipe b { color: var(--red-dark); }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper-2);
+    }
+    .pipe-step { position: relative; min-height: 230px; padding: 22px; border-right: 1px solid var(--line); }
+    .pipe-step:last-child { border: 0; }
+    .pipe-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 24px;
+      right: -12px;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--paper);
+      font-family: var(--mono);
+    }
+    .pipe-step span { color: var(--red); font: 500 11px var(--mono); }
+    .pipe-step h3 { margin: 28px 0 8px; font-size: 23px; }
+    .pipe-step p { margin: 0; color: var(--muted); font-size: 13px; }
+    .warning {
+      margin-top: 18px;
+      padding: 18px 20px;
+      border-left: 5px solid var(--red);
+      background: #ffe7de;
+      font-size: 14px;
+    }
+
+    .phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .phase {
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+      padding: 25px;
+      color: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    .phase:nth-child(1) { background: #193b35; }
+    .phase:nth-child(2) { background: #9e3c29; }
+    .phase:nth-child(3) { background: #2e5275; }
+    .phase::after {
+      content: attr(data-phase);
+      position: absolute;
+      right: -10px;
+      bottom: -40px;
+      color: rgba(255,255,255,.08);
+      font: 800 170px/1 var(--display);
+    }
+    .phase .date { color: var(--yellow); font: 500 12px var(--mono); }
+    .phase h3 { margin: 22px 0 6px; font-size: 37px; }
+    .phase .sectors { color: rgba(255,255,255,.72); font-size: 13px; }
+    .phase h4 { margin: 32px 0 8px; font-size: 17px; }
+    .phase ul { position: relative; z-index: 1; margin: 0; padding-left: 19px; font-size: 14px; }
+    .phase li { margin: 9px 0; }
+
+    .ideas-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .filter-btn {
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--paper-2);
+    }
+    .filter-btn.active { color: #fff; border-color: var(--green); background: var(--green); }
+    .idea-search {
+      flex: 1 1 260px;
+      min-width: 220px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--paper-2);
+    }
+    .idea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .idea-card {
+      min-height: 190px;
+      padding: 18px;
+      background: rgba(255,250,240,.86);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+    .idea-card h3 { margin: 18px 0 8px; font-size: 21px; }
+    .idea-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { padding: 3px 7px; color: var(--blue); background: #e8eff8; border-radius: 4px; font: 500 10px var(--mono); }
+    .empty { display: none; padding: 30px; border: 1px dashed var(--line); border-radius: 14px; text-align: center; color: var(--muted); }
+
+    .daily {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
+    .checklist, .rescue, .calendar, .template-card, .link-builder, .sources {
+      padding: 24px;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .checklist h3, .rescue h3, .calendar h3, .link-builder h3, .sources h3 { margin: 0 0 18px; font-size: 26px; }
+    .check-row { display: grid; grid-template-columns: 42px 95px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .check-row:first-of-type { border-top: 0; }
+    .check-row .time { color: var(--red-dark); font: 500 12px var(--mono); }
+    .check-row b { font-size: 14px; }
+    .check-row span:last-child { color: var(--muted); font-size: 13px; }
+    .rescue { background: var(--yellow-soft); }
+    .rescue-item { padding: 13px 0; border-top: 1px solid rgba(23,33,29,.15); }
+    .rescue-item:first-of-type { border-top: 0; }
+    .rescue-item b { display: block; font-size: 14px; }
+    .rescue-item span { color: #6e6041; font-size: 13px; }
+
+    .traffic-light { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+    .light { padding: 18px; border-radius: 14px; border: 1px solid var(--line); }
+    .light.green { background: #e3f0e7; }
+    .light.yellow { background: #fff1c6; }
+    .light.red { background: #ffe0d8; }
+    .light h4 { margin: 0 0 8px; font-size: 18px; }
+    .light p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .calendar { margin-top: 18px; }
+    .weeks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--line); }
+    .week { padding: 18px; background: #fffaf0; }
+    .week strong { display: block; font: 800 21px var(--display); }
+    .week span { color: var(--red-dark); font: 500 10px var(--mono); }
+    .week p { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+
+    .templates { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .template-card { position: relative; }
+    .template-card .label { color: var(--red-dark); font: 500 11px var(--mono); }
+    .template-card h3 { margin: 14px 60px 12px 0; font-size: 24px; }
+    .copy {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 12px;
+    }
+    .copy:hover { color: var(--ink); border-color: var(--ink); }
+    .copy-text {
+      white-space: pre-wrap;
+      padding: 14px;
+      color: #2f3834;
+      background: #f2eee5;
+      border-radius: 10px;
+      font: 400 12px/1.7 var(--mono);
+    }
+    .template-note { margin-top: 10px; color: var(--muted); font-size: 12px; }
+
+    .link-builder { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px; background: var(--green); color: #fff; }
+    .link-builder p { color: #c9d8d2; }
+    .builder-fields { display: grid; gap: 10px; }
+    .builder-fields label { font: 500 11px var(--mono); color: var(--yellow); }
+    .builder-fields input, .builder-fields select {
+      width: 100%;
+      margin-top: 5px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 8px;
+      color: #fff;
+      background: rgba(255,255,255,.08);
+    }
+    .builder-fields option { color: var(--ink); }
+    .built-link { word-break: break-all; min-height: 90px; padding: 13px; color: #f8f2df; background: rgba(0,0,0,.18); border-radius: 10px; font: 400 12px/1.6 var(--mono); }
+    .builder-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .builder-actions button { padding: 8px 12px; border: 0; border-radius: 8px; background: var(--yellow); color: var(--ink); font-weight: 700; }
+
+    .sources { margin-top: 18px; }
+    .source-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .source-link { display: block; padding: 14px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; }
+    .source-link:hover { border-color: var(--red); }
+    .source-link b { display: block; font-size: 14px; }
+    .source-link span { color: var(--muted); font-size: 12px; }
+
+    .finish {
+      padding: 72px 0 86px;
+      color: #fff;
+      background: var(--green);
+    }
+    .finish-grid { display: grid; grid-template-columns: 1fr .7fr; gap: 48px; align-items: end; }
+    .finish h2 { max-width: 760px; margin: 10px 0 18px; font-size: clamp(46px, 7vw, 86px); letter-spacing: -.04em; }
+    .finish p { max-width: 680px; color: #d5e2dd; }
+    .finish a.btn { display: inline-block; margin-top: 14px; padding: 13px 18px; color: var(--ink); background: var(--yellow); border-radius: 999px; text-decoration: none; font-weight: 800; }
+    .finish-check { padding: 22px; border: 1px solid rgba(255,255,255,.22); border-radius: 18px; }
+    .finish-check h3 { margin: 0 0 12px; font-size: 23px; }
+    .finish-check ul { margin: 0; padding-left: 19px; color: #d5e2dd; font-size: 14px; }
+    footer { padding: 20px 0; color: var(--muted); background: #0e2922; font-size: 12px; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--ink);
+      border-radius: 8px;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: .2s ease;
+      pointer-events: none;
+      font-size: 13px;
+    }
+    .toast.show { opacity: 1; transform: none; }
+
+    @media (max-width: 980px) {
+      .hero-grid, .daily, .finish-grid { grid-template-columns: 1fr; }
+      .platform-grid { grid-template-columns: 1fr 1fr; }
+      .pipeline { grid-template-columns: 1fr; }
+      .pipe-step { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
+      .pipe-step:not(:last-child)::after { content: "↓"; top: auto; right: 22px; bottom: -12px; }
+      .phases, .idea-grid { grid-template-columns: 1fr 1fr; }
+      .weeks { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      .shell { width: min(100% - 22px, 1180px); }
+      .topnav a:not(.top-cta) { display: none; }
+      .hero { padding-top: 48px; }
+      h1 { font-size: 53px; }
+      .facts { grid-template-columns: 1fr 1fr; }
+      .section { padding: 56px 0; }
+      .section-head { grid-template-columns: 1fr; gap: 9px; }
+      .start-grid, .platform-grid, .phases, .idea-grid, .templates, .traffic-light, .source-list { grid-template-columns: 1fr; }
+      .north-star, .link-builder { grid-template-columns: 1fr; }
+      .weeks { grid-template-columns: 1fr; }
+      .check-row { grid-template-columns: 38px 78px 1fr; gap: 8px; }
+      .phase { min-height: 360px; }
+    }
+    @media print {
+      .topbar, .copy, .ideas-toolbar, .link-builder, .toast { display: none !important; }
+      body { background: #fff; }
+      .section { break-before: page; }
+      .step-card, .platform, .phase, .idea-card, .template-card { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark">贯</span><span>外国展商获客手册</span></div>
+      <nav class="topnav" aria-label="页面导航">
+        <a href="#workflow">工作流</a>
+        <a href="#ideas">选题库</a>
+        <a href="#templates">发帖模板</a>
+        <a class="top-cta" href="https://www.translationchina.com/m/en/interpreters/" target="_blank" rel="noopener">查看推广页 ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="shell">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">Intern playbook · 140th Canton Fair · 2026</div>
+            <h1>先帮他<em>来中国做成生意</em>，再让他想到我们。</h1>
+            <p class="lede">给 X、LinkedIn、YouTube、Facebook 的可执行内容系统。不是“宣传公司”，而是持续回答外国展商和采购商出发前、展中、谈判后最着急的问题。</p>
+          </div>
+          <aside class="hero-rule">
+            <div class="rule-number">THE ONLY RULE</div>
+            <h2>90% 有用信息<br>10% 服务入口</h2>
+            <p>每条只解决一个问题，只给一个下一步。先让人收藏，再让人询价。</p>
+          </aside>
+        </div>
+        <div class="facts" aria-label="推广页现有信任信息">
+          <div class="fact"><strong>2003</strong><span>成立于广州</span></div>
+          <div class="fact"><strong>812</strong><span>页面可浏览译员</span></div>
+          <div class="fact"><strong>14</strong><span>页面可筛选语言</span></div>
+          <div class="fact"><strong>12</strong><span>页面可筛选行业</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="start">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">01 · Start here</div>
+          <div><h2>实习生第一周，只做三件事</h2><p>不要一上来“运营四个平台”。先搭好可重复的最小系统：一个受众、一批来源、一个能追踪的落地页。</p></div>
+        </div>
+        <div class="start-grid">
+          <article class="step-card">
+            <div class="num">STEP 01</div>
+            <h3>把对象说具体</h3>
+            <p>每条内容开工前先填一句：</p>
+            <ul>
+              <li>谁：海外采购商 / 国际馆展商 / 首次来华团队</li>
+              <li>何时：出发前 / 到达日 / 展中 / 工厂考察 / 展后</li>
+              <li>行业：三期中的一个小类</li>
+            </ul>
+          </article>
+          <article class="step-card">
+            <div class="num">STEP 02</div>
+            <h3>建立 20 个可靠来源</h3>
+            <p>小红书、知乎、抖音只负责“发现问题”；日期、交通、办证、酒店、政策必须回到官方来源复核。</p>
+            <ul>
+              <li>广交会官网与当届海外买家指南</li>
+              <li>机场、地铁、政府、酒店官网</li>
+              <li>行业协会与监管机构</li>
+            </ul>
+          </article>
+          <article class="step-card">
+            <div class="num">STEP 03</div>
+            <h3>统一服务入口</h3>
+            <p>资料型帖子也要能回到同一个页面，但不要每段都卖服务。</p>
+            <ul>
+              <li>链接统一指向译员浏览页</li>
+              <li>每个平台使用独立 UTM</li>
+              <li>CTA 写动作：“Browse interpreters by language”</li>
+            </ul>
+          </article>
+        </div>
+        <div class="north-star">
+          <div class="metric-card good">
+            <h3>真正要追的数字</h3>
+            <div class="metric-list"><span class="metric-pill">落地页点击</span><span class="metric-pill">有效询盘</span><span class="metric-pill">询盘语种/行业</span><span class="metric-pill">预约译员天数</span></div>
+          </div>
+          <div class="metric-card bad">
+            <h3>只作参考，不当成绩</h3>
+            <div class="metric-list"><span class="metric-pill">粉丝数</span><span class="metric-pill">单条曝光</span><span class="metric-pill">无关点赞</span><span class="metric-pill">发帖总数</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="platforms">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">02 · Channels</div>
+          <div><h2>四个平台，四种任务</h2><p>同一个主题可以复用，但不能原文复制。LinkedIn 建信任，X 抢时效，YouTube 吃搜索，Facebook 进社群。</p></div>
+        </div>
+        <div class="platform-grid">
+          <article class="platform">
+            <div class="platform-code">B2B / TRUST</div><h3>LinkedIn</h3><p class="role">主阵地：决策人信任</p>
+            <ul><li>每周 2 条：实用清单 + 行业洞察</li><li>优先 PDF 轮播、现场照片、短原生视频</li><li>由真实员工账号参与评论，不刷模板</li><li>内容写给采购、销售负责人、参展负责人</li></ul>
+            <p class="recipe"><b>固定配方：</b>痛点钩子 → 3–5 条清单 → 中国现场细节 → 一个问题 → 软 CTA</p>
+          </article>
+          <article class="platform">
+            <div class="platform-code">REAL-TIME / REPLIES</div><h3>X</h3><p class="role">雷达：及时提醒与对话</p>
+            <ul><li>每周 3 条短帖或 1 条 5–7 段线程</li><li>围绕 #CantonFair、行业词与 Guangzhou</li><li>展期发入口、天气、交通、排队变化</li><li>每天主动回复 5 个真实参展问题</li></ul>
+            <p class="recipe"><b>固定配方：</b>一句突发/误区 → 3 个要点 → 官方来源 → 轻量链接</p>
+          </article>
+          <article class="platform">
+            <div class="platform-code">SEARCH / HOW-TO</div><h3>YouTube</h3><p class="role">内容资产：长期搜索流量</p>
+            <ul><li>每周 1 条 Short；每两周 1 条 3–6 分钟指南</li><li>不会拍就用地图/网页录屏 + 英文旁白</li><li>一个视频只回答一个搜索问题</li><li>标题写用户会搜的完整问题</li></ul>
+            <p class="recipe"><b>固定配方：</b>5 秒答案 → 3 个步骤 → 屏幕示范 → 描述区清单与落地页</p>
+          </article>
+          <article class="platform">
+            <div class="platform-code">GROUPS / COMMUNITY</div><h3>Facebook</h3><p class="role">社群：在华外商与行业群</p>
+            <ul><li>先读群规，先回答，再发自己的内容</li><li>每周 1 个长帖 + 3–5 次有用评论</li><li>适合酒店、支付、交通、现场求助类内容</li><li>避免把同一推广链接丢进多个群</li></ul>
+            <p class="recipe"><b>固定配方：</b>明确人群 → 可保存清单 → 邀请补充 → 群规允许时再放链接</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">03 · Content engine</div>
+          <div><h2>中文平台不是素材仓库，是“问题雷达”</h2><p>延续现有 Claude content-pipeline 的核心纪律：不同平台要重新写，事实不足就留待确认，不能靠“翻译得像真的”补齐。</p></div>
+        </div>
+        <div class="pipeline">
+          <article class="pipe-step"><span>01 / LISTEN</span><h3>发现问题</h3><p>在小红书、知乎、抖音、展商群搜“广交会 + 第一次 / 机场 / 酒店 / 付款 / 工厂”。只记录问题与关键词。</p></article>
+          <article class="pipe-step"><span>02 / VERIFY</span><h3>回官方核验</h3><p>用当届官方指南、机场/地铁/酒店官网确认日期、地点、价格与规则。截下来源链接和更新日期。</p></article>
+          <article class="pipe-step"><span>03 / ADD VALUE</span><h3>加入本地经验</h3><p>补上外国人真正会卡住的步骤、英文说法、地图顺序、现场沟通点。不要只做直译。</p></article>
+          <article class="pipe-step"><span>04 / REMAKE</span><h3>四种原生版本</h3><p>LinkedIn 做清单，X 做提醒，YouTube 做演示，Facebook 做讨论。开头、长度、CTA 都不同。</p></article>
+          <article class="pipe-step"><span>05 / LEARN</span><h3>记录与复用</h3><p>保存原问题、官方来源、英文稿、链接、数据。有效主题 30 天后换角度再发，而不是作废。</p></article>
+        </div>
+        <div class="warning"><b>版权与可信度底线：</b>不要下载并重发原作者的视频/图片，不要逐句翻译整篇帖子。提炼问题后自己重新研究、重新组织、自己做图，并在涉及规则时链接官方来源。</div>
+      </div>
+    </section>
+
+    <section class="section" id="phases">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">04 · Phase strategy</div>
+          <div><h2>三期不是三个日期，是三群不同的人</h2><p>总攻略只能吸引一次点击；行业化内容才能让海外团队觉得“这家公司懂我们的生意”。</p></div>
+        </div>
+        <div class="phases">
+          <article class="phase" data-phase="1">
+            <div class="date">OCT 15–19 · PHASE 1</div><h3>Advanced<br>Manufacturing</h3><div class="sectors">Electronics · Machinery & Auto · Hardware</div>
+            <h4>优先选题</h4><ul><li>机器规格、报价单、MOQ 的中英词汇表</li><li>如何安排广州—东莞—深圳工厂考察</li><li>第一次看工厂要问的 12 个问题</li><li>设备演示时译员需要提前拿到哪些资料</li><li>电池、认证、售后条款沟通易错点</li></ul>
+          </article>
+          <article class="phase" data-phase="2">
+            <div class="date">OCT 23–27 · PHASE 2</div><h3>Quality Home<br>Living</h3><div class="sectors">Building & Home · Chemicals & Materials</div>
+            <h4>优先选题</h4><ul><li>佛山家具/陶瓷工厂考察怎么排一天</li><li>定制、打样、色差、包装的谈判词汇</li><li>问供应商要 SDS / 检测报告的英文清单</li><li>建材买家常见的规格单位误会</li><li>从展位到工厂：谁负责交通与样品</li></ul>
+          </article>
+          <article class="phase" data-phase="3">
+            <div class="date">OCT 31–NOV 4 · PHASE 3</div><h3>Better<br>Life</h3><div class="sectors">Textiles · Food & Beverage · Beauty · Health</div>
+            <h4>优先选题</h4><ul><li>如何核验广州化妆品 OEM/ODM 工厂</li><li>配方、包材、起订量、备案沟通清单</li><li>服装 tech pack 与打样必备双语词汇</li><li>食品标签、过敏原、保质期要问什么</li><li>医疗健康产品演示的术语准备方法</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ideas">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">05 · Idea bank</div>
+          <div><h2>选题库：拿一个就能开工</h2><p>先按阶段筛，再按标题做。每张卡都给出最小成品，避免“搜了两小时还没开始写”。</p></div>
+        </div>
+        <div class="ideas-toolbar" aria-label="选题筛选">
+          <button class="filter-btn active" data-filter="all">全部</button>
+          <button class="filter-btn" data-filter="arrival">到达与生活</button>
+          <button class="filter-btn" data-filter="fair">展会现场</button>
+          <button class="filter-btn" data-filter="phase1">Phase 1</button>
+          <button class="filter-btn" data-filter="phase2">Phase 2</button>
+          <button class="filter-btn" data-filter="phase3">Phase 3</button>
+          <button class="filter-btn" data-filter="trust">翻译与信任</button>
+          <input class="idea-search" id="ideaSearch" type="search" placeholder="搜索：机场、酒店、化妆品、工厂……" aria-label="搜索选题">
+        </div>
+        <div class="idea-grid" id="ideaGrid"></div>
+        <div class="empty" id="ideaEmpty">没有匹配项。换一个更短的关键词试试。</div>
+      </div>
+    </section>
+
+    <section class="section" id="daily">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">06 · Anti-stuck system</div>
+          <div><h2>每天 90 分钟，做到“可以发布”</h2><p>任务结束条件不是“研究得差不多”，而是有一条已核验、已改写、带来源、带下一步的成品。</p></div>
+        </div>
+        <div class="daily">
+          <article class="checklist">
+            <h3>单条内容时间盒</h3>
+            <div class="check-row"><span class="time">15m</span><b>找问题</b><span>只收集 3 个候选，选最具体的一个，不继续刷。</span></div>
+            <div class="check-row"><span class="time">20m</span><b>核事实</b><span>找到 1–3 个权威来源，记下发布日期与链接。</span></div>
+            <div class="check-row"><span class="time">25m</span><b>写主稿</b><span>先写 LinkedIn 或 YouTube 主稿；一个问题、三到五个要点。</span></div>
+            <div class="check-row"><span class="time">15m</span><b>做素材</b><span>一张清单图，或 30–60 秒录屏。没有图也不拖延。</span></div>
+            <div class="check-row"><span class="time">10m</span><b>质检发布</b><span>检查数字、人名、链接、英文、CTA 与平台规则。</span></div>
+            <div class="check-row"><span class="time">05m</span><b>登记</b><span>在台账记标题、平台、UTM、发布日期；次日回填数据。</span></div>
+          </article>
+          <aside class="rescue">
+            <h3>卡住时，立刻降级</h3>
+            <div class="rescue-item"><b>找不到完整资料？</b><span>改成“3 个你出发前要向官方确认的问题”，不要编答案。</span></div>
+            <div class="rescue-item"><b>英文写不顺？</b><span>先写 5 条事实清单，再让 AI 改成自然英文；逐条反查含义。</span></div>
+            <div class="rescue-item"><b>不会做视频？</b><span>地图/官网录屏 + 旁白 + 自动字幕，就是合格 Short。</span></div>
+            <div class="rescue-item"><b>没有新选题？</b><span>从客户聊天、评论区和搜索自动补全中取一个真实问题。</span></div>
+            <div class="rescue-item"><b>不敢发？</b><span>使用下方红黄绿审核：绿色直接发，黄色核验后发，红色交负责人。</span></div>
+          </aside>
+        </div>
+
+        <div class="traffic-light">
+          <article class="light green"><h4>🟢 实习生可直接发</h4><p>常用中英术语、通用打包清单、如何准备译员 brief、已核验的公司事实、现场照片。</p></article>
+          <article class="light yellow"><h4>🟡 必须复核来源</h4><p>展期、航站楼、地铁、酒店、办证地点、开放时间、票价、支付与通信步骤。</p></article>
+          <article class="light red"><h4>🔴 负责人审核</h4><p>法律/监管结论、工厂排名、客户案例、报价、合作承诺、竞争对比、任何“保证通过”。</p></article>
+        </div>
+
+        <article class="calendar">
+          <h3>7 周冲刺安排</h3>
+          <div class="weeks">
+            <div class="week"><span>WEEK 1</span><strong>搭台</strong><p>完善四个平台简介、视觉、落地页、UTM；发布“广交会三期怎么选”。</p></div>
+            <div class="week"><span>WEEK 2</span><strong>到达</strong><p>机场、办证、支付、通信、酒店区域；做一份可收藏的 arrival checklist。</p></div>
+            <div class="week"><span>WEEK 3</span><strong>Phase 1</strong><p>机器规格、工厂考察、RFQ、技术口译准备；找 5 个制造业讨论参与。</p></div>
+            <div class="week"><span>WEEK 4</span><strong>Phase 2</strong><p>佛山路线、材质/检测、定制与打样；做一条地图录屏。</p></div>
+            <div class="week"><span>WEEK 5</span><strong>Phase 3</strong><p>化妆品 OEM 核验、服装 tech pack、食品标签；做行业词汇卡。</p></div>
+            <div class="week"><span>WEEK 6</span><strong>成交准备</strong><p>如何 brief 译员、谈判清单、工厂访问日程、展后 follow-up 邮件。</p></div>
+            <div class="week"><span>WEEK 7</span><strong>临场提醒</strong><p>天气与交通复核、最后清单、可用语种/行业入口；减少长文，增加提醒。</p></div>
+            <div class="week"><span>FAIR DAYS</span><strong>现场</strong><p>当天变化、实景路线、常见问题、行业观察；所有即时信息注明日期时间。</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="templates">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">07 · Copy-ready</div>
+          <div><h2>英文模板：替换方括号就能发</h2><p>模板故意写得短。实习生只需要补上经核验的细节与自己的观察，不要让 AI 自动填日期、价格或政策。</p></div>
+        </div>
+        <div class="templates">
+          <article class="template-card">
+            <div class="label">LINKEDIN · CHECKLIST</div><h3>第一次来广交会</h3><button class="copy" data-copy="tpl1">复制</button>
+            <div class="copy-text" id="tpl1">Coming to the Canton Fair for the first time?
+
+Before you book meetings, confirm these five things:
+
+1. Your correct phase and product category
+2. Buyer badge collection arrangements
+3. The entrance closest to your exhibition area
+4. A realistic travel buffer from your hotel
+5. Whether your meetings need an industry-specific interpreter
+
+[Add one locally verified detail here.]
+
+Save this checklist for your Guangzhou trip. Which part of the visit are you still planning?
+
+Browse Guangzhou-based interpreters by language and industry: [UTM LINK]</div>
+            <p class="template-note">配图：5 页 PDF 轮播；每页一个动作。日期和入口信息必须用当届官方指南复核。</p>
+          </article>
+
+          <article class="template-card">
+            <div class="label">X · THREAD</div><h3>机场到展馆线程</h3><button class="copy" data-copy="tpl2">复制</button>
+            <div class="copy-text" id="tpl2">Flying into Guangzhou for the Canton Fair? A quick arrival thread for overseas visitors:
+
+1/ First, confirm whether you land at [TERMINAL — VERIFIED DATE].
+
+2/ Decide before arrival: metro, taxi, or a pre-arranged pickup. Choose based on landing time, luggage, and hotel location—not just price.
+
+3/ Keep your hotel name and address in Chinese on your phone.
+
+4/ If you plan to collect a buyer badge away from the fair complex, check the latest official locations and service hours.
+
+5/ Official guide: [OFFICIAL SOURCE]
+Interpreter options by language and industry: [UTM LINK]</div>
+            <p class="template-note">不要把旧届机场柜台时间沿用到 140 届；每次发布前重查。</p>
+          </article>
+
+          <article class="template-card">
+            <div class="label">YOUTUBE SHORT · 45 SEC</div><h3>如何选广交会期数</h3><button class="copy" data-copy="tpl3">复制</button>
+            <div class="copy-text" id="tpl3">HOOK (0–5s)
+Don't book your Canton Fair trip until you know the right phase.
+
+BODY (5–35s)
+Phase 1, October 15–19, focuses on advanced manufacturing: electronics, machinery, vehicles, and hardware.
+
+Phase 2, October 23–27, is for home living, building materials, furniture, gifts, and related products.
+
+Phase 3, October 31–November 4, covers fashion, textiles, food, beauty, and health.
+
+CLOSE (35–45s)
+Check the official category list before booking. If your meetings cross industries, plan your interpreter by phase—not for the whole month.
+
+ON SCREEN
+Official schedule + interpreter link in description.</div>
+            <p class="template-note">画面：三张大字日期卡 + 官方网站录屏；字幕必须校对行业名称。</p>
+          </article>
+
+          <article class="template-card">
+            <div class="label">FACEBOOK · GROUP VALUE POST</div><h3>展会附近住哪里</h3><button class="copy" data-copy="tpl4">复制</button>
+            <div class="copy-text" id="tpl4">If you're choosing a Guangzhou hotel for the Canton Fair, don't look at distance alone.
+
+Check these four things:
+
+• Walking time to the nearest metro entrance
+• The number of transfers to Pazhou
+• Whether breakfast starts early enough for fair days
+• Whether the hotel offers current badge-related or shuttle services
+
+A hotel that looks “close” on a map can still create a slow morning if the route is awkward.
+
+I'm compiling a practical area-by-area checklist for overseas visitors. What matters most to you: shortest commute, restaurants nearby, or easier factory trips?</div>
+            <p class="template-note">先征集需求再做酒店榜单。不要转发未经核验的“官方酒店”名单。</p>
+          </article>
+
+          <article class="template-card">
+            <div class="label">LINKEDIN · PHASE 3</div><h3>化妆品 OEM 工厂核验</h3><button class="copy" data-copy="tpl5">复制</button>
+            <div class="copy-text" id="tpl5">A polished booth is not a factory audit.
+
+If you're sourcing private-label cosmetics in Guangzhou, use the fair to shortlist suppliers—then verify the operation behind the samples.
+
+Ask about:
+
+• The exact legal entity that will manufacture the product
+• Product category and production scope
+• Formula ownership and change-control process
+• Packaging compatibility and stability testing
+• MOQ by formula, shade, and packaging component
+• Documents available for your destination market
+
+The hard part is rarely translating one sentence. It's keeping the technical, commercial, and regulatory questions aligned across the booth meeting and factory visit.
+
+Save this list for Phase 3. [SOFT CTA OR UTM LINK]</div>
+            <p class="template-note">必须由懂行业的人审核。不要写“十大工厂”，除非有透明、可复核的评选方法。</p>
+          </article>
+
+          <article class="template-card">
+            <div class="label">TRUST POST · SERVICE</div><h3>为什么要行业匹配</h3><button class="copy" data-copy="tpl6">复制</button>
+            <div class="copy-text" id="tpl6">“Speaks English” and “can interpret a machinery negotiation” are not the same requirement.
+
+For a fair meeting, a useful interpreter should know what will actually happen:
+
+• Booth reception or scheduled negotiation?
+• Product demo or price discussion?
+• Factory visit after the fair?
+• Technical drawings, samples, or contracts involved?
+
+Send the agenda and product material before the meeting. That short preparation step usually matters more than a long generic introduction.
+
+Translation China has worked in Guangzhou since 2003. You can browse local interpreters by language and industry here: [UTM LINK]</div>
+            <p class="template-note">这是少量的直接服务帖。比例控制在全部内容的 10–20%。</p>
+          </article>
+        </div>
+
+        <article class="link-builder">
+          <div>
+            <div class="eyebrow" style="color:var(--yellow)">UTM BUILDER</div>
+            <h3>每条链接都要知道从哪里来</h3>
+            <p>选择平台、填写本条内容短名，复制后替换模板里的 [UTM LINK]。短名只用英文小写和连字符。</p>
+            <div class="built-link" id="builtLink" aria-live="polite"></div>
+            <div class="builder-actions"><button id="copyLink">复制链接</button></div>
+          </div>
+          <div class="builder-fields">
+            <label>PLATFORM<select id="utmSource"><option value="linkedin">LinkedIn</option><option value="x">X</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option></select></label>
+            <label>CAMPAIGN<input id="utmCampaign" value="cantonfair140" maxlength="40"></label>
+            <label>CONTENT NAME<input id="utmContent" value="first-time-checklist" maxlength="60"></label>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="sources">
+      <div class="shell">
+        <div class="section-head">
+          <div class="eyebrow">08 · Guardrails</div>
+          <div><h2>发布前的“六个一”</h2><p>一条内容只要同时满足下面六项，就是合格成品。缺任何一项，留在草稿箱。</p></div>
+        </div>
+        <div class="facts" style="grid-template-columns:repeat(3,1fr);margin-top:0">
+          <div class="fact"><strong>1</strong><span>个明确受众</span></div><div class="fact"><strong>1</strong><span>个具体问题</span></div><div class="fact"><strong>1+</strong><span>个可核验来源</span></div><div class="fact"><strong>1</strong><span>个自己的增量</span></div><div class="fact"><strong>1</strong><span>个清楚下一步</span></div><div class="fact"><strong>1</strong><span>条可追踪链接</span></div>
+        </div>
+        <article class="sources">
+          <h3>优先使用的来源</h3>
+          <div class="source-list">
+            <a class="source-link" href="https://www.cantonfair.org.cn/en-US" target="_blank" rel="noopener"><b>广交会官网 · 第 140 届日程与展区</b><span>日期、期数、展区与买家入口</span></a>
+            <a class="source-link" href="https://www.cantonfair.org.cn/en-US/pages/598494791797825536" target="_blank" rel="noopener"><b>2026 Overseas Buyer Attendance Guide</b><span>当届官方参会指南与多语言附件</span></a>
+            <a class="source-link" href="https://www.translationchina.com/m/en/interpreters/" target="_blank" rel="noopener"><b>Translation China · Canton Fair Interpreters</b><span>唯一统一的服务落地页</span></a>
+            <a class="source-link" href="https://www.linkedin.com/business/marketing/blog/content-marketing/tips-for-growing-organic-marketing-reach" target="_blank" rel="noopener"><b>LinkedIn · Organic reach guidance</b><span>持续发布、按平台改写、帮助受众解决问题</span></a>
+            <a class="source-link" href="https://support.google.com/youtube/answer/72431?hl=en" target="_blank" rel="noopener"><b>YouTube · Thumbnail guidance</b><span>长视频与 Shorts 的封面尺寸和规则</span></a>
+            <a class="source-link" href="https://www.gz.gov.cn/" target="_blank" rel="noopener"><b>广州市政府门户</b><span>交通、城市服务与最新官方通知的入口</span></a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="finish">
+      <div class="shell finish-grid">
+        <div>
+          <div class="eyebrow" style="color:var(--yellow)">THE JOB TO BE DONE</div>
+          <h2>让外国客户在需要翻译之前，已经认识我们。</h2>
+          <p>实习生的任务不是把公司夸得更大，而是把“来中国参展”这件事讲得更清楚。持续做到这一点，译员页面才会从一个广告链接变成可信的下一步。</p>
+          <a class="btn" href="https://www.translationchina.com/m/en/interpreters/" target="_blank" rel="noopener">打开译员推广页 ↗</a>
+        </div>
+        <aside class="finish-check"><h3>负责人每周只检查 4 件事</h3><ul><li>本周发布了哪些“可保存”的内容？</li><li>哪些问题带来了落地页点击或询盘？</li><li>哪些事实缺口需要业务同事补充？</li><li>下周只加码哪两个主题？</li></ul></aside>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell">内部执行手册 · 更新于 2026-08-29 · 当届信息以官方最新公告为准 · 页面设置 noindex</div></footer>
+  <div class="toast" id="toast">已复制</div>
+
+  <script>
+    const ideas = [
+      {tags:['arrival'], title:'白云机场到酒店：三种交通怎么选', desc:'最小成品：一张决策图。按落地时间、行李、酒店区域选择；航站楼信息发布前复核。'},
+      {tags:['arrival'], title:'把酒店中文地址存在手机里', desc:'最小成品：30 秒 Short。演示如何保存酒店名、地址、电话和地图截图。'},
+      {tags:['arrival','fair'], title:'海外买家证：出发前要确认什么', desc:'最小成品：5 条清单 + 当届官方指南链接。不沿用往届柜台时间。'},
+      {tags:['arrival'], title:'展会酒店不要只看直线距离', desc:'最小成品：四项判断卡——地铁入口、换乘、早餐、展期服务。'},
+      {tags:['arrival'], title:'手机支付第一次设置检查表', desc:'最小成品：录屏指南。平台流程、证件要求、支持情况必须用最新官方帮助页复核。'},
+      {tags:['arrival'], title:'广州地铁：展馆入口不是同一个', desc:'最小成品：地图卡。按展区写对应站点/出口，发布前对照当届导向手册。'},
+      {tags:['fair'], title:'第一次去广交会：包里放什么', desc:'最小成品：10 件物品清单。证件、充电、名片、样品记录、双语公司简介。'},
+      {tags:['fair'], title:'一天排多少个展位会面才现实', desc:'最小成品：示例日程表。加入步行、排队、吃饭和跨展区缓冲。'},
+      {tags:['fair','trust'], title:'给译员的 10 分钟会前 brief', desc:'最小成品：可复制表格。公司、产品、目标、底价边界、术语、禁说事项。'},
+      {tags:['fair'], title:'如何记录 30 个供应商而不混乱', desc:'最小成品：手机表格模板。展位、联系人、产品、MOQ、下一步、红旗。'},
+      {tags:['fair'], title:'从展位聊天转到正式谈判', desc:'最小成品：5 句英文过渡话术 + 会议预约清单。'},
+      {tags:['fair','trust'], title:'展后 48 小时 follow-up 邮件', desc:'最小成品：英文邮件框架。回顾需求、待补资料、下一步与截止日期。'},
+      {tags:['phase1'], title:'机器演示前要发给译员的资料', desc:'最小成品：产品页、规格表、图纸、缩写、演示步骤、常见故障六项。'},
+      {tags:['phase1'], title:'MOQ、tooling、lead time 不要混着谈', desc:'最小成品：双语术语卡 + 一段报价对话示例。'},
+      {tags:['phase1'], title:'广州—东莞—深圳工厂访问怎么排', desc:'最小成品：路线规划原则，不先给固定车程；按实时地图与预约时间核验。'},
+      {tags:['phase1'], title:'第一次看电子厂要问的 12 个问题', desc:'最小成品：产线、测试、追溯、认证、返修、产能与交期清单。'},
+      {tags:['phase1'], title:'设备售后条款的 8 个英文关键词', desc:'最小成品：warranty、spare parts、commissioning、remote support 等术语卡。'},
+      {tags:['phase1','trust'], title:'为什么机械口译不能只看英语水平', desc:'最小成品：三个真实任务场景——读规格、追问参数、复述交易条件。'},
+      {tags:['phase2'], title:'佛山家具/陶瓷工厂一天怎么排', desc:'最小成品：区域选择 + 预约顺序 + 样品/拍照/晚返时间清单。不要写死车程。'},
+      {tags:['phase2'], title:'颜色、材质、表面处理的双语词汇', desc:'最小成品：12 词卡片，配自己拍的样品细节图。'},
+      {tags:['phase2'], title:'SDS、检测报告、合规文件怎么问', desc:'最小成品：英文索取邮件 + 文件名称核对表；法规结论交负责人。'},
+      {tags:['phase2'], title:'定制产品报价为什么总是对不上', desc:'最小成品：把尺寸、材质、工艺、数量、包装、贸易条款拆成 6 格 RFQ。'},
+      {tags:['phase2'], title:'样品确认时最容易漏掉的 7 件事', desc:'最小成品：色差、尺寸公差、配件、标签、包装、封样、变更记录。'},
+      {tags:['phase2','trust'], title:'建材谈判中的单位换算误会', desc:'最小成品：公制/英制与每片/每箱/每平方米的核对流程。'},
+      {tags:['phase3'], title:'如何核验化妆品 OEM/ODM 工厂', desc:'最小成品：法律主体、生产范围、配方、检测、包材、MOQ、出口文件 7 项。'},
+      {tags:['phase3'], title:'化妆品打样会议的双语问题清单', desc:'最小成品：肤感、香型、颜色、活性成分、相容性、稳定性与封样。'},
+      {tags:['phase3'], title:'服装 tech pack 发出去前检查什么', desc:'最小成品：尺寸表、面料、辅料、工艺、印绣花、标签、包装。'},
+      {tags:['phase3'], title:'食品供应商要问的标签信息', desc:'最小成品：成分、过敏原、净含量、批号、保质期、储存、产地；法规结论需审核。'},
+      {tags:['phase3'], title:'医疗产品演示为什么要提前建术语表', desc:'最小成品：部件、适用范围、操作、警示、清洁、耗材 6 类词汇框架。'},
+      {tags:['phase3'], title:'Beauty sourcing: MOQ by formula or shade?', desc:'最小成品：英文 LinkedIn 帖，用一个问题解释同一“MOQ”可能有不同口径。'},
+      {tags:['trust'], title:'如何选择展会译员：5 个问题', desc:'最小成品：语种、行业、任务、资料、展后安排；链接到按语言/行业筛选页。'},
+      {tags:['trust'], title:'Booth reception vs negotiation interpreting', desc:'最小成品：对比卡。让客户按任务选人，不按“会不会英语”选。'},
+      {tags:['trust'], title:'一个译员能不能连续跑三期', desc:'最小成品：解释行业匹配、档期和任务差异；CTA 指向分期浏览。'},
+      {tags:['trust'], title:'工厂考察当天的译员做什么', desc:'最小成品：接送沟通、产线讲解、技术追问、条件复述、行动项记录。'},
+      {tags:['trust'], title:'23 年广州本地经验，具体意味着什么', desc:'最小成品：只写可验证事实——成立年份、广州基地、语种/行业筛选与工作环节。'},
+      {tags:['trust','fair'], title:'展会口译询价时一次说清楚', desc:'最小成品：日期、时段、地点、语种、行业、任务、人数、工厂访问、资料九项表。'}
+    ];
+
+    const grid = document.getElementById('ideaGrid');
+    const empty = document.getElementById('ideaEmpty');
+    const search = document.getElementById('ideaSearch');
+    let activeFilter = 'all';
+
+    function renderIdeas() {
+      const q = search.value.trim().toLowerCase();
+      const filtered = ideas.filter(item => {
+        const tagMatch = activeFilter === 'all' || item.tags.includes(activeFilter);
+        const textMatch = !q || `${item.title} ${item.desc}`.toLowerCase().includes(q);
+        return tagMatch && textMatch;
+      });
+      grid.innerHTML = filtered.map(item => `<article class="idea-card"><div class="chips">${item.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div><h3>${item.title}</h3><p>${item.desc}</p></article>`).join('');
+      empty.style.display = filtered.length ? 'none' : 'block';
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      renderIdeas();
+    }));
+    search.addEventListener('input', renderIdeas);
+    renderIdeas();
+
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    function notify(message = '已复制') {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+    async function copyText(value) {
+      try { await navigator.clipboard.writeText(value); notify(); }
+      catch (_) {
+        const area = document.createElement('textarea');
+        area.value = value; document.body.appendChild(area); area.select();
+        document.execCommand('copy'); area.remove(); notify();
+      }
+    }
+    document.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', () => copyText(document.getElementById(btn.dataset.copy).innerText)));
+
+    const source = document.getElementById('utmSource');
+    const campaign = document.getElementById('utmCampaign');
+    const content = document.getElementById('utmContent');
+    const built = document.getElementById('builtLink');
+    function clean(value) { return value.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, ''); }
+    function buildLink() {
+      const url = new URL('https://www.translationchina.com/m/en/interpreters/');
+      url.searchParams.set('utm_source', source.value);
+      url.searchParams.set('utm_medium', 'organic');
+      url.searchParams.set('utm_campaign', clean(campaign.value) || 'cantonfair140');
+      url.searchParams.set('utm_content', clean(content.value) || 'post');
+      built.textContent = url.toString();
+    }
+    [source, campaign, content].forEach(el => el.addEventListener('input', buildLink));
+    document.getElementById('copyLink').addEventListener('click', () => copyText(built.textContent));
+    buildLink();
+  </script>
+</body>
+</html>
