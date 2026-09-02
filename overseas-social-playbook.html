@@ -44,23 +44,59 @@
 <div class="wrap">
 
 <h1>海外社媒推广指南 — 广交会口译</h1>
-<div class="meta">给发帖同学的话题库和方向 · 2026-08-29 · 落地页 <a href="https://www.translationchina.com/m/en/interpreters/" target="_blank">translationchina.com/m/en/interpreters/</a></div>
+<div class="meta">给发帖同学的话题库和方向 · 2026-08-29 · 链接规范更新 2026-09-02 · 落地页 <a href="https://www.translationchina.com/m/en/interpreters/" target="_blank">translationchina.com/m/en/interpreters/</a></div>
 
 <div class="goal">
 <b>一句话目标：</b>让准备来广交会的外国采购商，在出发前搜攻略、进群提问、刷到视频的时候碰到我们的内容，需要翻译时想到这个页面。<br>
 <b>思路：</b>他们缺的不是广告，是靠谱信息。我们持续发实用干货（机场、酒店、逛展、砍价、验厂），每篇末尾自然带一句：需要现场口译，这里有 812 位广州译员可选。
 </div>
 
-<h2>1. 链接规范（每帖必带，别改格式）</h2>
-<table>
-<tr><th>平台</th><th>复制这个链接</th></tr>
-<tr><td>X</td><td><code>https://www.translationchina.com/m/en/interpreters/?utm_source=x&utm_medium=social</code></td></tr>
-<tr><td>LinkedIn</td><td><code>https://www.translationchina.com/m/en/interpreters/?utm_source=linkedin&utm_medium=social</code></td></tr>
-<tr><td>Facebook</td><td><code>https://www.translationchina.com/m/en/interpreters/?utm_source=facebook&utm_medium=social</code></td></tr>
-<tr><td>YouTube</td><td><code>https://www.translationchina.com/m/en/interpreters/?utm_source=youtube&utm_medium=social</code></td></tr>
-<tr><td>Quora / Reddit</td><td><code>...?utm_source=quora&utm_medium=social</code>（reddit 同理换名）</td></tr>
+<h2>1. 链接规范（每帖必带，每人用自己的）</h2>
+<div class="card">
+<p><b>格式：</b><code>落地页?utm_source=平台&amp;utm_medium=social&amp;utm_content=你的后台登录名</code></p>
+<p>三个参数缺一不可：<b>utm_source</b> = 平台（小写英文），<b>utm_medium=social</b> 固定不动，<b>utm_content</b> = 你在公司后台的登录名——后台按它把访问和询价算到你名下。几个人共管同一个账号也各贴各的链接，这样才分得出谁的帖子带来了人。</p>
+<p>填登录名，下面自动生成各平台链接（登录后台 → <b>我的数据</b> 也能一键复制，那里还能看到自己带来的访问、独立访客和联系方式点击）：</p>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 4px">
+  <label for="who" style="font-weight:600">登录名</label>
+  <input id="who" placeholder="例如 shiyu" autocomplete="off" spellcheck="false"
+    style="flex:1;min-width:160px;max-width:260px;padding:7px 10px;border:1px solid var(--line);border-radius:6px;font-size:15px;font-family:ui-monospace,Menlo,Consolas,monospace">
+  <span id="whoNote" class="small"></span>
+</div>
+<table id="linkTable">
+<tr><th>平台</th><th>复制这个链接</th><th></th></tr>
 </table>
-<p class="small">带这个参数，后台能看到哪个平台带来了访问和询价——发帖效果看得见，别偷懒发裸链接。</p>
+<p class="small">其他平台：把 <code>utm_source=</code> 后面换成平台英文小写（instagram、tiktok…），其余不动。落地页也可以换成某篇博客，参数照带。</p>
+</div>
+<p class="small">带这三个参数，后台能看到哪个平台、哪个人带来了访问和询价——发帖效果看得见，别偷懒发裸链接、也别用别人的链接。</p>
+<script>
+(function(){
+  var LANDING='https://www.translationchina.com/m/en/interpreters/';
+  var PLATFORMS=[['x','X'],['linkedin','LinkedIn'],['facebook','Facebook'],['youtube','YouTube'],['quora','Quora'],['reddit','Reddit']];
+  var input=document.getElementById('who'),note=document.getElementById('whoNote'),table=document.getElementById('linkTable');
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function render(){
+    var raw=(input.value||'').trim().toLowerCase(), ok=/^[a-z0-9-]{2,30}$/.test(raw);
+    var who=ok?raw:'你的登录名';
+    note.textContent=raw&&!ok?'登录名只能是小写字母/数字/连字符':(ok?'已记住，下次打开自动带出':'');
+    var rows='<tr><th>平台</th><th>复制这个链接</th><th></th></tr>';
+    PLATFORMS.forEach(function(p){
+      var url=LANDING+'?utm_source='+p[0]+'&utm_medium=social&utm_content='+who;
+      rows+='<tr><td>'+p[1]+'</td><td><code>'+esc(url)+'</code></td><td>'+(ok?'<button data-url="'+esc(url)+'" style="padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer;white-space:nowrap">复制</button>':'')+'</td></tr>';
+    });
+    table.innerHTML=rows;
+    try{ if(ok) localStorage.setItem('social_who',raw); }catch(e){}
+  }
+  table.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-url]'); if(!b) return;
+    var u=b.getAttribute('data-url');
+    function done(){ b.textContent='已复制'; setTimeout(function(){b.textContent='复制';},1500); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(u).then(done,function(){ window.prompt('手动复制：',u); }); }
+    else { window.prompt('手动复制：',u); }
+  });
+  try{ var saved=localStorage.getItem('social_who'); if(saved) input.value=saved; }catch(e){}
+  input.addEventListener('input',render); render();
+})();
+</script>
 
 <h2>2. 各平台怎么用</h2>
 <table>
@@ -167,7 +203,7 @@
 <p><b>YouTube / Quora 卡位关键词（标题里带）：</b><br>
 <span class="tag">Canton Fair 2026 guide</span><span class="tag">Canton Fair interpreter</span><span class="tag">Guangzhou interpreter</span><span class="tag">Canton Fair hotel</span><span class="tag">how to source from China</span><span class="tag">China factory visit</span></p>
 
-<p class="small" style="margin-top:40px">落地页：translationchina.com/m/en/interpreters/ · 有拿不准的口径先问，别猜。</p>
+<p class="small" style="margin-top:40px">落地页：translationchina.com/m/en/interpreters/ · 链接一定带 utm_content=自己的登录名 · 有拿不准的口径先问，别猜。</p>
 
 </div>
 </body>
