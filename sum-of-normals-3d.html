@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Z = X + Y 的均值：三维几何解释</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<style>
+:root{
+  --paper:#EDF1F5;
+  --grid:#DDE4EB;
+  --ink:#1C2B3F;
+  --ink-soft:#56657A;
+  --rule:#C9D3DE;
+  --white:#FFFFFF;
+  --gold:#C88A04;
+  --gold-bg:#FFF4D6;
+  --coral:#D2463C;
+  --coral-bg:#FCECEA;
+  --violet:#6B48B8;
+  --blue:#2A6BD8;
+  --blue-bg:#EDF3FD;
+  --teal:#3B8577;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  line-height:1.6;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:24px 24px;
+}
+.wrap{max-width:1440px;margin:0 auto;padding:28px 28px 56px}
+
+/* ---------- header ---------- */
+.top h1{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:clamp(1.45rem,2.5vw,2.25rem);
+  line-height:1.3;
+  margin:0 0 .45em;
+}
+.m{font-family:var(--math);font-style:normal;white-space:nowrap}
+.wrong{
+  color:var(--ink-soft);
+  text-decoration:line-through;
+  text-decoration-color:var(--coral);
+  text-decoration-thickness:3px;
+}
+.lede{max-width:66ch;margin:0;color:var(--ink-soft);font-size:1rem}
+
+/* ---------- main stage ---------- */
+.stage{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 390px;
+  gap:20px;
+  margin-top:24px;
+  align-items:start;
+}
+.viz{
+  background:var(--white);
+  border:1px solid var(--rule);
+  border-radius:6px;
+  padding:6px 6px 12px;
+}
+#plot3d{height:min(74vh,740px);min-height:420px}
+.fail{padding:40px 24px;color:var(--coral)}
+
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:10px 22px;
+  padding:10px 10px 0;
+  border-top:1px solid var(--rule);
+  align-items:center;
+}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.glabel{font-size:.8rem;color:var(--ink-soft);margin-right:2px}
+.btn{
+  font:inherit;font-size:.85rem;
+  min-height:32px;padding:4px 11px;
+  background:var(--white);color:var(--ink);
+  border:1px solid var(--rule);border-radius:4px;
+  cursor:pointer;
+}
+.btn:hover{border-color:var(--ink)}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.is-on{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.chk{display:inline-flex;align-items:center;gap:5px;font-size:.85rem;cursor:pointer;min-height:32px;padding-right:4px}
+.chk input{margin:0;accent-color:var(--ink)}
+.op{display:inline-flex;align-items:center;gap:8px;font-size:.85rem}
+.op input{width:110px}
+.hint{margin:8px 10px 0;font-size:.8rem;color:var(--ink-soft);max-width:90ch}
+
+/* swatches: same visual language as the 3D marks */
+.sw{display:inline-block;flex:none;width:18px;height:4px;border-radius:2px}
+.sw.fam{background:repeating-linear-gradient(90deg,#8C99AA 0 3px,transparent 3px 5px);height:3px}
+.sw.dist{background:var(--coral)}
+.sw.proj{background:var(--violet)}
+.sw.plane{background:var(--blue);height:10px;opacity:.55}
+.sw.center{width:10px;height:10px;border-radius:50%;background:var(--ink);margin:0 4px}
+.sw.mean{background:var(--gold);height:6px}
+.sw.sd{background:linear-gradient(90deg,#CFE5DD,var(--teal),#CFE5DD);height:6px}
+
+/* ---------- side panel ---------- */
+.panel{display:flex;flex-direction:column;gap:14px}
+.panel h2{font-family:var(--serif);font-size:1.05rem;font-weight:600;margin:0 0 8px}
+.block{background:var(--white);border:1px solid var(--rule);border-radius:6px;padding:14px 16px}
+
+/* z control is the primary control: heavier frame */
+.zblock{border:2px solid var(--ink)}
+.zhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.zhead .ztitle{font-family:var(--serif);font-weight:600;font-size:1.1rem}
+#zOut{font-family:var(--math);font-size:1.5rem;font-variant-numeric:tabular-nums;color:var(--blue)}
+#zOut.gold{color:var(--gold)}
+#zSlider{width:100%;height:30px;margin:6px 0 4px;accent-color:var(--blue)}
+#zSlider.gold{accent-color:var(--gold)}
+.zbtns{display:flex;flex-wrap:wrap;gap:6px}
+.status{
+  margin-top:12px;padding:10px 12px;
+  border-left:4px solid var(--blue);background:var(--blue-bg);
+  font-size:.92rem;line-height:1.55;
+}
+.status b{display:block;font-weight:600}
+.status span{display:block;margin-top:4px;color:var(--ink-soft);font-size:.85rem}
+.status.center{border-left-color:var(--gold);background:var(--gold-bg)}
+.status.dist{border-left-color:var(--coral);background:var(--coral-bg)}
+.status.pulse{animation:pulse .9s ease-out}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(200,138,4,.55)}100%{box-shadow:0 0 0 12px rgba(200,138,4,0)}}
+
+/* key quantities */
+.keys dl{margin:0}
+.krow{
+  display:grid;grid-template-columns:22px 1fr auto;
+  align-items:center;gap:10px;
+  padding:7px 0;border-bottom:1px dashed var(--rule);
+}
+.krow dt{font-size:.9rem;line-height:1.3}
+.krow dt small{display:block;font-family:var(--math);color:var(--ink-soft);font-size:.85rem;margin-top:2px}
+.krow dd{margin:0;font-family:var(--math);font-size:1.02rem;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.krow.dist dd{color:var(--coral)}
+.krow.proj dd{color:var(--violet)}
+.krow.mean{background:var(--gold-bg);border-bottom:none;border-radius:4px;padding:8px 8px;margin:6px -8px 0}
+.krow.mean dt{font-weight:600}
+.krow.mean dd{color:var(--gold);font-weight:700;font-size:1.15rem}
+.krow.sd{border-bottom:none;margin-top:4px;opacity:.8}
+.note{font-size:.84rem;color:var(--ink-soft);margin:10px 0 0;line-height:1.55}
+.note b{color:var(--gold)}
+
+#plotZ{height:190px}
+
+/* parameters: quieter than the rest */
+.params{background:transparent;border:none;border-top:2px solid var(--ink);border-radius:0;padding:12px 2px 0}
+.param{display:grid;grid-template-columns:3.2em 1fr 3.2em;align-items:center;gap:10px;margin:4px 0}
+.param label{font-family:var(--math);font-size:1.08rem}
+.param input{width:100%;accent-color:var(--ink)}
+.param output{text-align:right;font-family:var(--math);font-variant-numeric:tabular-nums}
+.presets{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:.85rem}
+.presets .plabel{color:var(--ink-soft);width:100%}
+.params .note{margin-top:8px}
+
+/* ---------- explanation ---------- */
+.facts{margin-top:34px}
+.facts > h2{font-family:var(--serif);font-size:1.4rem;font-weight:600;margin:0 0 14px}
+.facts ol{
+  list-style:none;margin:0;padding:0;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+  counter-reset:step;
+}
+.facts li{
+  counter-increment:step;
+  background:var(--white);
+  border-top:3px solid var(--ink);
+  padding:14px 18px 16px;
+}
+.facts li::before{
+  content:counter(step);
+  font-family:var(--serif);font-size:2rem;line-height:1;color:var(--rule);
+  display:block;margin-bottom:6px;
+}
+.facts h3{font-family:var(--serif);font-size:1.08rem;font-weight:600;margin:0 0 6px;line-height:1.4}
+.facts p{margin:0;font-size:.93rem;line-height:1.75;max-width:60ch}
+.aside{
+  margin-top:18px;padding:14px 18px;
+  border:1px dashed var(--teal);background:rgba(255,255,255,.75);
+}
+.aside h3{font-family:var(--serif);font-size:1.05rem;margin:0 0 6px;color:var(--teal)}
+.aside p{margin:0;font-size:.93rem;line-height:1.75;max-width:92ch}
+
+@media (max-width:1060px){
+  .stage{grid-template-columns:1fr}
+  #plot3d{height:62vh;min-height:360px}
+  .facts ol{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .wrap{padding:18px 12px 40px}
+  .op input{width:90px}
+}
+@media (prefers-reduced-motion:reduce){
+  .status.pulse{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>为什么 <span class="m">E[X + Y] = μ₁ + μ₂</span>，而不是 <span class="m wrong">√(μ₁² + μ₂²)</span></h1>
+  <p class="lede">
+    X ~ N(μ₁, σ₁²)，Y ~ N(μ₂, σ₂²)，Z = X + Y。下图是 (X, Y) 的联合密度山丘。
+    竖直切面 x + y = z 每切一刀，对应 Z 取一个值；穿过山顶的那一刀，就是 Z 的中心。
+  </p>
+</header>
+
+<main class="stage">
+  <section class="viz" aria-label="三维联合密度图">
+    <div id="plot3d"></div>
+
+    <div class="toolbar">
+      <div class="group">
+        <span class="glabel">视角</span>
+        <button class="btn" data-view="default" title="默认的斜上方视角">斜看</button>
+        <button class="btn" data-view="top" title="正交投影俯视，直角、45° 与圆都不变形">俯视底面</button>
+        <button class="btn" data-view="slice" title="沿 (1,1) 方向看，切面正对屏幕，可看清剖面">正对切面</button>
+        <button class="btn" data-view="edge" title="沿 (1,−1) 方向看，切面变成竖线，屏幕横向就是 Z 方向">沿切面看</button>
+      </div>
+      <div class="group">
+        <span class="glabel">图层</span>
+        <label class="chk"><input type="checkbox" data-layer="family" checked><i class="sw fam"></i>平行线族</label>
+        <label class="chk"><input type="checkbox" data-layer="dist" checked><i class="sw dist"></i>距离与圆</label>
+        <label class="chk"><input type="checkbox" data-layer="proj" checked><i class="sw proj"></i>投影与 Z 尺</label>
+        <label class="chk"><input type="checkbox" data-layer="plane" checked><i class="sw plane"></i>切面</label>
+        <label class="chk"><input type="checkbox" data-layer="ann" checked>文字标注</label>
+      </div>
+      <div class="group">
+        <label class="op">山丘透明度 <input type="range" id="opacity" min="0.15" max="1" step="0.05" value="0.82"></label>
+      </div>
+    </div>
+    <p class="hint">
+      拖动旋转，滚轮或双指缩放。竖直轴是联合密度 f(x, y)；切面参数 z 是 X + Y 的取值，不是竖直高度。
+      悬停在山丘上，可同时看到该点的 x + y 与 √(x² + y²)。
+    </p>
+  </section>
+
+  <aside class="panel">
+    <div class="block zblock">
+      <div class="zhead">
+        <span class="ztitle">切面 x + y = z</span>
+        <output id="zOut" for="zSlider">z = 7</output>
+      </div>
+      <input type="range" id="zSlider" min="1" max="13" step="0.05" value="7" aria-label="切面位置 z">
+      <div class="zbtns">
+        <button class="btn" id="toMean">跳到 z = μ₁ + μ₂</button>
+        <button class="btn" id="toDist">跳到 z = √(μ₁² + μ₂²)</button>
+        <button class="btn" id="play">播放扫描</button>
+      </div>
+      <div id="status" class="status" aria-live="polite"></div>
+    </div>
+
+    <div class="block keys">
+      <h2>四个量，别混在一起</h2>
+      <dl>
+        <div class="krow center"><i class="sw center"></i><dt>山顶位置<small>(μ₁, μ₂)</small></dt><dd id="kCenter"></dd></div>
+        <div class="krow dist"><i class="sw dist"></i><dt>欧氏距离<small>√(μ₁² + μ₂²)</small></dt><dd id="kDist"></dd></div>
+        <div class="krow proj"><i class="sw proj"></i><dt>沿 (1,1)/√2 的投影长度<small>(μ₁ + μ₂)/√2</small></dt><dd id="kProj"></dd></div>
+        <div class="krow mean"><i class="sw mean"></i><dt>Z 的均值<small>μ₁ + μ₂</small></dt><dd id="kMean"></dd></div>
+        <div class="krow sd"><i class="sw sd"></i><dt>对照：Z 的标准差<small>√(σ₁² + σ₂² + 2ρσ₁σ₂)</small></dt><dd id="kSd"></dd></div>
+      </dl>
+      <p class="note" id="kNote"></p>
+    </div>
+
+    <div class="block">
+      <h2>Z 的密度 f<sub>Z</sub>(z)</h2>
+      <div id="plotZ"></div>
+      <p class="note" id="areaNote"></p>
+    </div>
+
+    <div class="block params">
+      <h2>参数</h2>
+      <div class="param"><label for="mu1">μ₁</label><input type="range" id="mu1" min="-4" max="6" step="0.1" value="3"><output id="mu1Out">3</output></div>
+      <div class="param"><label for="mu2">μ₂</label><input type="range" id="mu2" min="-4" max="6" step="0.1" value="4"><output id="mu2Out">4</output></div>
+      <div class="param"><label for="s1">σ₁</label><input type="range" id="s1" min="0.4" max="2" step="0.1" value="1"><output id="s1Out">1</output></div>
+      <div class="param"><label for="s2">σ₂</label><input type="range" id="s2" min="0.4" max="2" step="0.1" value="1"><output id="s2Out">1</output></div>
+      <div class="param"><label for="rho">ρ</label><input type="range" id="rho" min="-0.9" max="0.9" step="0.1" value="0"><output id="rhoOut">0</output></div>
+      <p class="note">ρ 是 X 与 Y 的相关系数，默认 0 即独立。改变 ρ 会让山丘变成斜的椭圆，但山顶和金色切面的位置不变。</p>
+      <div class="presets">
+        <span class="plabel">这几个中心到原点的距离都是 5，Z 的均值却各不相同：</span>
+        <button class="btn" data-p="3,4">(3, 4)</button>
+        <button class="btn" data-p="4,3">(4, 3)</button>
+        <button class="btn" data-p="5,0">(5, 0)</button>
+        <button class="btn" data-p="3,-4">(3, −4)</button>
+        <button class="btn" id="reset">恢复默认</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<section class="facts">
+  <h2>这个几何论证分三步</h2>
+  <ol>
+    <li>
+      <h3>距离 5 和 X + Y 回答的是两个不同的问题</h3>
+      <p>
+        √(x² + y²) 问的是“点离原点多远”；x + y 问的是“点沿 (1,1) 方向走了多远”。
+        底面上，到原点距离为 5 的点组成红色虚线圆；x + y = 7 的点组成金色直线。
+        (3, 4) 恰好同时落在两者上，可同在圆上的 (5, 0) 的 x + y 是 5，(3, −4) 的是 −1。
+        只知道距离，推不出 X + Y。
+      </p>
+    </li>
+    <li>
+      <h3>x + y 是沿 (1,1) 方向的坐标，再乘 √2</h3>
+      <p>
+        取单位向量 u = (1,1)/√2。点 (x, y) 在 u 上的正交投影长度是 (x + y)/√2，所以 x + y = √2 × 投影坐标。
+        直线 x + y = c 与 (1,1) 垂直，它上面的每个点都投影到对角线上的同一点 (c/2, c/2)。
+        对角线上的刻度就是一把“Z 尺”：刻度间距 1/√2，标的是 Z 值。
+        中心 (3, 4) 投影到 (3.5, 3.5)，投影长度 7/√2，乘 √2 得 7。
+      </p>
+    </li>
+    <li>
+      <h3>切面扫过山丘，扫出的就是 Z 的分布</h3>
+      <p>
+        竖直平面 x + y = z 在山丘上切出一条剖面，剖面面积 = √2 · f<sub>Z</sub>(z)（右侧有数值核对）。
+        联合密度关于中心 (μ₁, μ₂) 点对称，所以 z = μ₁+μ₂+t 与 z = μ₁+μ₂−t 两刀切出的剖面互为镜像，
+        f<sub>Z</sub> 关于 μ₁+μ₂ 对称。Z 的中心，就是穿过山顶的那一刀。
+        这里只用到了中心的位置，不需要独立：把 ρ 调成非零，金色切面仍然穿过山顶。
+      </p>
+    </li>
+  </ol>
+  <div class="aside">
+    <h3>那 √(·² + ·²) 真正属于谁？</h3>
+    <p>
+      属于标准差。X、Y 独立时 Var(Z) = σ₁² + σ₂²，所以 σ<sub>Z</sub> = √(σ₁² + σ₂²)——这种“勾股”形式描述的是山丘有多宽，不是山顶在哪。
+      均值永远线性相加：E[X + Y] = E[X] + E[Y]。代数上 (μ₁ + μ₂)² = μ₁² + μ₂² + 2μ₁μ₂，
+      两者只差交叉项 2μ₁μ₂，只有 μ₁ 或 μ₂ 为 0 时，欧氏距离才碰巧等于 |μ₁ + μ₂|（试试预设 (5, 0)）。
+    </p>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+if (typeof Plotly === 'undefined'){
+  document.getElementById('plot3d').innerHTML =
+    '<div class="fail">没有加载到 Plotly.js。本页需要联网从 cdnjs.cloudflare.com 加载图形库，请检查网络后刷新页面。</div>';
+  return;
+}
+
+/* ================= state & helpers ================= */
+const SQ2 = Math.SQRT2;
+const C = {
+  ink:'#1C2B3F', soft:'#56657A', fam:'rgba(86,101,122,0.45)',
+  gold:'#C88A04', goldLight:'#E8B028',
+  coral:'#D2463C', violet:'#6B48B8',
+  blue:'#2A6BD8', teal:'#3B8577'
+};
+const DEF = {mu1:3, mu2:4, s1:1, s2:1, rho:0};
+const S = Object.assign({}, DEF, {
+  z:7, opacity:0.82,
+  layers:{family:true, dist:true, proj:true, plane:true, ann:true}
+});
+
+const $ = id => document.getElementById(id);
+function fmt(v, d){
+  if (d === undefined) d = 2;
+  const p = Math.pow(10, d);
+  let r = Math.round(v * p) / p;
+  if (Math.abs(r) < 1e-12) r = 0;
+  return String(r).replace('-', '−');
+}
+const sq   = v => v < 0 ? `(${fmt(v)})²` : `${fmt(v)}²`;
+const plus = (a, b) => b < 0 ? `${fmt(a)} + (${fmt(b)})` : `${fmt(a)} + ${fmt(b)}`;
+function lin(a, b, n){ const r = new Array(n); for (let i = 0; i < n; i++) r[i] = a + (b - a) * i / (n - 1); return r; }
+const nd = (v, m, s) => Math.exp(-0.5 * ((v - m) / s) ** 2) / (s * Math.sqrt(2 * Math.PI));
+
+function pdf(x, y){
+  const dx = (x - S.mu1) / S.s1, dy = (y - S.mu2) / S.s2, r = S.rho, om = 1 - r * r;
+  return Math.exp(-(dx * dx - 2 * r * dx * dy + dy * dy) / (2 * om)) /
+         (2 * Math.PI * S.s1 * S.s2 * Math.sqrt(om));
+}
+
+function derived(){
+  const muZ  = S.mu1 + S.mu2;
+  const dist = Math.hypot(S.mu1, S.mu2);
+  const proj = muZ / SQ2;
+  const sdZ  = Math.sqrt(Math.max(1e-9, S.s1 * S.s1 + S.s2 * S.s2 + 2 * S.rho * S.s1 * S.s2));
+  const fmax = 1 / (2 * Math.PI * S.s1 * S.s2 * Math.sqrt(1 - S.rho * S.rho));
+  const pad = 3.2;
+  const xmin = Math.floor(Math.min(-1, S.mu1 - pad * S.s1));
+  const xmax = Math.ceil (Math.max( 1, S.mu1 + pad * S.s1));
+  const ymin = Math.floor(Math.min(-1, S.mu2 - pad * S.s2));
+  const ymax = Math.ceil (Math.max( 1, S.mu2 + pad * S.s2));
+  const zmin = Math.max(xmin + ymin + 0.5, Math.floor(Math.min(muZ - 4 * sdZ, dist - 1)));
+  const zmax = Math.min(xmax + ymax - 0.5, Math.ceil (Math.max(muZ + 4 * sdZ, dist + 1)));
+  return {muZ, dist, proj, sdZ, fmax, xmin, xmax, ymin, ymax, zmin, zmax};
+}
+
+/* segment of the line x + y = c inside the plotting rectangle, as an x-interval */
+function clip(c, D){
+  const xa = Math.max(D.xmin, c - D.ymax), xb = Math.min(D.xmax, c - D.ymin);
+  return xa < xb - 1e-9 ? [xa, xb] : null;
+}
+
+/* flat triangle arrowhead lying on the floor */
+function arrowHead(tip, dir, L, W, z, color){
+  const nx = -dir[1], ny = dir[0];
+  const bx = tip[0] - L * dir[0], by = tip[1] - L * dir[1];
+  return {
+    type:'mesh3d', x:[tip[0], bx + W * nx, bx - W * nx], y:[tip[1], by + W * ny, by - W * ny],
+    z:[z, z, z], i:[0], j:[1], k:[2], color, opacity:1, flatshading:true,
+    lighting:{ambient:1, diffuse:0, specular:0, fresnel:0}, hoverinfo:'skip', showscale:false
+  };
+}
+
+/* surface grid is cached — only recomputed when μ, σ, ρ change */
+let cache = null;
+function surfaceData(D){
+  const key = [S.mu1, S.mu2, S.s1, S.s2, S.rho].join('|');
+  if (cache && cache.key === key) return cache;
+  const N = 64;
+  const xs = lin(D.xmin, D.xmax, N), ys = lin(D.ymin, D.ymax, N);
+  const zs = [], txt = [];
+  for (let i = 0; i < N; i++){
+    const row = new Array(N), trow = new Array(N);
+    for (let j = 0; j < N; j++){
+      const x = xs[j], y = ys[i];
+      row[j] = pdf(x, y);
+      trow[j] = `x + y = ${fmt(x + y)}<br>√(x² + y²) = ${fmt(Math.hypot(x, y))}`;
+    }
+    zs.push(row); txt.push(trow);
+  }
+  cache = {key, xs, ys, zs, txt};
+  return cache;
+}
+
+function sliceData(D){
+  const seg = clip(S.z, D);
+  if (!seg) return null;
+  const n = 160;
+  const xs = lin(seg[0], seg[1], n), ys = xs.map(x => S.z - x), fs = xs.map((x, i) => pdf(x, ys[i]));
+  let A = 0;
+  for (let i = 0; i < n - 1; i++) A += 0.5 * (fs[i] + fs[i + 1]) * (xs[i + 1] - xs[i]) * SQ2;
+  return {seg, xs, ys, fs, A};
+}
+
+const isCenter = D => Math.abs(S.z - D.muZ) < 1e-6;
+const isDist   = D => Math.abs(S.z - D.dist) < 0.03 && Math.abs(D.dist - D.muZ) > 0.05;
+
+/* ================= 3D figure ================= */
+const VIEWS = {
+  default:{eye:{x:-1.35, y:-1.75, z:0.95}, up:{x:0, y:0, z:1}, center:{x:0, y:0, z:-0.12}, projection:{type:'perspective'}},
+  top:    {eye:{x:0, y:0, z:2.3},          up:{x:0, y:1, z:0}, center:{x:0, y:0, z:0},     projection:{type:'orthographic'}},
+  slice:  {eye:{x:-1.55, y:-1.55, z:0.35}, up:{x:0, y:0, z:1}, center:{x:0, y:0, z:-0.1},  projection:{type:'perspective'}},
+  edge:   {eye:{x:1.75, y:-1.75, z:0.22},  up:{x:0, y:0, z:1}, center:{x:0, y:0, z:-0.1},  projection:{type:'orthographic'}}
+};
+
+function ann(x, y, z, text, color, ax, ay){
+  return {
+    x, y, z, text, showarrow:true, arrowhead:0, arrowwidth:1.2, arrowcolor:color,
+    ax, ay, font:{size:12, color, family:'PingFang SC, Microsoft YaHei, sans-serif'},
+    bgcolor:'rgba(255,255,255,0.9)', bordercolor:color, borderwidth:1, borderpad:3, align:'left'
+  };
+}
+
+function build3D(D, sl){
+  const L = S.layers;
+  const eps = D.fmax * 0.004;
+  const H = D.fmax * 1.2;
+  const span = Math.max(D.xmax - D.xmin, D.ymax - D.ymin);
+  const AL = span * 0.045, AW = AL * 0.45;
+  const center = isCenter(D);
+  const planeCol = center ? C.goldLight : C.blue;
+  const planeLine = center ? C.gold : C.blue;
+  const surf = surfaceData(D);
+  const T = [];
+  const A = [];
+
+  /* 1. joint density surface */
+  T.push({
+    type:'surface', x:surf.xs, y:surf.ys, z:surf.zs, text:surf.txt,
+    hovertemplate:'x = %{x:.2f}<br>y = %{y:.2f}<br>f(x, y) = %{z:.4f}<br>%{text}<extra></extra>',
+    colorscale:[[0,'#EEF5F2'],[0.2,'#CFE5DD'],[0.5,'#86BCAD'],[0.8,'#3B8577'],[1,'#1E5A52']],
+    showscale:false, opacity:S.opacity,
+    lighting:{ambient:0.7, diffuse:0.55, specular:0.12, roughness:0.9, fresnel:0.1},
+    contours:{z:{show:true, usecolormap:false, color:'rgba(30,90,82,0.5)', width:1,
+                 start:D.fmax * 0.1, end:D.fmax * 0.95, size:D.fmax * 0.2, project:{z:true}}}
+  });
+
+  /* 2. family of parallel lines x + y = c on the floor */
+  {
+    const fx = [], fy = [], fz = [];
+    for (let c = Math.ceil(D.xmin + D.ymin) + 1; c <= Math.floor(D.xmax + D.ymax) - 1; c++){
+      if (Math.abs(c - D.muZ) < 1e-9) continue;
+      const s = clip(c, D); if (!s) continue;
+      fx.push(s[0], s[1], null); fy.push(c - s[0], c - s[1], null); fz.push(eps, eps, null);
+    }
+    T.push({type:'scatter3d', mode:'lines', x:fx, y:fy, z:fz, visible:L.family,
+            line:{color:C.fam, width:2}, hoverinfo:'skip'});
+  }
+
+  /* 3. highlighted line x + y = μ1 + μ2 (through the center) */
+  const gs = clip(D.muZ, D);
+  if (gs){
+    T.push({type:'scatter3d', mode:'lines', x:gs, y:[D.muZ - gs[0], D.muZ - gs[1]], z:[eps * 2, eps * 2],
+            line:{color:C.gold, width:8}, hoverinfo:'skip'});
+    if (L.ann) A.push(ann(gs[0], D.muZ - gs[0], eps, `x + y = ${fmt(D.muZ)}（= μ₁ + μ₂）`, C.gold, 10, -28));
+  }
+
+  /* 4. euclidean distance: segment O→center and circle of radius √(μ1²+μ2²) */
+  if (D.dist > 0.05){
+    T.push({type:'scatter3d', mode:'lines+markers', x:[0, S.mu1], y:[0, S.mu2], z:[eps * 1.6, eps * 1.6],
+            visible:L.dist, line:{color:C.coral, width:6}, marker:{size:3, color:C.coral}, hoverinfo:'skip'});
+    const cx = [], cy = [], cz = [];
+    for (const t of lin(0, 2 * Math.PI, 241)){
+      const x = D.dist * Math.cos(t), y = D.dist * Math.sin(t);
+      const inside = x >= D.xmin && x <= D.xmax && y >= D.ymin && y <= D.ymax;
+      cx.push(inside ? x : null); cy.push(inside ? y : null); cz.push(inside ? eps * 1.2 : null);
+    }
+    T.push({type:'scatter3d', mode:'lines', x:cx, y:cy, z:cz, visible:L.dist,
+            line:{color:C.coral, width:3, dash:'dash'}, hoverinfo:'skip', connectgaps:false});
+    if (L.ann && L.dist) A.push(ann(S.mu1 / 2, S.mu2 / 2, eps,
+      `欧氏距离 √(${sq(S.mu1)} + ${sq(S.mu2)}) = ${fmt(D.dist)}<br>这是平面上的几何长度，不是 X + Y`, C.coral, -110, 36));
+  }
+
+  /* 5. diagonal "Z ruler" along (1,1), projection arrow, right-angle mark */
+  {
+    const tmin = Math.max(D.xmin, D.ymin), tmax = Math.min(D.xmax, D.ymax);
+    T.push({type:'scatter3d', mode:'lines', x:[tmin, tmax], y:[tmin, tmax], z:[eps, eps], visible:L.proj,
+            line:{color:C.soft, width:2, dash:'dash'}, hoverinfo:'skip'});
+    const tk = [];
+    for (let c = Math.ceil(2 * tmin); c <= Math.floor(2 * tmax - 0.3); c++) tk.push(c);
+    T.push({type:'scatter3d', mode:'markers+text', x:tk.map(c => c / 2), y:tk.map(c => c / 2), z:tk.map(() => eps),
+            text:tk.map(c => fmt(c)), textposition:'bottom right', textfont:{size:10, color:C.soft},
+            marker:{size:2.5, color:C.soft}, visible:L.proj, hoverinfo:'skip'});
+    T.push(Object.assign(arrowHead([tmax, tmax], [1 / SQ2, 1 / SQ2], AL, AW, eps, C.soft), {visible:L.proj}));
+    if (L.ann && L.proj) A.push(ann(tmax - AL, tmax - AL, eps,
+      'Z 尺：沿 u = (1,1)/√2<br>刻度 c 标在 (c/2, c/2)', C.soft, 30, -30));
+
+    const sgn = D.muZ >= 0 ? 1 : -1;
+    const u = [sgn / SQ2, sgn / SQ2];
+    const F = [D.muZ / 2, D.muZ / 2];
+    const len = Math.abs(D.proj);
+    if (len > AL * 1.05){
+      const e = [F[0] - AL * u[0], F[1] - AL * u[1]];
+      T.push({type:'scatter3d', mode:'lines', x:[0, e[0]], y:[0, e[1]], z:[eps * 2.4, eps * 2.4], visible:L.proj,
+              line:{color:C.violet, width:8}, hoverinfo:'skip'});
+      T.push(Object.assign(arrowHead(F, u, AL, AW, eps * 2.6, C.violet), {visible:L.proj}));
+    }
+    T.push({type:'scatter3d', mode:'markers', x:[F[0]], y:[F[1]], z:[eps * 2.6], visible:L.proj,
+            marker:{size:4, color:C.violet},
+            hovertemplate:`投影点 (${fmt(F[0])}, ${fmt(F[1])})<extra></extra>`});
+    /* right angle between (1,1) and the gold line, at the foot F */
+    if (Math.abs(S.mu1 - S.mu2) > 0.05){
+      const vs = S.mu2 > S.mu1 ? 1 : -1;
+      const v = [-vs / SQ2, vs / SQ2];
+      const s = AL * 0.8;
+      const P1 = [F[0] + s * v[0], F[1] + s * v[1]];
+      const P2 = [P1[0] + s * u[0], P1[1] + s * u[1]];
+      const P3 = [F[0] + s * u[0], F[1] + s * u[1]];
+      T.push({type:'scatter3d', mode:'lines', x:[P1[0], P2[0], P3[0]], y:[P1[1], P2[1], P3[1]],
+              z:[eps * 2.5, eps * 2.5, eps * 2.5], visible:L.proj,
+              line:{color:C.violet, width:3}, hoverinfo:'skip'});
+    }
+    if (L.ann && L.proj) A.push(ann(F[0], F[1], eps,
+      `投影长度 (${plus(S.mu1, S.mu2)})/√2 ≈ ${fmt(D.proj)}<br>Z = √2 × 投影 = ${fmt(D.muZ)}`, C.violet, 95, 40));
+  }
+
+  /* 6. center: floor point, vertical line, summit */
+  T.push({type:'scatter3d', mode:'lines', x:[S.mu1, S.mu1], y:[S.mu2, S.mu2], z:[0, D.fmax * 1.1],
+          line:{color:C.ink, width:5}, hoverinfo:'skip'});
+  T.push({type:'scatter3d', mode:'markers', x:[S.mu1, S.mu1], y:[S.mu2, S.mu2], z:[eps * 3, D.fmax],
+          marker:{size:[7, 5], color:C.ink, line:{color:'#fff', width:2}},
+          hovertemplate:`中心 (${fmt(S.mu1)}, ${fmt(S.mu2)})<br>f = %{z:.4f}<extra></extra>`});
+  T.push({type:'scatter3d', mode:'markers', x:[0], y:[0], z:[eps * 3],
+          marker:{size:4, color:C.ink}, hovertemplate:'原点 (0, 0)<extra></extra>'});
+  if (L.ann){
+    A.push(ann(S.mu1, S.mu2, D.fmax * 1.1, `山顶：f 最大，f = ${D.fmax.toFixed(3)}`, C.ink, 0, -34));
+    A.push(ann(S.mu1, S.mu2, eps, `底面中心 (μ₁, μ₂) = (${fmt(S.mu1)}, ${fmt(S.mu2)})`, C.ink, 80, 26));
+    A.push(ann(0, 0, eps, 'O (0, 0)', C.ink, -26, 22));
+  }
+
+  /* 7. moving vertical plane x + y = z and its cross-section */
+  if (sl){
+    const [xa, xb] = sl.seg, ya = S.z - xa, yb = S.z - xb;
+    T.push({type:'mesh3d', x:[xa, xb, xb, xa], y:[ya, yb, yb, ya], z:[0, 0, H, H],
+            i:[0, 0], j:[1, 2], k:[2, 3], color:planeCol, opacity:center ? 0.3 : 0.2,
+            flatshading:true, lighting:{ambient:1, diffuse:0, specular:0, fresnel:0},
+            hoverinfo:'skip', showscale:false, visible:L.plane});
+    T.push({type:'scatter3d', mode:'lines', x:[xa, xb, xb, xa, xa], y:[ya, yb, yb, ya, ya], z:[eps, eps, H, H, eps],
+            line:{color:planeLine, width:3}, hoverinfo:'skip', visible:L.plane});
+    const n = sl.xs.length, vx = [], vy = [], vz = [], ii = [], jj = [], kk = [];
+    for (let q = 0; q < n; q++){ vx.push(sl.xs[q], sl.xs[q]); vy.push(sl.ys[q], sl.ys[q]); vz.push(0, sl.fs[q]); }
+    for (let q = 0; q < n - 1; q++){
+      const b = 2 * q;
+      ii.push(b, b + 1); jj.push(b + 1, b + 3); kk.push(b + 2, b + 2);
+    }
+    T.push({type:'mesh3d', x:vx, y:vy, z:vz, i:ii, j:jj, k:kk, color:planeCol, opacity:0.6,
+            flatshading:true, lighting:{ambient:1, diffuse:0, specular:0, fresnel:0},
+            hoverinfo:'skip', showscale:false, visible:L.plane});
+    T.push({type:'scatter3d', mode:'lines', x:sl.xs, y:sl.ys, z:sl.fs,
+            line:{color:center ? C.gold : '#1B4FA8', width:7}, visible:L.plane,
+            hovertemplate:`切面 x + y = ${fmt(S.z)}<br>剖面高度 %{z:.4f}<extra></extra>`});
+    if (L.ann && L.plane) A.push(ann(xb, yb, H,
+      center ? `切面 x + y = ${fmt(S.z)}：经过山顶` : `切面 x + y = ${fmt(S.z)}`, planeLine, 24, -24));
+  }
+
+  const xr = D.xmax - D.xmin, yr = D.ymax - D.ymin, m = Math.max(xr, yr);
+  const axis = (title, range) => ({
+    title:{text:title, font:{size:13, color:C.ink}}, range, dtick:1,
+    gridcolor:'#D3DBE4', zerolinecolor:'#8A97A8', showbackground:true, backgroundcolor:'#F6F8FA',
+    tickfont:{size:10, color:C.soft}, showspikes:false
+  });
+  const layout = {
+    uirevision:'keep',
+    margin:{l:0, r:0, t:0, b:0},
+    paper_bgcolor:'#FFFFFF',
+    font:{family:'PingFang SC, Microsoft YaHei, sans-serif', color:C.ink},
+    showlegend:false,
+    hoverlabel:{bgcolor:'#FFFFFF', bordercolor:C.ink, font:{size:12, color:C.ink}},
+    scene:{
+      xaxis:axis('X', [D.xmin, D.xmax]),
+      yaxis:axis('Y', [D.ymin, D.ymax]),
+      zaxis:Object.assign(axis('f(x, y) 密度', [0, D.fmax * 1.3]), {dtick:null, nticks:4, tickformat:'.2f'}),
+      aspectmode:'manual',
+      aspectratio:{x:xr / m, y:yr / m, z:0.55},
+      annotations:A
+    }
+  };
+  return {data:T, layout};
+}
+
+/* ================= f_Z chart ================= */
+function buildZ(D){
+  const zz = lin(D.zmin, D.zmax, 240);
+  const fz = zz.map(v => nd(v, D.muZ, D.sdZ));
+  const peak = nd(D.muZ, D.muZ, D.sdZ);
+  const top = peak * 1.32;
+  const cur = nd(S.z, D.muZ, D.sdZ);
+  const center = isCenter(D);
+  const pc = center ? C.gold : C.blue;
+  const shapes = [
+    {type:'line', x0:D.muZ, x1:D.muZ, y0:0, y1:peak * 1.14, line:{color:C.gold, width:3}}
+  ];
+  const annotations = [
+    {x:D.muZ, y:peak * 1.14, text:`均值 ${fmt(D.muZ)}`, showarrow:false, yanchor:'bottom',
+     font:{size:11, color:C.gold}}
+  ];
+  if (D.dist >= D.zmin && D.dist <= D.zmax && Math.abs(D.dist - D.muZ) > 0.05){
+    shapes.push({type:'line', x0:D.dist, x1:D.dist, y0:0, y1:peak * 0.82, line:{color:C.coral, width:2, dash:'dash'}});
+    annotations.push({x:D.dist, y:peak * 0.82, text:`${fmt(D.dist)}：欧氏距离`, showarrow:false, yanchor:'bottom',
+      xanchor:D.dist > D.muZ ? 'left' : 'right', xshift:D.dist > D.muZ ? 3 : -3, font:{size:11, color:C.coral}});
+  }
+  shapes.push({type:'line', x0:S.z, x1:S.z, y0:0, y1:cur, line:{color:pc, width:2, dash:'dot'}});
+  return {
+    data:[
+      {x:zz, y:fz, type:'scatter', mode:'lines', line:{color:C.teal, width:2},
+       fill:'tozeroy', fillcolor:'rgba(59,133,119,0.13)', hoverinfo:'skip'},
+      {x:[S.z], y:[cur], type:'scatter', mode:'markers', marker:{size:10, color:pc, line:{color:'#fff', width:2}},
+       hovertemplate:'z = %{x:.2f}<br>f<sub>Z</sub> = %{y:.4f}<extra></extra>'}
+    ],
+    layout:{
+      margin:{l:36, r:12, t:8, b:30}, showlegend:false, paper_bgcolor:'#FFFFFF', plot_bgcolor:'#FFFFFF',
+      font:{family:'PingFang SC, Microsoft YaHei, sans-serif', size:11, color:C.ink},
+      xaxis:{range:[D.zmin, D.zmax], title:{text:'z', standoff:4}, gridcolor:'#E6EBF0', zeroline:false, tickfont:{size:10}},
+      yaxis:{range:[0, top], gridcolor:'#E6EBF0', zeroline:false, tickformat:'.2f', nticks:4, tickfont:{size:10}},
+      shapes, annotations
+    }
+  };
+}
+
+/* ================= panel text ================= */
+let wasCenter = null;
+function updatePanel(D, sl){
+  const center = isCenter(D);
+  $('zOut').textContent = `z = ${fmt(S.z)}`;
+  $('zOut').classList.toggle('gold', center);
+  $('zSlider').classList.toggle('gold', center);
+
+  $('kCenter').textContent = `(${fmt(S.mu1)}, ${fmt(S.mu2)})`;
+  $('kDist').textContent   = `√(${sq(S.mu1)} + ${sq(S.mu2)}) = ${fmt(D.dist, 3)}`;
+  $('kProj').textContent   = `(${plus(S.mu1, S.mu2)})/√2 = ${fmt(D.proj, 3)}`;
+  $('kMean').textContent   = `${plus(S.mu1, S.mu2)} = ${fmt(D.muZ)}`;
+  $('kSd').textContent     = `${fmt(D.sdZ, 3)}`;
+  $('kNote').innerHTML =
+    `投影长度 × √2 = ${fmt(D.proj, 3)} × √2 = <b>${fmt(D.muZ)}</b>，正是 Z 的均值。` +
+    `欧氏距离的平方与 (μ₁+μ₂)² 只差交叉项 2μ₁μ₂ = ${fmt(2 * S.mu1 * S.mu2)}。`;
+
+  const st = $('status');
+  let cls = 'status', html;
+  if (center){
+    cls += ' center';
+    html = `<b>该切面经过联合分布中心 (${fmt(S.mu1)}, ${fmt(S.mu2)})，因此 Z = X + Y 的中心位置对应 μ₁ + μ₂ = ${fmt(D.muZ)}。</b>` +
+           `<span>此时剖面最高、面积最大；向两侧平移同样距离，切出的剖面互为镜像。</span>`;
+  } else if (isDist(D)){
+    cls += ' dist';
+    html = `<b>这是 z = √(μ₁² + μ₂²) = ${fmt(D.dist)} 的切面，它没有经过山顶。</b>` +
+           `<span>沿 (1,1) 方向离中心还有 |${fmt(D.dist)} − ${fmt(D.muZ)}|/√2 ≈ ${fmt(Math.abs(D.dist - D.muZ) / SQ2)}。${fmt(D.dist)} 不是 Z 的中心。</span>`;
+  } else {
+    html = `<b>切面沿 (1,1) 方向离中心 |z − ${fmt(D.muZ)}|/√2 = ${fmt(Math.abs(S.z - D.muZ) / SQ2)}。</b>` +
+           `<span>离得越远，剖面越矮、面积越小。拖到 z = ${fmt(D.muZ)} 试试。</span>`;
+  }
+  st.className = cls;
+  st.innerHTML = html;
+  if (center && wasCenter === false){ void st.offsetWidth; st.classList.add('pulse'); }
+  wasCenter = center;
+
+  if (sl){
+    const fz = nd(S.z, D.muZ, D.sdZ);
+    $('areaNote').innerHTML =
+      `当前剖面面积 A = ${sl.A.toFixed(4)}，A/√2 = ${(sl.A / SQ2).toFixed(4)}，` +
+      `f<sub>Z</sub>(${fmt(S.z)}) = ${fz.toFixed(4)}。剖面沿切面方向的长度元是 √2·dx，所以面积 = √2 · f<sub>Z</sub>(z)。`;
+  } else {
+    $('areaNote').textContent = '';
+  }
+
+  const zs = $('zSlider');
+  zs.min = D.zmin; zs.max = D.zmax;
+  if (Math.abs(parseFloat(zs.value) - S.z) > 0.024) zs.value = S.z;
+  const dBtn = $('toDist');
+  const ok = D.dist >= D.zmin && D.dist <= D.zmax;
+  dBtn.disabled = !ok;
+  dBtn.title = ok ? '' : '这个 z 值超出了当前图形范围';
+}
+
+/* ================= render ================= */
+let first = true;
+const cfg3 = {responsive:true, displaylogo:false, modeBarButtonsToRemove:['resetCameraLastSave3d']};
+const cfgZ = {responsive:true, displayModeBar:false};
+
+function render(){
+  const D = derived();
+  S.z = Math.min(D.zmax, Math.max(D.zmin, S.z));
+  const sl = sliceData(D);
+  const f3 = build3D(D, sl);
+  const fZ = buildZ(D);
+  if (first){
+    f3.layout.scene.camera = VIEWS.default;
+    Plotly.newPlot('plot3d', f3.data, f3.layout, cfg3);
+    Plotly.newPlot('plotZ', fZ.data, fZ.layout, cfgZ);
+    first = false;
+  } else {
+    Plotly.react('plot3d', f3.data, f3.layout, cfg3);
+    Plotly.react('plotZ', fZ.data, fZ.layout, cfgZ);
+  }
+  updatePanel(D, sl);
+}
+
+/* ================= interaction ================= */
+let playing = false, dir = 1, raf = null, last = 0, holdUntil = 0;
+function stopPlay(){
+  playing = false; if (raf) cancelAnimationFrame(raf); raf = null;
+  $('play').textContent = '播放扫描'; $('play').classList.remove('is-on');
+}
+function tick(t){
+  if (!playing) return;
+  if (t >= holdUntil && t - last >= 33){
+    last = t;
+    const D = derived();
+    const prev = S.z;
+    let next = prev + dir * 0.06;
+    if (next >= D.zmax){ next = D.zmax; dir = -1; }
+    if (next <= D.zmin){ next = D.zmin; dir = 1; }
+    if ((prev - D.muZ) * (next - D.muZ) < 0){ next = D.muZ; holdUntil = t + 1500; }
+    S.z = next;
+    $('zSlider').value = next;
+    render();
+  }
+  raf = requestAnimationFrame(tick);
+}
+$('play').addEventListener('click', () => {
+  if (playing){ stopPlay(); return; }
+  playing = true; last = 0; holdUntil = 0;
+  $('play').textContent = '暂停'; $('play').classList.add('is-on');
+  raf = requestAnimationFrame(tick);
+});
+
+$('zSlider').addEventListener('input', e => {
+  stopPlay();
+  const D = derived();
+  let v = parseFloat(e.target.value);
+  if (Math.abs(v - D.muZ) < 0.12) v = D.muZ;           // magnetic snap to the center
+  else if (Math.abs(v - D.dist) < 0.06) v = D.dist;
+  S.z = v;
+  render();
+});
+$('toMean').addEventListener('click', () => { stopPlay(); S.z = derived().muZ; render(); });
+$('toDist').addEventListener('click', () => { stopPlay(); S.z = derived().dist; render(); });
+
+function setParam(key, val){
+  const D0 = derived();
+  const followCenter = isCenter(D0);
+  S[key] = val;
+  if (followCenter) S.z = derived().muZ;                 // keep the plane on the summit
+  render();
+}
+['mu1', 'mu2', 's1', 's2', 'rho'].forEach(k => {
+  $(k).addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    $(k + 'Out').textContent = fmt(v, 1);
+    setParam(k, v);
+  });
+});
+
+function setMu(a, b){
+  stopPlay();
+  const D0 = derived();
+  const followCenter = isCenter(D0);
+  S.mu1 = a; S.mu2 = b;
+  $('mu1').value = a; $('mu2').value = b;
+  $('mu1Out').textContent = fmt(a, 1); $('mu2Out').textContent = fmt(b, 1);
+  if (followCenter) S.z = a + b;
+  render();
+}
+document.querySelectorAll('[data-p]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const [a, b] = btn.dataset.p.split(',').map(Number);
+    setMu(a, b);
+  });
+});
+$('reset').addEventListener('click', () => {
+  stopPlay();
+  Object.assign(S, DEF, {z:DEF.mu1 + DEF.mu2});
+  ['mu1', 'mu2', 's1', 's2', 'rho'].forEach(k => { $(k).value = DEF[k]; $(k + 'Out').textContent = fmt(DEF[k], 1); });
+  render();
+});
+
+document.querySelectorAll('[data-layer]').forEach(chk => {
+  chk.addEventListener('change', () => { S.layers[chk.dataset.layer] = chk.checked; render(); });
+});
+$('opacity').addEventListener('input', e => { S.opacity = parseFloat(e.target.value); render(); });
+
+document.querySelectorAll('[data-view]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    Plotly.relayout('plot3d', {'scene.camera': JSON.parse(JSON.stringify(VIEWS[btn.dataset.view]))});
+  });
+});
+
+render();
+})();
+</script>
+</body>
+</html>
