@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>取消与派遣规则修改方案</title>
+<style>
+:root{
+  --bg:#f7f6f3;--card:#ffffff;--text:#1f2328;--muted:#5d646d;--line:#e3e1dc;
+  --accent:#b4441f;--accent-soft:#fbeee8;--code:#f1efea;--warn:#8a5a00;--warn-soft:#fff6de;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#141517;--card:#1d1f22;--text:#e6e6e3;--muted:#a0a6ad;--line:#33363b;
+    --accent:#f08a63;--accent-soft:#2c211c;--code:#25282c;--warn:#f0c060;--warn-soft:#2b2615;}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:16px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;}
+main{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+header h1{font-size:1.45rem;line-height:1.35;margin:8px 0 4px}
+header p{color:var(--muted);font-size:.85rem;margin:0 0 16px}
+nav{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:18px;font-size:.92rem}
+nav a{color:var(--accent);text-decoration:none;display:inline-block;margin:2px 10px 2px 0}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 12px;margin:0 0 16px}
+h2{font-size:1.15rem;margin:0 0 10px;line-height:1.4}
+h3{font-size:1rem;margin:16px 0 6px}
+p,li{overflow-wrap:anywhere}
+ul,ol{padding-left:1.25em;margin:6px 0}
+li{margin:3px 0}
+.lead{background:var(--accent-soft);border-color:transparent}
+.lead ol{margin:0}
+.clause{position:relative;background:var(--code);border-radius:10px;padding:12px 12px 10px;margin:8px 0 12px;font-size:.93rem;line-height:1.65}
+.clause p{margin:0 0 8px}
+.clause .en{color:var(--muted);font-size:.88rem}
+.clause strong{color:var(--text)}
+.copy{float:right;margin:-4px -4px 6px 8px;font:inherit;font-size:.78rem;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--accent);cursor:pointer}
+.basis{border-top:1px dashed var(--line);margin-top:12px;padding-top:8px;font-size:.82rem;color:var(--muted)}
+.basis a{color:var(--muted)}
+.unsure{display:inline-block;background:var(--warn-soft);color:var(--warn);border-radius:6px;padding:0 6px;font-size:.8rem;font-weight:600}
+.note{font-size:.9rem;color:var(--muted)}
+.tbl{width:100%;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+.tag{display:inline-block;font-size:.75rem;padding:0 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-left:4px}
+footer{color:var(--muted);font-size:.8rem;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>取消费、派遣单与译员管理：修改方案</h1>
+  <p>起因：2026-09-23/24 深圳陪同单的临时取消（译员 Sophia）· 内部参考，非法律意见 · 标<span class="unsure">不确定</span>的地方需要律师或保险经纪确认</p>
+</header>
+
+<nav>
+  <a href="#s0">总结</a><a href="#s1">1 报价单</a><a href="#s2">2 派遣单</a><a href="#s3">3 译员管理</a><a href="#s4">4 保险</a><a href="#s5">5 待确认</a>
+</nav>
+
+<section class="lead" id="s0">
+  <h2>这次的漏洞和推荐方案</h2>
+  <ol>
+    <li><strong>漏洞</strong>：没收预付款，报价单和派遣单都没写取消、超时收款和付款对象。结果客户当场把全部费用付给了译员，取消后又以「文件里没写」拒付，公司两头都没有依据。</li>
+    <li><strong>报价单</strong>：先收 50% 预付服务费再派人；取消费分三档，加粗写进正文；所有款项只付公司账户。</li>
+    <li><strong>派遣单</strong>：客户取消时给译员「保底 + 按比例转付」；客户当场付款的，译员报备后转回；超时费由公司去收；每单买意外险。</li>
+    <li><strong>译员管理</strong>：用每单打分加事实备注代替一刀切的黑名单，停用由人确认，稀缺语种另外处理。</li>
+    <li><strong>保险</strong>：派单时按天投保团体意外险，大约每人每天 2–7 元；另外请经纪报一个能覆盖劳务人员的雇主责任险方案。</li>
+  </ol>
+</section>
+
+<section id="s1">
+  <h2>1 · 报价单怎么改（可直接粘进模板）</h2>
+  <p class="note">整段放在报价单正文里，<strong>标题和取消档位加粗</strong>。只放在附件里的条款，客户可以说「没看到」。【】里的内容按每单填写。</p>
+
+  <div class="clause" data-copy>
+    <button class="copy" type="button">复制</button>
+    <p><strong>预订、付款与取消 / Booking, Payment &amp; Cancellation</strong></p>
+    <p><strong>1. 预付服务费。</strong>确认预订须支付总额 50% 的预付服务费（非定金）。未付预付款的预订仅为暂留，本公司可将译员另作安排。<br><span class="en"><strong>1. Advance payment.</strong> A 50% advance payment (not a deposit) is required to confirm the booking. Unpaid bookings are provisional and the interpreter may be released.</span></p>
+    <p><strong>2. 取消费（每个工作日单独计算，以本公司收到书面通知的时间为准）：</strong><br>
+    <strong>· 开工前 72 小时以上：免费</strong>，预付款全额退还或转作改期；<br>
+    <strong>· 开工前 72–24 小时：收取该日服务费的 50%</strong>；<br>
+    <strong>· 开工前 24 小时以内，或前一日 18:00 之后：收取该日服务费的 100%</strong>。<br>
+    取消费优先从预付款中扣除，多退少补。<br>
+    <span class="en"><strong>2. Cancellation fees (per working day, based on when we receive written notice by email / WhatsApp / WeChat):</strong><br>
+    <strong>· More than 72 h before start: free</strong> – the advance is refunded or moved to a new date;<br>
+    <strong>· 72–24 h before start: 50% of that day's fee</strong>;<br>
+    <strong>· Less than 24 h before start, or after 18:00 the day before: 100% of that day's fee</strong>.<br>
+    Cancellation fees are deducted from the advance payment; any balance is refunded or invoiced.</span></p>
+    <p><strong>3. 超时费。</strong>每日标准工时为【8】小时，超出部分按【X】元/小时计（不足半小时按半小时计），以译员当日在工作群中发出的报时消息为准。<br><span class="en"><strong>3. Overtime.</strong> The standard working day is [8] hours. Overtime is charged at CNY [X] per hour (rounded up to the half-hour), as reported by the interpreter in the shared chat on the day.</span></p>
+    <p><strong>4. 付款对象。所有费用（含预付款、尾款、超时费、取消费）只付至本公司账户【账户 / 付款链接】。译员无权代收，付给译员的款项不视为已向本公司付款。</strong><br><span class="en"><strong>4. Payee. All fees, including advance, balance, overtime and cancellation fees, are payable only to [company] at [account / payment link]. Interpreters are not authorised to collect payment, and payments made to an interpreter do not count as payment to us.</strong></span></p>
+    <p><strong>5. 确认。</strong>客户书面回复同意本报价或支付预付款，即表示已阅读并同意以上条款。<br><span class="en"><strong>5. Acceptance.</strong> Confirming this quote in writing or paying the advance means you have read and accepted these terms.</span></p>
+    <p><strong>6. 适用法律。</strong>本报价适用中华人民共和国法律。<br><span class="en"><strong>6. Governing law.</strong> This quote is governed by the laws of the People's Republic of China.</span></p>
+  </div>
+
+  <h3>客户怎么确认才算数（从强到弱）</h3>
+  <ol>
+    <li><strong>付了预付款</strong>，付款时注明报价单编号：最稳，钱已经在手里。</li>
+    <li><strong>签字的 PDF</strong>，或电子签。</li>
+    <li><strong>WhatsApp 或邮件里回「I agree」</strong>，而且<strong>条款原文就贴在消息正文里</strong>，不是只放在附件里。</li>
+  </ol>
+  <div class="clause" data-copy>
+    <button class="copy" type="button">复制</button>
+    <p>Please reply "I agree" to confirm the booking and the cancellation terms above, and pay the 50% advance to secure your interpreter.</p>
+  </div>
+  <p class="note">客户只回「OK」、点个赞，或者条款只在附件里的，都算弱证据。聊天记录要导出并保留原手机，真要打官司再做公证。</p>
+  <p class="note">24 小时内取消收 100%：前提是公司真的会给译员补偿（见第 2 节），这样公司才有实际损失可以举证。法院会不会把比例调低，<span class="unsure">不确定</span>；想更稳可以改成 80%。取消费是民事纠纷，拿报警威胁客户容易反过来被说成施压，不要这样做。</p>
+
+  <div class="basis">依据：
+    民法典第 933、787 条（没写取消条款，客户取消也要赔损失，只是不好举证）；第 585 条和合同编通则解释（法释〔2023〕13 号）第 65 条（违约金超过实际损失 30% 的，一般可以请求调低）；第 586、588 条（定金最多 20%，与违约金二选一，所以不用「定金」这个名字）；第 496 条和通则解释第 10 条（格式条款要显著提示，是否已提示由公司举证）；第 469 条和《民事诉讼证据规定》第 14 条（即时通信记录属于电子数据、可视为书面形式）；《涉外民事关系法律适用法》第 41、42 条（涉外客户适用中国法）。
+    · <a href="https://flk.npc.gov.cn/detail?title=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E6%B0%91%E6%B3%95%E5%85%B8&id=ff808081729d1efe01729d50b5c500bf">民法典</a>
+    · <a href="https://www.court.gov.cn/fabu/xiangqing/419382.html">合同编通则解释</a>
+    · <a href="https://www.zhonglun.com/research/articles/7648.html">电子数据证据</a>
+    · <a href="http://gongbao.court.gov.cn/Details/5556b6c60575c047bb77100af04a09.html">法律适用法</a>
+    · 行业参照：<a href="https://www.kennistranslations.com/zh-CN/shang-ye-tiao-kuan">Kennis 商业条款</a>（48 小时内取消收 100%）
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2 · 派遣单怎么改（给译员）</h2>
+  <p class="note">为什么这样写：客户取消，对译员来说就是公司取消，第三人的原因不能免除公司的责任（民法典第 593 条）。所以派遣单里什么都不写，公司的风险反而最大。</p>
+  <ul class="note">
+    <li>「最多赔当日费用的 15%」：属于格式条款，有被认定为不合理减轻自身责任而无效的风险（第 497 条），<span class="unsure">不确定</span>；而且客户付了取消费、公司只转 15%，译员一眼就能看出来，影响招人。不采用。</li>
+    <li>「让译员自己向客户追讨」：公司对译员的付款义务转不给客户，译员和客户之间也没有合同；还等于把客户关系交给了译员。不采用。</li>
+  </ul>
+
+  <div class="clause" data-copy>
+    <button class="copy" type="button">复制</button>
+    <p><strong>一、报酬与付款</strong><br>本单译员报酬为【X】元/日，超时【X】元/小时，由本公司在完工后【X】个工作日内支付。客户的全部费用均由客户付给本公司。</p>
+    <p><strong>二、客户取消时的补偿</strong><br>
+    1. 客户取消本单任一工作日的，本公司在收到通知后 1 小时内告知译员。<br>
+    2. 客户就该日实际支付取消费的，本公司在到账后 3 个工作日内，按「译员日费 ÷ 客户日价」的比例将取消费转付给译员。<br>
+    3. <strong>取消通知晚于工作日前一日 18:00 的，无论客户是否付费，本公司保证译员至少获得当日报酬的 25%。</strong>第 2、3 款两者取高，不叠加。<br>
+    4. 译员当日另接本公司安排的工作的，该工作报酬可以抵扣第 3 款的保底。<br>
+    5. 取消费一律由本公司向客户追讨，译员不得就取消事宜直接联系客户索要或私下收款。</p>
+    <p><strong>三、超时</strong><br>超时结束后，译员须当天在工作群中报「超时 X 小时」。报时是译员的义务，超时费由本公司向客户收取，译员不需要当面向客户要钱。客户是否付超时费，不影响本公司按第一条向译员支付超时报酬（以译员已按时报时为前提）。</p>
+    <p><strong>四、客户当场付款</strong><br>客户坚持当场向译员付款的，译员视为代本公司收款，须在 24 小时内向本公司报备金额，并在 3 日内将超出本人应得部分的款项转回本公司。逾期未转回的，本公司可以从应付给译员的任何款项中抵销。</p>
+    <p><strong>五、保险</strong><br>本公司为每单派遣的译员投保意外伤害保险（保额【X】万元，保险期间覆盖出行日至结束日）。投保需要向保险公司提供译员的姓名和身份证号，译员确认本派遣单即表示同意为投保提供上述信息。</p>
+    <p><strong>六、确认</strong><br>第二、四条已单独提示。译员回复「确认」即表示同意本派遣单全部内容。</p>
+  </div>
+  <p class="note">「第三条：客户不付超时费也照付译员」是一个取舍：不这样写，收不回超时费的风险就落在译员身上，他们以后会硬向客户要钱。如果不想兜底，可以删掉这一句，改成「超时报酬在客户付款后支付」。另外，第五条里的身份证信息属于提供给第三方的个人信息，最好在入库时让译员单独勾选同意，派遣单里的这句只作补充。</p>
+
+  <div class="basis">依据：民法典第 593 条（因第三人原因违约，仍要向对方承担责任）；第 787、933 条（定作人或委托人解除合同，要赔对方损失）；第 497 条（格式条款不合理地免除或减轻己方责任的，无效）；第 522 条第 2 款（第三人直接请求权须有约定）；第 568 条（抵销）；第 172 条（表见代理，是写明「译员无权代收」的原因）；《个人信息保护法》第 23 条（向他人提供个人信息须单独同意）。</div>
+</section>
+
+<section id="s3">
+  <h2>3 · 译员管理：打分和备注，不做一刀切的黑名单</h2>
+  <p>「收不到超时费就拉黑」这个信号不可靠。收不回来，常见原因是客户赖账、熟客不好开口、报价单里本来就没写超时费。这些以后改由公司来收（第 1、2 节），就不应该再算成译员的问题。</p>
+  <h3>每单打分（1–5 分）</h3>
+  <ul>
+    <li>准时 · 超时按规定报时 · 客户反馈 · 配合度 · 客户当场付款后按规定报备</li>
+    <li>附一句<strong>事实备注</strong>，例如「9/23 超时 1h 未报时，客户直付后 2 天才报备」；<strong>不写</strong>「自私」「态度差」这类人格评价。</li>
+  </ul>
+  <h3>停用规则</h3>
+  <ol>
+    <li>看最近 3–5 单的平均分，不看单次。低于阈值先<strong>降低派单优先级</strong>。</li>
+    <li>同类问题出现第 2 次，先当面谈一次；出现第 3 次，才考虑停用。</li>
+    <li><strong>停用必须由人确认</strong>（Anne 或 Sara）。系统只负责提示，不自动停用。</li>
+    <li><strong>稀缺语种</strong>（缅甸语、泰语、法语等）<strong>不停用</strong>，只降低优先级、改派更成熟的客户，同时尽快找一名备选译员。<strong>通用语种</strong>（英语等）按上面的规则执行。</li>
+    <li>译员问起时，能说清是哪几单、什么事实。评价记录只在内部使用，不发给同行；停止合作满 2 年后删除。</li>
+  </ol>
+  <div class="basis">依据：《个人信息保护法》第 24 条（对个人权益有重大影响的决定，个人有权拒绝仅通过自动化决策作出，这是停用必须由人确认的原因）；第 13、14、17 条（入库时告知译员：会记录每单表现、用于派单、保存多久；以「履行合同所必需」作为处理依据的边界<span class="unsure">不确定</span>，所以要告知）；第 5–8 条（最小必要、准确）；第 19 条（保存期限）；第 23 条（向他人提供须单独同意）；第 44–46 条（查阅、更正权）。· <a href="http://www.npc.gov.cn/npc/c2/c30834/202108/t20210820_313088.html">个人信息保护法全文</a></div>
+</section>
+
+<section id="s4">
+  <h2>4 · 保险：买什么、多少钱、怎么投</h2>
+  <p><strong>为什么要买</strong>：公司和个人之间的劳务关系，法律没有明确规定受伤时怎么担责（第 1192 条只管个人与个人之间）。上海一中院的思路是参照劳动关系，<strong>公司即使没有过错也要赔</strong>。广东法院怎么判，没有查到统一的口径，<span class="unsure">不确定</span>。严重伤残可能要赔几十万元以上。</p>
+  <div class="tbl"><table>
+    <tr><th>险种</th><th>适合度</th><th>大概价格</th></tr>
+    <tr><td>按天的团体意外险<span class="tag">推荐</span></td><td>不要求劳动关系，派一单保一单；赔款给译员本人</td><td>大约 1.8 元/人/天（保额 20 万）、3.5 元（50 万）、6.8 元（100 万）</td></tr>
+    <tr><td>年度团体意外险</td><td>要固定名单，有的最低 3 人起保</td><td>1–3 类职业、保额 50 万，约 430–520 元/人/年</td></tr>
+    <tr><td>雇主责任险（扩展到劳务人员）<span class="tag">询价</span></td><td>保的是<strong>公司的赔偿责任</strong>；标准条款要求雇佣关系，保劳务人员要和保险公司单独谈</td><td>标准版 1–2 类职业、保额 50 万，约 400–450 元/人/年；扩展后的价格待询</td></tr>
+    <tr><td>广东单项工伤保险</td><td>只覆盖实习学生、超龄人员等几类人，普通自由译员大概率不在范围内</td><td>按月缴费，不适合按单</td></tr>
+  </table></div>
+  <p class="note">价格来自保险销售网站，只作量级参考，以实际报价为准。</p>
+  <h3>怎么投保</h3>
+  <ol>
+    <li><strong>现在就做</strong>：每单派遣确认时，在线投保按天的团体意外险，保额 50 万左右，保险期间覆盖出行日到结束日。职业类别按实际情况填：纯会场陪同一般是 1 类，去工厂、工地的可能要按 2–3 类投保。</li>
+    <li>派遣单里写明「本单已投保意外险」，对招人也是加分项。</li>
+    <li><strong>1–2 个月内</strong>：找一家保险经纪，比较「雇主责任险（按人天申报）」和「年度团意险加按月增减人员」两种方案，看按实际派单量哪个便宜。</li>
+    <li>成本估算：假设一年派出 300 个译员工作日，按每天 3.5 元算，全年约 1000 元。</li>
+  </ol>
+  <p class="note">公司买的意外险赔款，能不能抵掉公司自己应承担的赔偿，法院有分歧，<span class="unsure">不确定</span>。所以最稳的组合是：意外险保译员本人，再加上能覆盖劳务人员的雇主责任险保公司的责任。</p>
+  <div class="basis">依据：民法典第 1191–1193 条 · <a href="https://www.a-court.gov.cn/xxfb/no1court_412/docs/202101/d_3694510.html">上海一中院：提供劳务者受害纠纷的审理思路</a> · <a href="https://m.thepaper.cn/newsDetail_forward_29381599">澎湃：非个人之间劳务受害案（二审适用无过错责任）</a> · 价格：<a href="https://news.vobao.com/article/1088181960465074081.shtml">沃保·按天意外险</a>、<a href="https://news.vobao.com/article/1116176545800449673.shtml">沃保·团意险价格表</a>、<a href="https://www.cpic.com.cn/c/2026-04-01/1881448.shtml">太平洋保险·雇主责任险</a>、<a href="https://news.vobao.com/article/1145705430564133366.shtml">临时工能否纳入雇主责任险</a> · 工伤：<a href="https://hrss.sz.gov.cn/ztfw/yshj/sbzcjd/content/post_11361925.html">粤人社规〔2024〕6 号</a></div>
+</section>
+
+<section id="s5">
+  <h2>5 · 需要律师或保险经纪确认</h2>
+  <h3>律师</h3>
+  <ol>
+    <li>「24 小时内取消收 100%」被法院调低的可能性有多大；改成 80% 是否更稳。</li>
+    <li>译员与公司的关系在广东会被认定为劳务、承揽还是委托；译员受伤时，适用无过错责任还是过错责任。</li>
+    <li>派遣单中保底补偿、禁止私下收款、抵销条款的效力；「意外险赔款抵作公司赔偿」能否写进派遣单。</li>
+    <li>WhatsApp 聊天记录的取证和公证流程；对境外客户起诉或执行是否划算（中国与西班牙之间的司法协助安排，<span class="unsure">未核实</span>）。</li>
+    <li>入库告知书和个人信息处理规则的写法（打分记录、系统提示、提供给保险公司）。</li>
+  </ol>
+  <h3>保险经纪</h3>
+  <ol>
+    <li>按单结算、非劳动关系的译员，能不能投雇主责任险；能否按人天申报，价格多少。</li>
+    <li>口译陪同（包括去工厂、跨城出行）按几类职业投保；按天意外险的最短保期、当天投保是否当天生效、有没有最低人数。</li>
+    <li>意外险和雇主责任险同时投保时，赔付是否重叠、有没有冲突。</li>
+    <li>在校生译员、超龄译员能否走广东的单项工伤保险，公司需要办什么手续。</li>
+  </ol>
+</section>
+
+<footer>2026-09-24 · 内部参考</footer>
+</main>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(box){
+  var btn=box.querySelector('.copy');
+  btn.addEventListener('click',function(){
+    var clone=box.cloneNode(true);clone.querySelector('.copy').remove();
+    var text=clone.innerText.trim();
+    function done(){btn.textContent='已复制';setTimeout(function(){btn.textContent='复制'},1500)}
+    function fallback(){var t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){btn.textContent='请长按选择'}document.body.removeChild(t)}
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(done,fallback)}else{fallback()}
+  });
+});
+</script>
+</body>
+</html>
